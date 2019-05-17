@@ -1,0 +1,52 @@
+from enum import Enum
+import InputData as D
+from SimPy.DiscreteEventSim import SimulationEvent as Event
+
+
+class Priority(Enum):
+    """ priority of events (low number implies higher priority)"""
+    BIRTH = 1
+    DEATH = 0
+
+
+class Birth(Event):
+    def __init__(self, time, individual, cohort):
+        """
+        creates the birth of an individual
+        """
+        # initialize the master class
+        Event.__init__(self, time=time, priority=Priority.BIRTH.value)
+
+        self.individual = individual
+        self.cohort = cohort
+
+        # trace
+        self.cohort.trace.add_message(
+            str(individual) + ' will be born at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
+
+    def process(self):
+        """ processes birth of a new individual """
+
+        self.cohort.process_birth(individual=self.individual)
+
+
+class Death(Event):
+    def __init__(self, time, individual, cohort):
+        """
+        creates the death of an individual
+        """
+        # initialize the master class
+        Event.__init__(self, time=time, priority=Priority.DEATH.value)
+
+        self.individual = individual
+        self.cohort = cohort
+
+        # trace
+        self.cohort.trace.add_message(
+            str(individual) + ' will die at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
+
+    def process(self):
+        """ processes the death of an individual """
+
+        self.cohort.process_death(individual=self.individual)
+
