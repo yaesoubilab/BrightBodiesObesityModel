@@ -4,16 +4,20 @@ import SimPy.RandomVariantGenerators as RVGs
 import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
+import ModelParameters as P
 import SimPy.InOutFunctions as IO
 
 
 class Individual:
-    def __init__(self, id):
+    def __init__(self, id, age_sex, sim_time):
         """ create an individual
         :param id: (integer) patient ID
+        :param age_sex: [age, sex]
+        :param sim_time: simulation time
         """
         self.id = id
-        self.tBirth = 0               # time of birth
+        self.sex = age_sex[1]
+        self.tBirth = sim_time - age_sex[0]    # time of birth
 
     def __str__(self):
         return "Patient " + str(self.id)
@@ -23,7 +27,7 @@ class Cohort:
     def __init__(self, id, parameters):
         """ creates a cohort of individuals
         :param id: ID of this cohort
-        :parameters: parameters of this cohort
+        :param parameters: parameters of this cohort
         """
 
         self.id = id
@@ -42,12 +46,15 @@ class Cohort:
     def __initialize(self):
         """ initialize the cohort """
 
-        # find the first birth
-        bith_time = self.params.timeToNextBirthDist.sample(rng=self.rng)
+        for i in range(1000):
 
-        # schedule the first birth
-        self.simCal.add_event(
-            event=E.Birth(time=bith_time, individual=Individual(id=0), cohort=self))
+            age_sex = self.params.ageSexDist.get_sample_values(rng=self.rng)
+
+            # schedule the first birth
+            self.simCal.add_event(
+                event=E.Birth(time=0,
+                              individual=Individual(id=0, age_sex=age_sex, sim_time=self.simCal.time),
+                              cohort=self))
 
     def simulate(self, sim_duration):
         """ simulate the cohort
