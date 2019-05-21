@@ -1,8 +1,8 @@
 import ModelEntities as Cls
 import InputData as D
 import ModelParameters as P
-import SimPy.SamplePathClasses as Path
-import SimPy.FigureSupport as Fig
+import SimPy.Plots.SamplePaths as Path
+import SimPy.Plots.FigSupport as Fig
 
 # create a cohort
 myCohort = Cls.Cohort(id=1, parameters=P.Parameters())

@@ -22,6 +22,6 @@ probDf = df.DataFrameWithEmpiricalDist(rows=D.rows,
                                        list_x_max=[85, 1],
                                        list_x_delta=[5, 'int'])
 # get a sample
-print('Get a sampled index:', probDf.get_sample_indices(rng=rng))
-print('Get a sampled value:', probDf.get_sample_values(rng=rng))
+print('Get a sampled index:', probDf.sample_indices(rng=rng))
+print('Get a sampled value:', probDf.sample_values(rng=rng))
 print('')

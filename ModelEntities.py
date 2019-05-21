@@ -48,12 +48,12 @@ class Cohort:
 
         for i in range(1000):
 
-            age_sex = self.params.ageSexDist.get_sample_values(rng=self.rng)
+            age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
             # schedule the first birth
             self.simCal.add_event(
-                event=E.Birth(time=0,
-                              individual=Individual(id=0, age_sex=age_sex, sim_time=self.simCal.time),
+                event=E.Birth(time=0.0000001*i,
+                              individual=Individual(id=i, age_sex=age_sex, sim_time=self.simCal.time),
                               cohort=self))
 
     def simulate(self, sim_duration):
