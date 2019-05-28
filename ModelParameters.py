@@ -1,7 +1,8 @@
 import InputData as D
 import SimPy.RandomVariantGenerators as RVGs
-# for adding births
+# for adding births/deaths
 import SimPy.DataFrames as df
+from SimPy.Models import MortalityModel
 
 
 class Parameters:
@@ -13,6 +14,16 @@ class Parameters:
                                                         list_x_min=[0, 0],
                                                         list_x_max=[85, 1],
                                                         list_x_delta=[5, 'int'])
+        # self.deathDist = df.DataFrameWithExpDist(rows=D.death,
+        #                                          list_x_min=[0, 0],
+        #                                          list_x_max=[85, 1],
+        #                                          list_x_delta=[5, 'int'])
+        self.mortalityModel = MortalityModel(rows=D.death,           # life table
+                                             group_mins=0,        # minimum value of sex group
+                                             group_maxs=1,        # maximum value of sex group
+                                             group_delta='int',   # sex group is a category
+                                             age_min=0,           # minimum age in this life table
+                                             age_delta=5)         # age interval
 
 
 # For Adding Births
@@ -25,3 +36,30 @@ probDf = df.DataFrameWithEmpiricalDist(rows=D.rows,
 print('Get a sampled index:', probDf.sample_indices(rng=rng))
 print('Get a sampled value:', probDf.sample_values(rng=rng))
 print('')
+
+
+# # For Adding Deaths
+# df2 = df.DataFrameWithExpDist(rows=D.death,
+#                               list_x_min=[0, 0],
+#                               list_x_max=[85, 1],
+#                               list_x_delta=[5, 'int'])
+#
+# # get a sample
+# rng = RVGs.RNG(seed=1)
+# print('Sample 1: ', df2.get_dist(x_value=[0, 0]).sample(rng))
+# print('Sample 2', df2.get_dist(x_value=[1, 0]).sample(rng))
+# print('Sample 3', df2.get_dist(x_value=[2, 1]).sample(rng))
+# print('Sample 4', df2.get_dist(x_value=[5, 0]).sample(rng))
+
+# Mortality Model Samples
+
+# mortalityModel = MortalityModel(rows=D.death,           # life table
+#                                 group_mins=0,        # minimum value of sex group
+#                                 group_maxs=1,        # maximum value of sex group
+#                                 group_delta='int',   # sex group is a category
+#                                 age_min=0,           # minimum age in this life table
+#                                 age_delta=5)         # age interval
+# # get sample for time until death
+# print(mortalityModel.sample_time_to_death(group=0, age=8.9, rng=rng))
+# print(mortalityModel.sample_time_to_death(group=0, age=0, rng=rng))
+# print(mortalityModel.sample_time_to_death(group=0, age=32, rng=rng))

@@ -7,6 +7,7 @@ class Priority(Enum):
     """ priority of events (low number implies higher priority)"""
     BIRTH = 1
     DEATH = 0
+    # EVALMORT = 2
 
 
 class Birth(Event):
@@ -49,4 +50,26 @@ class Death(Event):
         """ processes the death of an individual """
 
         self.cohort.process_death(individual=self.individual)
+
+
+# class EvaluateMortality(Event):
+#     def __init__(self, time, individual, cohort):
+#         """
+#         Evaluates death of individual
+#         """
+#         # initialize master class
+#         Event.__init__(self, time=time, priority=Priority.EVALMORT.value)
+#
+#         self.individual = individual
+#         self.cohort = cohort
+#
+#         # trace
+#         self.cohort.trace.add_message(
+#             str(individual) + ' '
+#         )
+#
+#     def process(self):
+#         """ """
+#
+#         self.cohort.evaluate_mortality(individual=self.individual)
 

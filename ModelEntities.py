@@ -4,6 +4,7 @@ import SimPy.RandomVariantGenerators as RVGs
 import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
+import math
 import ModelParameters as P
 import SimPy.InOutFunctions as IO
 
@@ -18,9 +19,13 @@ class Individual:
         self.id = id
         self.sex = age_sex[1]
         self.tBirth = sim_time - age_sex[0]    # time of birth
+        self.simCal = SimCls.SimulationCalendar()  # simulation calendar
 
     def __str__(self):
         return "Patient " + str(self.id)
+
+    def get_age(self, current_time):
+        return current_time - self.tBirth
 
 
 class Cohort:
@@ -46,7 +51,7 @@ class Cohort:
     def __initialize(self):
         """ initialize the cohort """
 
-        for i in range(1000):
+        for i in range(100):
 
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
@@ -88,7 +93,13 @@ class Cohort:
         self.individuals.append(individual)
 
         # find the time of death
-        time_death = self.simCal.time + self.params.timeToDeath.sample(rng=self.rng)
+        # time_death = self.simCal.time + self.params.timeToDeath.sample(rng=self.rng)
+        # time_death = self.simCal.time + self.params.deathDist.get_dist(x_value=[0, sex]).sample(rng=self.rng)
+
+        time_to_death = self.params.mortalityModel.sample_time_to_death(group=individual.sex,
+                                                                        age=individual.get_age(self.simCal.time),
+                                                                        rng=self.rng)
+        time_death = self.simCal.time + time_to_death
 
         # schedule the the death of this person
         self.simCal.add_event(
@@ -99,6 +110,10 @@ class Cohort:
             )
         )
 
+        sex = D.SEX.MALE.value  # sex set to male
+        if self.rng.sample() < 0.5075:  # prob of being female
+            sex = D.SEX.FEMALE.value
+
         # find the time of next birth
         time_next_birth = self.simCal.time + self.params.timeToNextBirthDist.sample(rng=self.rng)
 
@@ -106,7 +121,7 @@ class Cohort:
         self.simCal.add_event(
             event=E.Birth(
                 time=time_next_birth,
-                individual=Individual(id=individual.id + 1),  # id of the next patient = this patient's id + 1
+                individual=Individual(id=individual.id + 1, age_sex=[0, sex], sim_time=self.simCal.time),
                 cohort=self
             )
         )
@@ -123,6 +138,32 @@ class Cohort:
         # collect statistics on new birth
         self.simOutputs.collect_death(individual=individual)
 
+    # def evaluate_mortality(self, individual):
+    #
+    #     # trace
+    #
+    #     age = self.simCal.time - individual.tBirth
+    #
+    #     # utilize as t and add to time under schedule event mortality
+    #     time_to_next_age_break = 5*math.floor(age/5) + 5 - age
+    #
+    #     # find time until death (time of death - current time)
+    #     t = self.params.deathDist.get_dist(x_value=[age, individual.sex]).sample(rng=self.rng) - self.simCal.time
+    #     # if time until death is less than time until the next age break (interval)
+    #     if t <= time_to_next_age_break:
+    #         # schedule death at time t
+    #         self.simCal.add_event(
+    #             event=E.Death(
+    #                 time=self.simCal.time + t,
+    #                 individual=individual,
+    #                 cohort=self)
+    #         )
+    #     else: # else schedule Evaluate Mortality event at next age break (interval)
+    #         self.simCal.add_event(
+    #             event=E.EvaluateMortality(time=self.simCal.time + time_to_next_age_break,
+    #                                       individual=individual,
+    #                                       cohort=self)
+    #         )
     def print_trace(self):
         """ outputs trace """
 
