@@ -4,6 +4,8 @@ import SimPy.RandomVariantGenerators as RVGs
 import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
+from SimPy.DataFrames import Pyramid
+
 import math
 import ModelParameters as P
 import SimPy.InOutFunctions as IO
@@ -51,15 +53,27 @@ class Cohort:
     def __initialize(self):
         """ initialize the cohort """
 
+        age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
+
         for i in range(100):
 
-            age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
+            # age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
             # schedule the first birth
             self.simCal.add_event(
                 event=E.Birth(time=0.0000001*i,
                               individual=Individual(id=i, age_sex=age_sex, sim_time=self.simCal.time),
                               cohort=self))
+
+        # schedule population distribution test event at t=.1 and t=1
+        self.simCal.add_event(
+            event=E.TestPopDistribution(time=.1,
+                                        individual=self,
+                                        cohort=self))
+        self.simCal.add_event(
+            event=E.TestPopDistribution(time=1,
+                                        individual=self,
+                                        cohort=self))
 
     def simulate(self, sim_duration):
         """ simulate the cohort
@@ -137,6 +151,30 @@ class Cohort:
 
         # collect statistics on new birth
         self.simOutputs.collect_death(individual=individual)
+
+    def process_testpop(self, individual):
+        """
+        processes the population distribution pyramid
+        """
+        pyramid = Pyramid(list_x_min=[0, 0],
+                          list_x_max=[100, 1],
+                          list_x_delta=[5, 'int'])
+
+        # for each individual, record age/sex and increment pyramid by 1
+        for individual in self.individuals:
+            pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
+                                     increment=1)
+
+        self.simOutputs.pyramids.append(pyramid)
+
+        # print time of test
+        print('Population stats age/sex at time =', self.simCal.time)
+        # get the total population size
+        print('Population size:', self.params.pyramid.get_sum())
+        # get the size of each group
+        print('Population size by age, sex:', self.params.pyramid.get_table_of_values())
+        # get the percentage of population in each group
+        print('Population distribution by age, sex', self.params.pyramid.get_percentage())
 
     # def evaluate_mortality(self, individual):
     #

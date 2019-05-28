@@ -3,6 +3,7 @@ import SimPy.RandomVariantGenerators as RVGs
 # for adding births/deaths
 import SimPy.DataFrames as df
 from SimPy.Models import MortalityModel
+from SimPy.DataFrames import Pyramid
 
 
 class Parameters:
@@ -53,7 +54,7 @@ print('')
 
 # Mortality Model Samples
 
-# mortalityModel = MortalityModel(rows=D.death,           # life table
+# mortalityModel = MortalityModel(rows=D.death,        # life table
 #                                 group_mins=0,        # minimum value of sex group
 #                                 group_maxs=1,        # maximum value of sex group
 #                                 group_delta='int',   # sex group is a category
@@ -63,3 +64,8 @@ print('')
 # print(mortalityModel.sample_time_to_death(group=0, age=8.9, rng=rng))
 # print(mortalityModel.sample_time_to_death(group=0, age=0, rng=rng))
 # print(mortalityModel.sample_time_to_death(group=0, age=32, rng=rng))
+
+# for creating age/sex distribution pyramids
+# pyramid = Pyramid(list_x_min=[0, 0],
+#                   list_x_max=[100, 1],
+#                   list_x_delta=[5, 'int'])

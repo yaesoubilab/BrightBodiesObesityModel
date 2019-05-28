@@ -7,6 +7,7 @@ class Priority(Enum):
     """ priority of events (low number implies higher priority)"""
     BIRTH = 1
     DEATH = 0
+    TESTPOP = 2
     # EVALMORT = 2
 
 
@@ -51,6 +52,24 @@ class Death(Event):
 
         self.cohort.process_death(individual=self.individual)
 
+
+class TestPopDistribution(Event):
+    def __init__(self, time, individual, cohort):
+        """
+        Tests the age/sex characteristics of simulated population
+        """
+        # initialize master class
+        Event.__init__(self, time=time, priority=Priority.TESTPOP.value)
+
+        self.individual = individual
+        self.cohort = cohort
+
+        # trace
+
+    def process(self):
+        """ processes the population distribution test """
+
+        self.cohort.process_testpop(individual=self.individual)
 
 # class EvaluateMortality(Event):
 #     def __init__(self, time, individual, cohort):

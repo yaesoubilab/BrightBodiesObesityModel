@@ -1,4 +1,5 @@
 import SimPy.SamplePathClasses as Path
+from SimPy.DataFrames import Pyramid
 
 
 class SimOutputs:
@@ -19,6 +20,7 @@ class SimOutputs:
                                                      initial_size=0,
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
+        self.pyramids = []
 
     def collect_end_of_sim_stat(self):
         """
