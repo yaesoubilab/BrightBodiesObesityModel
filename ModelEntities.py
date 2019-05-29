@@ -22,10 +22,9 @@ class Individual:
         self.id = id
         self.sex = age_sex[1]
         self.tBirth = sim_time - age_sex[0]    # time of birth
-        self.simCal = SimCls.SimulationCalendar()  # simulation calendar
 
     def __str__(self):
-        return "Patient " + str(self.id)
+        return "Individual {0}".format(self.id)
 
     def get_age(self, current_time):
         return current_time - self.tBirth
@@ -56,9 +55,16 @@ class Cohort:
 
         # age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
-        for i in range(100):
+        for i in range(D.POP_SIZE):
 
+            # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
+
+            # TODO: I think as you also pointed out, the issue here is that we are scheduling a lot of
+            #  births right at time 0. I think you should modify the Birth event so that we can specify
+            #  whether it should schedule the next birth or not.
+            #  Now, if a birth is scheduled as part of the initialization, it should not schedule
+            #  another birth when processed.
 
             # schedule the first birth
             self.simCal.add_event(
@@ -66,15 +72,21 @@ class Cohort:
                               individual=Individual(id=i, age_sex=age_sex, sim_time=self.simCal.time),
                               cohort=self))
 
+        # TODO: since now the Birth events we schedule above will not schedule any new births,
+        #  we need to reschedule our first birth here:
+
+        # find the time until next birth and schedule it
+
+
         # schedule population distribution test event at t=.1 and t=1
         self.simCal.add_event(
-            event=E.TestPopDistribution(time=.1,
-                                        individual=self,
-                                        cohort=self))
+            event=E.PopSurvey(time=.1,
+                              individual=self,
+                              cohort=self))
         self.simCal.add_event(
-            event=E.TestPopDistribution(time=1,
-                                        individual=self,
-                                        cohort=self))
+            event=E.PopSurvey(time=1,
+                              individual=self,
+                              cohort=self))
 
     def simulate(self, sim_duration):
         """ simulate the cohort
@@ -108,9 +120,6 @@ class Cohort:
         self.individuals.append(individual)
 
         # find the time of death
-        # time_death = self.simCal.time + self.params.timeToDeath.sample(rng=self.rng)
-        # time_death = self.simCal.time + self.params.deathDist.get_dist(x_value=[0, sex]).sample(rng=self.rng)
-
         time_to_death = self.params.mortalityModel.sample_time_to_death(group=individual.sex,
                                                                         age=individual.get_age(self.simCal.time),
                                                                         rng=self.rng)
@@ -126,6 +135,7 @@ class Cohort:
         )
 
         sex = D.SEX.MALE.value  # sex set to male
+        # TODO: make 0.5075 a model input (add to the InputData.py)
         if self.rng.sample() < 0.5075:  # prob of being female
             sex = D.SEX.FEMALE.value
 
@@ -153,7 +163,7 @@ class Cohort:
         # collect statistics on new birth
         self.simOutputs.collect_death(individual=individual)
 
-    def process_testpop(self, individual):
+    def process_pop_survey(self):
         """
         processes the population distribution pyramid
         """
@@ -168,6 +178,10 @@ class Cohort:
 
         self.simOutputs.pyramids.append(pyramid)
 
+        # TODO: this is great but I would create figures only after when the simulation is done.
+        #  I would move these to Simulate.py or add a new Support.py file to take care of creating figures.
+        #  We'll have a lot of them!
+
         # print time of test
         print('Population stats age/sex at time =', self.simCal.time)
         # get the total population size
@@ -180,9 +194,9 @@ class Cohort:
         # plot the pyramid
         Pyr.plot_pyramids(observed_data=pyramid.get_percentage(),
                           simulated_data=None,
-                          x_lim=100,
-                          y_lim=12.5,
-                          title='Testing Pyramid')
+                          x_lim=10,
+                          y_lim=100,
+                          title='Population Pyramid at T = ' + str(self.simCal.time))
 
     # def evaluate_mortality(self, individual):
     #

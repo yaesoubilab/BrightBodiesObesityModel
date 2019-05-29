@@ -35,7 +35,7 @@ class SimOutputs:
         """
 
         # record time of birth
-        individual.tBirth = self.simCal.time
+        #individual.tBirth = self.simCal.time
 
         self.popSize += 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=1)
