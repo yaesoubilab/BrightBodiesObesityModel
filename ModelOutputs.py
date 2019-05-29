@@ -1,5 +1,4 @@
 import SimPy.SamplePathClasses as Path
-from SimPy.DataFrames import Pyramid
 
 
 class SimOutputs:

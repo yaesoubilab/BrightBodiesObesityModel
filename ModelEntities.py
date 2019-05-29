@@ -5,6 +5,7 @@ import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
+from SimPy.Plots import PopulationPyramids as Pyr
 
 import math
 import ModelParameters as P
@@ -53,11 +54,11 @@ class Cohort:
     def __initialize(self):
         """ initialize the cohort """
 
-        age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
+        # age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
         for i in range(100):
 
-            # age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
+            age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
             # schedule the first birth
             self.simCal.add_event(
@@ -170,11 +171,18 @@ class Cohort:
         # print time of test
         print('Population stats age/sex at time =', self.simCal.time)
         # get the total population size
-        print('Population size:', self.params.pyramid.get_sum())
+        print('Population size:', pyramid.get_sum())
         # get the size of each group
-        print('Population size by age, sex:', self.params.pyramid.get_table_of_values())
+        print('Population size by age, sex:', pyramid.get_values())
         # get the percentage of population in each group
-        print('Population distribution by age, sex', self.params.pyramid.get_percentage())
+        print('Population distribution by age, sex', pyramid.get_percentage())
+
+        # plot the pyramid
+        Pyr.plot_pyramids(observed_data=pyramid.get_percentage(),
+                          simulated_data=None,
+                          x_lim=100,
+                          y_lim=12.5,
+                          title='Testing Pyramid')
 
     # def evaluate_mortality(self, individual):
     #
