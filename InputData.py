@@ -7,9 +7,14 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 # simulation settings
 SIM_DURATION = 1   # (years)
 
-POP_SIZE = 1000
-INTER_BIRTH_TIME = 1       # mean time (years) between births
+POP_SIZE = 1000             # population size (at initialization)
+INTER_BIRTH_TIME = 0.06       # mean time (years) between births
 LIFE_EXPECTANCY = 60         # life expectancy (years)
+
+PROB_FEMALE = 0.5075    # probability of being female
+
+# for MultiCohorts
+N_COHORTS = 5
 
 
 class SEX(Enum):

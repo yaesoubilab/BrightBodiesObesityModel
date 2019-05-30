@@ -19,7 +19,8 @@ class SimOutputs:
                                                      initial_size=0,
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
-        self.pyramids = []
+        self.pyramids = []  # empty list to be populated with pyramids
+        self.pyramidPercentage = []  # group percentages
 
     def collect_end_of_sim_stat(self):
         """
@@ -33,10 +34,10 @@ class SimOutputs:
         """
         collect statistics on the birth of this individual
         """
-
         # record time of birth
-        #individual.tBirth = self.simCal.time
+        # individual.tBirth = self.simCal.time
 
+        # increment population size by 1 after a birth
         self.popSize += 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=1)
 
@@ -46,6 +47,9 @@ class SimOutputs:
         """
 
         del individual  # delete the individual
+        # decrement population size by 1 after a death
         self.popSize -= 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=-1)
+
+
 

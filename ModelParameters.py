@@ -3,22 +3,21 @@ import SimPy.RandomVariantGenerators as RVGs
 # for adding births/deaths
 import SimPy.DataFrames as df
 from SimPy.Models import MortalityModel
-from SimPy.DataFrames import Pyramid
 
 
 class Parameters:
     # class to contain the parameters of the model
     def __init__(self):
+        # exponential distribution of time to next birth
         self.timeToNextBirthDist = RVGs.Exponential(scale=D.INTER_BIRTH_TIME)
+        # exponential distribution of time to death
         self.timeToDeath = RVGs.Exponential(scale=D.LIFE_EXPECTANCY)
-        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.rows,
-                                                        list_x_min=[0, 0],
-                                                        list_x_max=[85, 1],
-                                                        list_x_delta=[5, 'int'])
-        # self.deathDist = df.DataFrameWithExpDist(rows=D.death,
-        #                                          list_x_min=[0, 0],
-        #                                          list_x_max=[85, 1],
-        #                                          list_x_delta=[5, 'int'])
+        # population distribution by age/sex
+        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.rows,                # life table
+                                                        list_x_min=[0, 0],          # minimum values for age/sex groups
+                                                        list_x_max=[85, 1],         # maximum values for age/sex groups
+                                                        list_x_delta=[5, 'int'])    # [age interval, sex categorical]
+        # population mortality rates by age/sex
         self.mortalityModel = MortalityModel(rows=D.death,           # life table
                                              group_mins=0,        # minimum value of sex group
                                              group_maxs=1,        # maximum value of sex group
@@ -27,16 +26,16 @@ class Parameters:
                                              age_delta=5)         # age interval
 
 
-# For Adding Births
-rng = RVGs.RNG(seed=1)
-probDf = df.DataFrameWithEmpiricalDist(rows=D.rows,
-                                       list_x_min=[0, 0],
-                                       list_x_max=[85, 1],
-                                       list_x_delta=[5, 'int'])
-# get a sample
-print('Get a sampled index:', probDf.sample_indices(rng=rng))
-print('Get a sampled value:', probDf.sample_values(rng=rng))
-print('')
+# # For Adding Births
+# rng = RVGs.RNG(seed=1)
+# probDf = df.DataFrameWithEmpiricalDist(rows=D.rows,
+#                                        list_x_min=[0, 0],
+#                                        list_x_max=[85, 1],
+#                                        list_x_delta=[5, 'int'])
+# # get a sample
+# print('Get a sampled index:', probDf.sample_indices(rng=rng))
+# print('Get a sampled value:', probDf.sample_values(rng=rng))
+# print('')
 
 
 # # For Adding Deaths
@@ -65,7 +64,4 @@ print('')
 # print(mortalityModel.sample_time_to_death(group=0, age=0, rng=rng))
 # print(mortalityModel.sample_time_to_death(group=0, age=32, rng=rng))
 
-# for creating age/sex distribution pyramids
-# pyramid = Pyramid(list_x_min=[0, 0],
-#                   list_x_max=[100, 1],
-#                   list_x_delta=[5, 'int'])
+
