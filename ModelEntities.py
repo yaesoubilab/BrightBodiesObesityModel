@@ -22,6 +22,14 @@ class Individual:
         self.id = id
         self.sex = age_sex[1]
         self.tBirth = sim_time - age_sex[0]    # time of birth (current time - age)
+        # TODO: one thing I noticed is that when we kill (!) an individual,
+        #   they still stay in the population (the won't be removed from
+        #   self.individuals attribute of Cohort.
+        #   So, when we do the population survey, we are still counting them
+        #   as alive people.
+        #   To resolve this issue, you should add self.ifAlive attribute to
+        #   this class, set to False whenever a person dies, and when you
+        #   do the population survey, only use the people who are alive.
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -60,12 +68,6 @@ class Cohort:
             # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
-            # TODO: I think as you also pointed out, the issue here is that we are scheduling a lot of
-            #  births right at time 0. I think you should modify the Birth event so that we can specify
-            #  whether it should schedule the next birth or not.
-            #  Now, if a birth is scheduled as part of the initialization, it should not schedule
-            #  another birth when processed.
-
             # schedule the first "birth" at approximately time 0
             self.simCal.add_event(
                 event=E.Birth(time=0.0000001*i,
@@ -74,9 +76,6 @@ class Cohort:
                               if_schedule_birth=False)  # if_schedule_birth false so the initial births do not
                                                         # schedule additional births at time 0
             )
-
-        # TODO: since now the Birth events we schedule above will not schedule any new births,
-        #  we need to reschedule our first birth here:
 
         # find the time until next birth (first true birth, person age 0) and schedule it
         time_next_birth = self.simCal.time + self.params.timeToNextBirthDist.sample(rng=self.rng)
@@ -158,7 +157,6 @@ class Cohort:
         if if_schedule_birth:
 
             sex = D.SEX.MALE.value  # sex set to male
-            # TODO: make 0.5075 a model input (add to the InputData.py)
             if self.rng.sample() < D.PROB_FEMALE:  # prob of being female
                 sex = D.SEX.FEMALE.value
 
@@ -206,10 +204,6 @@ class Cohort:
 
         # record each pyramid in list in simulation outputs
         self.simOutputs.pyramids.append(pyramid)
-
-        # TODO: this is great but I would create figures only after when the simulation is done.
-        #  I would move these to Simulate.py or add a new Support.py file to take care of creating figures.
-        #  We'll have a lot of them!
 
     # def evaluate_mortality(self, individual):
     #

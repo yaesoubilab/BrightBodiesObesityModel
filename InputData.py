@@ -8,7 +8,18 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 SIM_DURATION = 1   # (years)
 
 POP_SIZE = 1000             # population size (at initialization)
+# TODO: if you want to inform INTER_BIRTH_TIME by real data:
+#   we know from here https://www.cdc.gov/nchs/nvss/births.htm that
+#   Birth rate= 12.4 per 1,000 population
+#   therefore INTER_BIRTH_TIME = 1/12.4 for a population of size 1,000
+#   and if you want to simulate a population of size N, then
+#   INTER_BIRTH_TIME = (1/12.4) * (1000/N)
+#   I'd suggest creating a word document (which can become your thesis later) and
+#   start documenting all these calculations, assumptions around the model
+#   and source of data that you are using below
+
 INTER_BIRTH_TIME = 0.06       # mean time (years) between births
+# TODO: I don't think we are using LIFE_EXPECTANCY any longer. Feel free to delete.
 LIFE_EXPECTANCY = 60         # life expectancy (years)
 
 PROB_FEMALE = 0.5075    # probability of being female
