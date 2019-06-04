@@ -22,14 +22,6 @@ class Individual:
         self.id = id
         self.sex = age_sex[1]
         self.tBirth = sim_time - age_sex[0]    # time of birth (current time - age)
-        # TODO: one thing I noticed is that when we kill (!) an individual,
-        #   they still stay in the population (the won't be removed from
-        #   self.individuals attribute of Cohort.
-        #   So, when we do the population survey, we are still counting them
-        #   as alive people.
-        #   To resolve this issue, you should add self.ifAlive attribute to
-        #   this class, set to False whenever a person dies, and when you
-        #   do the population survey, only use the people who are alive.
         self.ifAlive = True
 
     def __str__(self):

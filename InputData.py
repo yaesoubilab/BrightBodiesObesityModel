@@ -8,17 +8,11 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 SIM_DURATION = 1   # (years)
 
 POP_SIZE = 1000             # population size (at initialization)
-# TODO: if you want to inform INTER_BIRTH_TIME by real data:
-#   we know from here https://www.cdc.gov/nchs/nvss/births.htm that
-#   Birth rate= 12.4 per 1,000 population
-#   therefore INTER_BIRTH_TIME = 1/12.4 for a population of size 1,000
-#   and if you want to simulate a population of size N, then
-#   INTER_BIRTH_TIME = (1/12.4) * (1000/N)
-#   I'd suggest creating a word document (which can become your thesis later) and
-#   start documenting all these calculations, assumptions around the model
-#   and source of data that you are using below
-# (1/12.4)*(1000/N)... where N = 1000... = 0.08064516
-INTER_BIRTH_TIME = 0.08       # mean time (years) between births
+
+# mean time (years) between births
+# source: from here https://www.cdc.gov/nchs/nvss/births.htm, we know
+# that Birth rate= 12.4 per 1,000 population
+INTER_BIRTH_TIME = (1/12.4) * (1000/POP_SIZE)
 
 PROB_FEMALE = 0.5075    # probability of being female
 
@@ -76,6 +70,11 @@ rows = [
 # for Adding Deaths: US mortality distribution by age/sex
 # limited rates to 4 decimal places for now
 # last column = mortality rate
+# TODO: When you look at the pyramids, it seems that in our simulation model
+#   we have too few people in 0-5 age groups. I am worried the mortality rates
+#   we are using below for 0-5 age groups are too high.
+#   Could you share with me the Excel file you use to estimate mortality rate
+#   just to double check? You can put it in our shared Dropbox folder.
 death = [
     [0, 0, 0.0015],    # < 5, male
     [0, 1, 0.0013],    # < 5, female
