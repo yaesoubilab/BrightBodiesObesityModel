@@ -18,7 +18,7 @@ class Parameters:
                                                         list_x_max=[85, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[5, 'int'])    # [age interval, sex categorical]
         # population mortality rates by age/sex
-        self.mortalityModel = MortalityModel(rows=D.death,           # life table
+        self.mortalityModel = MortalityModel(rows=D.death_test,           # life table
                                              group_mins=0,        # minimum value of sex group
                                              group_maxs=1,        # maximum value of sex group
                                              group_delta='int',   # sex group is a category
