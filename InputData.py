@@ -17,10 +17,8 @@ POP_SIZE = 1000             # population size (at initialization)
 #   I'd suggest creating a word document (which can become your thesis later) and
 #   start documenting all these calculations, assumptions around the model
 #   and source of data that you are using below
-
-INTER_BIRTH_TIME = 0.06       # mean time (years) between births
-# TODO: I don't think we are using LIFE_EXPECTANCY any longer. Feel free to delete.
-LIFE_EXPECTANCY = 60         # life expectancy (years)
+# (1/12.4)*(1000/N)... where N = 1000... = 0.08064516
+INTER_BIRTH_TIME = 0.08       # mean time (years) between births
 
 PROB_FEMALE = 0.5075    # probability of being female
 

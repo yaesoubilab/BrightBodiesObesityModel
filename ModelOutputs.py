@@ -48,7 +48,8 @@ class SimOutputs:
 
         # TODO: I realized that this statement (del individual) doesn't do anything
         #   and we can replace it with individual.ifAlive = False
-        del individual  # delete the individual
+        individual.ifAlive = False
+
         # decrement population size by 1 after a death
         self.popSize -= 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=-1)

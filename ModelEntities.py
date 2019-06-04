@@ -30,6 +30,7 @@ class Individual:
         #   To resolve this issue, you should add self.ifAlive attribute to
         #   this class, set to False whenever a person dies, and when you
         #   do the population survey, only use the people who are alive.
+        self.ifAlive = True
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -197,8 +198,8 @@ class Cohort:
         # for each individual, record age/sex and increment pyramid by 1
         # x values: [age, sex]
         for individual in self.individuals:
-            pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
-                                     increment=1)
+            if individual.ifAlive is True:
+                pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex], increment=1)
 
         self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())
 

@@ -11,7 +11,7 @@ class Parameters:
         # exponential distribution of time to next birth
         self.timeToNextBirthDist = RVGs.Exponential(scale=D.INTER_BIRTH_TIME)
         # exponential distribution of time to death
-        self.timeToDeath = RVGs.Exponential(scale=D.LIFE_EXPECTANCY)
+       # self.timeToDeath = RVGs.Exponential(scale=D.LIFE_EXPECTANCY)
         # population distribution by age/sex
         self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.rows,                # life table
                                                         list_x_min=[0, 0],          # minimum values for age/sex groups
