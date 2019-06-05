@@ -1,13 +1,14 @@
 from enum import Enum
 
 # trace
-TRACE_ON = True        # Set to true to trace a simulation replication
+TRACE_ON = False        # Set to true to trace a simulation replication
 DECI = 5               # the decimal point to round the numbers to in the trace file
 
 # simulation settings
-SIM_DURATION = 1   # (years)
+SIM_INIT = 0.00001  # (years) initialization period to create the cohort
+SIM_DURATION = 10   # (years)
 
-POP_SIZE = 1000             # population size (at initialization)
+POP_SIZE = 10000             # population size (at initialization)
 
 # mean time (years) between births
 # source: from here https://www.cdc.gov/nchs/nvss/births.htm, we know
@@ -17,7 +18,7 @@ INTER_BIRTH_TIME = (1/12.4) * (1000/POP_SIZE)
 PROB_FEMALE = 0.5075    # probability of being female
 
 # for MultiCohorts
-N_COHORTS = 5
+N_COHORTS = 2
 
 
 class SEX(Enum):
@@ -28,7 +29,7 @@ class SEX(Enum):
 # for Adding Births: US population distribution by age/sex (as of 7/1/17)
 # limited percentages to 3 decimal places for now (had to adjust to = 1)
 rows = [
-    [0, 0, 0.030],    # < 5, male
+    [0, 0, 0.03],    # < 5, male
     [0, 1, 0.030],    # < 5, female
     [5, 0, 0.031],    # 5-9, male
     [5, 1, 0.031],    # 5-9, female
@@ -116,8 +117,8 @@ death = [
 
 # without age 0-1 deaths
 death_test = [
-    [0, 0, 0.0002],    # < 5, male
-    [0, 1, 0.0002],    # < 5, female
+    [0, 0, 0.000],    # < 5, male
+    [0, 1, 0.000],    # < 5, female
     [5, 0, 0.0001],    # 5-9, male
     [5, 1, 0.0001],    # 5-9, female
     [10, 0, 0.0002],   # 10-14, male

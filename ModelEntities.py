@@ -13,15 +13,15 @@ import SimPy.InOutFunctions as IO
 
 
 class Individual:
-    def __init__(self, id, age_sex, sim_time):
+    def __init__(self, id, age_sex, t_birth):
         """ create an individual
         :param id: (integer) patient ID
         :param age_sex: [age, sex]
-        :param sim_time: simulation time
+        :param t_birth: simulation time of birth
         """
         self.id = id
         self.sex = age_sex[1]
-        self.tBirth = sim_time - age_sex[0]    # time of birth (current time - age)
+        self.tBirth = t_birth - age_sex[0]    # time of birth (current time - age)
         self.ifAlive = True
 
     def __str__(self):
@@ -61,10 +61,13 @@ class Cohort:
             # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
+            # time of birth
+            t_birth = D.SIM_INIT * i / D.POP_SIZE
+
             # schedule the first "birth" at approximately time 0
             self.simCal.add_event(
-                event=E.Birth(time=0.0000001*i,
-                              individual=Individual(id=i, age_sex=age_sex, sim_time=self.simCal.time),
+                event=E.Birth(time=t_birth,
+                              individual=Individual(id=i, age_sex=age_sex, t_birth=t_birth),
                               cohort=self,
                               if_schedule_birth=False)  # if_schedule_birth false so the initial births do not
                                                         # schedule additional births at time 0
@@ -80,19 +83,19 @@ class Cohort:
         # schedule the next birth
         self.simCal.add_event(
             event=E.Birth(time=time_next_birth,
-                          individual=Individual(id=D.POP_SIZE + 1, age_sex=[0, sex], sim_time=self.simCal.time),
+                          individual=Individual(id=D.POP_SIZE + 1, age_sex=[0, sex], t_birth=time_next_birth),
                           cohort=self,
                           if_schedule_birth=True)  # if_schedule_birth allows Birth event to schedule future births
         )
 
-        # schedule population distribution survey event at t=.1
+        # schedule population distribution survey event right after initialization period
         self.simCal.add_event(
-            event=E.PopSurvey(time=.1,
+            event=E.PopSurvey(time=D.SIM_INIT,
                               individual=self,
                               cohort=self))
-        # schedule population distribution survey event at t=1
+        # schedule population distribution survey event at the end of simulation
         self.simCal.add_event(
-            event=E.PopSurvey(time=1,
+            event=E.PopSurvey(time=D.SIM_DURATION,
                               individual=self,
                               cohort=self))
 
@@ -131,6 +134,7 @@ class Cohort:
         self.individuals.append(individual)
 
         # find the time to death for that individual (using mortality distribution)
+
         time_to_death = self.params.mortalityModel.sample_time_to_death(group=individual.sex,
                                                                         age=individual.get_age(self.simCal.time),
                                                                         rng=self.rng)
@@ -142,8 +146,7 @@ class Cohort:
             event=E.Death(
                 time=time_death,
                 individual=individual,
-                cohort=self)
-        )
+                cohort=self))
 
         # if schedule birth is True, do this
         # if schedule birth is False, skip this
@@ -159,7 +162,7 @@ class Cohort:
             # schedule the next birth
             self.simCal.add_event(
                 event=E.Birth(time=time_next_birth,
-                              individual=Individual(id=individual.id + 1, age_sex=[0, sex], sim_time=self.simCal.time),
+                              individual=Individual(id=individual.id + 1, age_sex=[0, sex], t_birth=time_next_birth),
                               cohort=self,
                               if_schedule_birth=True)
             )
@@ -168,7 +171,6 @@ class Cohort:
         """
         process the death of an individual
         """
-
         # trace
         self.trace.add_message(
             'Processing the death of ' + str(individual) + '.')
