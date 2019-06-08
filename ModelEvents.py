@@ -75,25 +75,3 @@ class PopSurvey(Event):
 
         self.cohort.process_pop_survey()
 
-
-# class EvaluateMortality(Event):
-#     def __init__(self, time, individual, cohort):
-#         """
-#         Evaluates death of individual
-#         """
-#         # initialize master class
-#         Event.__init__(self, time=time, priority=Priority.EVALMORT.value)
-#
-#         self.individual = individual
-#         self.cohort = cohort
-#
-#         # trace
-#         self.cohort.trace.add_message(
-#             str(individual) + ' '
-#         )
-#
-#     def process(self):
-#         """ """
-#
-#         self.cohort.evaluate_mortality(individual=self.individual)
-

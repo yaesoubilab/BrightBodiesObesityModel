@@ -203,33 +203,6 @@ class Cohort:
         # record each pyramid in list in simulation outputs
         self.simOutputs.pyramids.append(pyramid)
 
-    # def evaluate_mortality(self, individual):
-    #
-    #     # trace
-    #
-    #     age = self.simCal.time - individual.tBirth
-    #
-    #     # utilize as t and add to time under schedule event mortality
-    #     time_to_next_age_break = 5*math.floor(age/5) + 5 - age
-    #
-    #     # find time until death (time of death - current time)
-    #     t = self.params.deathDist.get_dist(x_value=[age, individual.sex]).sample(rng=self.rng) - self.simCal.time
-    #     # if time until death is less than time until the next age break (interval)
-    #     if t <= time_to_next_age_break:
-    #         # schedule death at time t
-    #         self.simCal.add_event(
-    #             event=E.Death(
-    #                 time=self.simCal.time + t,
-    #                 individual=individual,
-    #                 cohort=self)
-    #         )
-    #     else: # else schedule Evaluate Mortality event at next age break (interval)
-    #         self.simCal.add_event(
-    #             event=E.EvaluateMortality(time=self.simCal.time + time_to_next_age_break,
-    #                                       individual=individual,
-    #                                       cohort=self)
-    #         )
-
     def print_trace(self):
         """ outputs trace """
 

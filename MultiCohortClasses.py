@@ -1,10 +1,5 @@
 from ModelEntities import Cohort
-import SimPy.DiscreteEventSim as SimCls
-import SimPy.SimulationSupport as Sim
-import ModelOutputs as O
 import SimPy.RandomVariantGenerators as RVGs
-# use Stat when extracting outcomes
-import SimPy.StatisticalClasses as Stat
 import InputData as D
 
 

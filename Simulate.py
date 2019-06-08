@@ -24,9 +24,7 @@ Path.graph_sample_paths(
     x_label='Years'
 )
 
-
-# colors can be chosen from here:
-# https://www.webucator.com/blog/2015/03/python-color-constants-module/
+# population pyramids
 Pyr.plot_pyramids(observed_data=D.rows,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
                   x_lim=10,
