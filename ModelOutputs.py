@@ -34,8 +34,6 @@ class SimOutputs:
         """
         collect statistics on the birth of this individual
         """
-        # record time of birth
-        # individual.tBirth = self.simCal.time
 
         # increment population size by 1 after a birth
         self.popSize += 1

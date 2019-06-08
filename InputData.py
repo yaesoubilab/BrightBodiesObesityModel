@@ -71,11 +71,6 @@ rows = [
 # for Adding Deaths: US mortality distribution by age/sex
 # limited rates to 4 decimal places for now
 # last column = mortality rate
-# TODO: When you look at the pyramids, it seems that in our simulation model
-#   we have too few people in 0-5 age groups. I am worried the mortality rates
-#   we are using below for 0-5 age groups are too high.
-#   Could you share with me the Excel file you use to estimate mortality rate
-#   just to double check? You can put it in our shared Dropbox folder.
 death = [
     [0, 0, 0.0015],    # < 5, male
     [0, 1, 0.0013],    # < 5, female
@@ -116,6 +111,7 @@ death = [
 ]
 
 # without age 0-1 deaths
+# TODO: This can be deleted.
 death_test = [
     [0, 0, 0.000],    # < 5, male
     [0, 1, 0.000],    # < 5, female

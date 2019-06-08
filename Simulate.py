@@ -25,7 +25,8 @@ Path.graph_sample_paths(
 )
 
 
-# TODO: you can choose colors from here: https://www.webucator.com/blog/2015/03/python-color-constants-module/
+# colors can be chosen from here:
+# https://www.webucator.com/blog/2015/03/python-color-constants-module/
 Pyr.plot_pyramids(observed_data=D.rows,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
                   x_lim=10,

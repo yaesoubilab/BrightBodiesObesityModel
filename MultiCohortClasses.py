@@ -47,13 +47,6 @@ class MultiSimOutputs:
 
     def __init__(self):
 
-        # self.simCal = SimCls.SimulationCalendar()  # simulation calendar
-        # # simulation outputs
-        # self.simOutputs = O.SimOutputs(sim_cal=self.simCal, sim_rep=id, trace_on=D.TRACE_ON)
-        # # simulation trace
-        # self.trace = Sim.DiscreteEventSimTrace(sim_calendar=self.simCal,
-        #                                        if_should_trace=D.TRACE_ON,
-        #                                        deci=D.DECI)
         self.pathPopSizes = []  # empty list to be populated with population sizes
         self.pyramidPercentagesStart = []
         self.pyramidPercentagesEnd = []

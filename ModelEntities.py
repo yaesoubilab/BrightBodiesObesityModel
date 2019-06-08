@@ -27,8 +27,11 @@ class Individual:
     def __str__(self):
         return "Individual {0}".format(self.id)
 
-    # get age (current time - time of birth)
     def get_age(self, current_time):
+        """
+        :param current_time: current simulation time
+        :return: age (current time - time of birth)
+        """
         return current_time - self.tBirth
 
 
