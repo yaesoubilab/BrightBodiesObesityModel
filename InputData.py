@@ -8,7 +8,7 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 SIM_INIT = 0.00001  # (years) initialization period to create the cohort
 SIM_DURATION = 10   # (years)
 
-POP_SIZE = 10000             # population size (at initialization)
+POP_SIZE = 1000             # population size (at initialization)
 
 # mean time (years) between births
 # source: from here https://www.cdc.gov/nchs/nvss/births.htm, we know
