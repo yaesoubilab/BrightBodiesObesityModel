@@ -47,19 +47,44 @@ Path.graph_sample_paths(
 # NEW PYRAMIDS FOR BRIGHT BODIES AGES ONLY
 # colors can be chosen from here:
 # https://www.webucator.com/blog/2015/03/python-color-constants-module/
+# Pyr.plot_pyramids(observed_data=D.age_sex_dist,
+#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
+#                   x_lim=10,
+#                   title="   Cohort Pyramids at the Initialization",
+#                   colors=('blue', 'red', 'black'),
+#                   length_of_sim_bars=100,
+#                   scale_of_sim_legend=1,
+#                   transparency=0.5)
+# Pyr.plot_pyramids(observed_data=D.age_sex_dist,
+#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
+#                   x_lim=10,
+#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
+#                   colors=('blue', 'red', 'black'),
+#                   length_of_sim_bars=100,
+#                   scale_of_sim_legend=1,
+#                   transparency=0.5)
+# NEW PYRAMID CHARACTERISTICS TO MATCH BB
+# at initialization
 Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
+                  fig_size=(6, 4),
                   x_lim=10,
-                  title="   Cohort Pyramids at the Initialization",
+                  title="Cohort Pyramids at Initialization",
                   colors=('blue', 'red', 'black'),
-                  length_of_sim_bars=100,
-                  scale_of_sim_legend=1,
+                  y_labels=['8', '9', '10', '11', '12', '13', '14', '15', '16'],
+                  age_group_width=1,
+                  length_of_sim_bars=750,
+                  scale_of_sim_legend=0.5,
                   transparency=0.5)
-Pyr.plot_pyramids(observed_data=D.age_sex_dist,
+# at end of sim
+Pyr.plot_pyramids(observed_data=D.age_sex_dist_end,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
+                  fig_size=(6, 4),
                   x_lim=10,
-                  title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
+                  title="Cohort Pyramids at Year {}".format(D.SIM_DURATION),
                   colors=('blue', 'red', 'black'),
-                  length_of_sim_bars=100,
-                  scale_of_sim_legend=1,
+                  y_labels=['17', '18', '19', '20', '21', '22', '23', '24', '25', '26'],
+                  age_group_width=1,
+                  length_of_sim_bars=750,
+                  scale_of_sim_legend=0.5,
                   transparency=0.5)

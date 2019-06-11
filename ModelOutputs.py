@@ -38,17 +38,17 @@ class SimOutputs:
         # increment population size by 1 after a birth
         self.popSize += 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=1)
-
-    def collect_death(self, individual):
-        """
-        collect statistics on the death of this individual
-        """
-
-        individual.ifAlive = False
-
-        # decrement population size by 1 after a death
-        self.popSize -= 1
-        self.pathPopSize.record_increment(time=self.simCal.time, increment=-1)
-
+    #
+    # def collect_death(self, individual):
+    #     """
+    #     collect statistics on the death of this individual
+    #     """
+    #
+    #     individual.ifAlive = False
+    #
+    #     # decrement population size by 1 after a death
+    #     self.popSize -= 1
+    #     self.pathPopSize.record_increment(time=self.simCal.time, increment=-1)
+    #
 
 

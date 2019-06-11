@@ -50,6 +50,33 @@ age_sex_dist = [
     [16, 1, 0.055305708]    # 16, female
 ]
 
+# for Bright Bodies FOLLOW UP (17-26 y/o)
+# use at end of sim (10 years)
+# fix decimals later
+age_sex_dist_end = [
+    [17, 0, 0.048929],   # 17, male
+    [17, 1, 0.046799],   # 17, female
+    [18, 0, 0.048929],   # 18, male
+    [18, 1, 0.046799],   # 18, female
+    [19, 0, 0.048929],   # 19, male
+    [19, 1, 0.046799],   # 19, female
+    [20, 0, 0.05142],    # 20, male
+    [20, 1, 0.048793],   # 20, female
+    [21, 0, 0.05142],    # 21, male
+    [21, 1, 0.048793],   # 21, female
+    [22, 0, 0.05142],    # 22, male
+    [22, 1, 0.048793],   # 22, female
+    [23, 0, 0.05142],    # 23, male
+    [23, 1, 0.048793],   # 23, female
+    [24, 0, 0.05142],    # 24, male
+    [24, 1, 0.048793],   # 24, female
+    [25, 0, 0.053912],   # 25, male
+    [25, 1, 0.051964],   # 25, female
+    [26, 0, 0.053912],   # 26, male
+    [26, 1, 0.051964]    # 26, female
+]
+
+
 # for Adding Births: US population distribution by age/sex (as of 7/1/17)
 # limited percentages to 3 decimal places for now (had to adjust to = 1)
 rows = [
