@@ -25,9 +25,29 @@ Path.graph_sample_paths(
 )
 
 
+# # colors can be chosen from here:
+# # https://www.webucator.com/blog/2015/03/python-color-constants-module/
+# Pyr.plot_pyramids(observed_data=D.rows,
+#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
+#                   x_lim=10,
+#                   title="   Cohort Pyramids at the Initialization",
+#                   colors=('blue', 'red', 'black'),
+#                   length_of_sim_bars=100,
+#                   scale_of_sim_legend=1,
+#                   transparency=0.5)
+# Pyr.plot_pyramids(observed_data=D.rows,
+#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
+#                   x_lim=10,
+#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
+#                   colors=('blue', 'red', 'black'),
+#                   length_of_sim_bars=100,
+#                   scale_of_sim_legend=1,
+#                   transparency=0.5)
+
+# NEW PYRAMIDS FOR BRIGHT BODIES AGES ONLY
 # colors can be chosen from here:
 # https://www.webucator.com/blog/2015/03/python-color-constants-module/
-Pyr.plot_pyramids(observed_data=D.rows,
+Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
                   x_lim=10,
                   title="   Cohort Pyramids at the Initialization",
@@ -35,7 +55,7 @@ Pyr.plot_pyramids(observed_data=D.rows,
                   length_of_sim_bars=100,
                   scale_of_sim_legend=1,
                   transparency=0.5)
-Pyr.plot_pyramids(observed_data=D.rows,
+Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
                   x_lim=10,
                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),

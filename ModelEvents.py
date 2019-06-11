@@ -5,10 +5,9 @@ from SimPy.DiscreteEventSim import SimulationEvent as Event
 
 class Priority(Enum):
     """ priority of events (low number implies higher priority)"""
-    BIRTH = 1
-    DEATH = 0
-    POP_SURVEY = 2
-    # EVALMORT = 2
+    BIRTH = 0
+    # DEATH = 0
+    POP_SURVEY = 1
 
 
 class Birth(Event):
@@ -38,25 +37,25 @@ class Birth(Event):
                                   if_schedule_birth=self.ifScheduleBirth)
 
 
-class Death(Event):
-    def __init__(self, time, individual, cohort):
-        """
-        creates the death of an individual
-        """
-        # initialize the master class
-        Event.__init__(self, time=time, priority=Priority.DEATH.value)
-
-        self.individual = individual
-        self.cohort = cohort
-
-        # trace
-        self.cohort.trace.add_message(
-            str(individual) + ' will die at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
-
-    def process(self):
-        """ processes the death of an individual """
-
-        self.cohort.process_death(individual=self.individual)
+# class Death(Event):
+#     def __init__(self, time, individual, cohort):
+#         """
+#         creates the death of an individual
+#         """
+#         # initialize the master class
+#         Event.__init__(self, time=time, priority=Priority.DEATH.value)
+#
+#         self.individual = individual
+#         self.cohort = cohort
+#
+#         # trace
+#         self.cohort.trace.add_message(
+#             str(individual) + ' will die at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
+#
+#     def process(self):
+#         """ processes the death of an individual """
+#
+#         self.cohort.process_death(individual=self.individual)
 
 
 class PopSurvey(Event):
