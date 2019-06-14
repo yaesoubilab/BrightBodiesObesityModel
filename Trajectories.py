@@ -12,7 +12,6 @@ f_13_rows = InOutSupport.read_csv_rows('female_13_obese.csv',
                                        delimiter=',',
                                        if_del_first_row=True,
                                        if_convert_float=True)
-f_13_rows = f_13_rows[1:]
 # print('Testing reading by rows for female 13:')
 # for row in f_13_rows:
 #     print(row)
@@ -21,8 +20,6 @@ f_13_rows = f_13_rows[1:]
 
 # Female 14
 f_14_rows = InOutSupport.read_csv_rows('female_14_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_14_rows = f_14_rows[1:]
-
 # print('Testing reading by rows for female 14:')
 # for row in f_14_rows:
 #     print(row)
@@ -31,8 +28,6 @@ f_14_rows = f_14_rows[1:]
 
 # # Female 15
 f_15_rows = InOutSupport.read_csv_rows('female_15_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_15_rows = f_15_rows[1:]
-
 # print('Testing reading by rows for female 15:')
 # for row in f_15_rows:
 #     print(row)
@@ -41,7 +36,6 @@ f_15_rows = f_15_rows[1:]
 
 # # Female 16
 f_16_rows = InOutSupport.read_csv_rows('female_16_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_16_rows = f_16_rows[1:]
 # print('Testing reading by rows for female 16:')
 # for row in f_16_rows:
 #     print(row)
@@ -51,7 +45,6 @@ f_16_rows = f_16_rows[1:]
 # MALES
 # Male 13
 m_13_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_13_rows = m_13_rows[1:]
 # print('Testing reading by rows for male 13:')
 # for row in m_13_rows:
 #     print(row)
@@ -60,7 +53,6 @@ m_13_rows = m_13_rows[1:]
 
 # Male 14
 m_14_rows = InOutSupport.read_csv_rows('male_14_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_14_rows = m_14_rows[1:]
 # print('Testing reading by rows for male 14:')
 # for row in m_14_rows:
 #     print(row)
@@ -69,8 +61,6 @@ m_14_rows = m_14_rows[1:]
 
 # Male 15
 m_15_rows = InOutSupport.read_csv_rows('male_15_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_15_rows = m_15_rows[1:]
-
 # print('Testing reading by rows for male 15:')
 # for row in m_15_rows:
 #     print(row)
@@ -79,8 +69,6 @@ m_15_rows = m_15_rows[1:]
 
 # Male 16
 m_16_rows = InOutSupport.read_csv_rows('male_16_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_16_rows = m_16_rows[1:]
-
 # print('Testing reading by rows for male 16:')
 # for row in m_16_rows:
 #     print(row)
@@ -89,25 +77,15 @@ m_16_rows = m_16_rows[1:]
 
 # younger ages - using older data for now to run model without errors
 f_8_rows = InOutSupport.read_csv_rows('female_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_8_rows = f_8_rows[1:]
 f_9_rows = InOutSupport.read_csv_rows('female_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_9_rows = f_9_rows[1:]
 f_10_rows = InOutSupport.read_csv_rows('female_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_10_rows = f_10_rows[1:]
 f_11_rows = InOutSupport.read_csv_rows('female_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_11_rows = f_11_rows[1:]
 f_12_rows = InOutSupport.read_csv_rows('female_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-f_12_rows = f_12_rows[1:]
 m_8_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_8_rows = m_8_rows[1:]
 m_9_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_9_rows = m_9_rows[1:]
 m_10_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_10_rows = m_10_rows[1:]
 m_11_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_11_rows = m_11_rows[1:]
 m_12_rows = InOutSupport.read_csv_rows('male_13_obese.csv', delimiter=',', if_del_first_row=True, if_convert_float=True)
-m_12_rows = m_12_rows[1:]
 
 
 # class to select random row from rows (specific to age/sex)
