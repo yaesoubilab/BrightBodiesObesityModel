@@ -2,7 +2,6 @@ import InputData as D
 import SimPy.RandomVariantGenerators as RVGs
 # for adding births/deaths
 import SimPy.DataFrames as df
-from SimPy.Models import MortalityModel
 
 
 class Parameters:

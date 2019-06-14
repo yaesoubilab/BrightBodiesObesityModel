@@ -7,7 +7,6 @@ import SimPy.Plots.FigSupport as Fig
 from SimPy.Plots import PopulationPyramids as Pyr
 import Support as Support
 
-
 # for MultiCohort
 multiCohort = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
@@ -22,6 +21,14 @@ Path.graph_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathPopSizes,
     title='Population Size',
     x_label='Years'
+)
+
+# sample paths for average BMIs at each time step
+Path.graph_sample_paths(
+    sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
+    title='Average BMIs',
+    x_label='Sim Year',
+    connect='line'
 )
 
 
@@ -76,15 +83,9 @@ Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   length_of_sim_bars=250,
                   scale_of_sim_legend=0.75,
                   transparency=0.5)
-# at end of sim
-Pyr.plot_pyramids(observed_data=D.age_sex_dist_end,
-                  simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
-                  fig_size=(6, 4),
-                  x_lim=10,
-                  title="Cohort Pyramids at Year {}".format(D.SIM_DURATION),
-                  colors=('blue', 'red', 'black'),
-                  y_labels=['17', '18', '19', '20', '21', '22', '23', '24', '25', '26'],
-                  age_group_width=1,
-                  length_of_sim_bars=250,
-                  scale_of_sim_legend=0.75,
-                  transparency=0.5)
+
+
+
+
+
+

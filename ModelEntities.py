@@ -6,23 +6,26 @@ import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
 from SimPy.Plots import PopulationPyramids as Pyr
+import Trajectories as T
 
-import math
+from math import floor
 import ModelParameters as P
 import SimPy.InOutFunctions as IO
 
 
 class Individual:
-    def __init__(self, id, age_sex, t_birth):
+    def __init__(self, id, age_sex, bmi_trajectory):
         """ create an individual
         :param id: (integer) patient ID
         :param age_sex: [age, sex]
         :param t_birth: simulation time of birth
+        :param bmi_trajectory: bmi trajectory for individual (based on age/sex)
         """
         self.id = id
         self.sex = age_sex[1]
-        self.tBirth = t_birth - age_sex[0]    # time of birth (current time - age)
+        self.initialAge = age_sex[0]
         self.ifAlive = True
+        self.trajectory = bmi_trajectory
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -32,7 +35,7 @@ class Individual:
         :param current_time: current simulation time
         :return: age (current time - time of birth)
         """
-        return current_time - self.tBirth
+        return current_time + self.initialAge
 
 
 class Cohort:
@@ -65,35 +68,72 @@ class Cohort:
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
             # time of birth
+
             t_birth = D.SIM_INIT * i / D.POP_SIZE
+
+            # find the BMI trajectory
+            rows = T.df_trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
+            bmi_trajectory = rows.sample_traj(rng=self.rng)
 
             # schedule the first "birth" at approximately time 0
             self.simCal.add_event(
                 event=E.Birth(time=t_birth,
-                              individual=Individual(id=i, age_sex=age_sex, t_birth=t_birth),
+                              individual=Individual(id=i,
+                                                    age_sex=age_sex,
+                                                    bmi_trajectory=bmi_trajectory),
                               cohort=self,
                               if_schedule_birth=False)  # if_schedule_birth false so the initial births do not
                                                         # schedule additional births at time 0
             )
 
-        # # find the time until next birth (first true birth, person age 0) and schedule it
-        # time_next_birth = self.simCal.time + self.params.timeToNextBirthDist.sample(rng=self.rng)
-        #
-        # sex = D.SEX.MALE.value  # sex set to male
-        # if self.rng.sample() < D.PROB_FEMALE:  # prob of being female
-        #     sex = D.SEX.FEMALE.value
-
-        # # schedule the next birth
-        # self.simCal.add_event(
-        #     event=E.Birth(time=time_next_birth,
-        #                   individual=Individual(id=D.POP_SIZE + 1, age_sex=[0, sex], t_birth=time_next_birth),
-        #                   cohort=self,
-        #                   if_schedule_birth=True)  # if_schedule_birth allows Birth event to schedule future births
-        # )
-
         # schedule population distribution survey event right after initialization period
         self.simCal.add_event(
             event=E.PopSurvey(time=D.SIM_INIT,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 1
+        self.simCal.add_event(
+            event=E.PopSurvey(time=1,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 2
+        self.simCal.add_event(
+            event=E.PopSurvey(time=2,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 3
+        self.simCal.add_event(
+            event=E.PopSurvey(time=3,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 4
+        self.simCal.add_event(
+            event=E.PopSurvey(time=4,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 5
+        self.simCal.add_event(
+            event=E.PopSurvey(time=5,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 6
+        self.simCal.add_event(
+            event=E.PopSurvey(time=6,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 7
+        self.simCal.add_event(
+            event=E.PopSurvey(time=7,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 8
+        self.simCal.add_event(
+            event=E.PopSurvey(time=8,
+                              individual=self,
+                              cohort=self))
+        # schedule at time 9
+        self.simCal.add_event(
+            event=E.PopSurvey(time=9,
                               individual=self,
                               cohort=self))
         # schedule population distribution survey event at the end of simulation
@@ -169,28 +209,11 @@ class Cohort:
         #                       cohort=self,
         #                       if_schedule_birth=True)
         #     )
-    #
-    # def process_death(self, individual):
-    #     """
-    #     process the death of an individual
-    #     """
-    #     # trace
-    #     self.trace.add_message(
-    #         'Processing the death of ' + str(individual) + '.')
-    #
-    #     # collect statistics on new birth
-    #     self.simOutputs.collect_death(individual=individual)
 
     def process_pop_survey(self):
         """
         processes the population distribution pyramid (age/sex)
         """
-
-        # create pyramid
-        # pyramid = Pyramid(list_x_min=[0, 0],
-        #                   list_x_max=[100, 1],
-        #                   list_x_delta=[5, 'int'],
-        #                   name='Population Pyramid at Time ' + str(self.simCal.time))
 
         # new pyramid
         pyramid = Pyramid(list_x_min=[8, 0],
@@ -200,41 +223,28 @@ class Cohort:
 
         # for each individual, record age/sex and increment pyramid by 1
         # x values: [age, sex]
+        self.simOutputs.bmiTimeStep = []
         for individual in self.individuals:
             if individual.ifAlive is True:
-                pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex], increment=1)
+                pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
+                                         increment=1)
+
+            # record BMI
+            index_by_time = floor(self.simCal.time) + 1
+            self.simOutputs.bmiTimeStep.append(individual.trajectory[index_by_time])
+            # self.simOutputs.collect_bmi(individual=individual)
+            print(int(individual.get_age(current_time=self.simCal.time)),
+                  "year old at time step:",
+                  index_by_time,
+                  '=',
+                  individual.trajectory[index_by_time])
+
+        self.simOutputs.collect_bmi()
 
         self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())
 
         # record each pyramid in list in simulation outputs
         self.simOutputs.pyramids.append(pyramid)
-
-    # def evaluate_mortality(self, individual):
-    #
-    #     # trace
-    #
-    #     age = self.simCal.time - individual.tBirth
-    #
-    #     # utilize as t and add to time under schedule event mortality
-    #     time_to_next_age_break = 5*math.floor(age/5) + 5 - age
-    #
-    #     # find time until death (time of death - current time)
-    #     t = self.params.deathDist.get_dist(x_value=[age, individual.sex]).sample(rng=self.rng) - self.simCal.time
-    #     # if time until death is less than time until the next age break (interval)
-    #     if t <= time_to_next_age_break:
-    #         # schedule death at time t
-    #         self.simCal.add_event(
-    #             event=E.Death(
-    #                 time=self.simCal.time + t,
-    #                 individual=individual,
-    #                 cohort=self)
-    #         )
-    #     else: # else schedule Evaluate Mortality event at next age break (interval)
-    #         self.simCal.add_event(
-    #             event=E.EvaluateMortality(time=self.simCal.time + time_to_next_age_break,
-    #                                       individual=individual,
-    #                                       cohort=self)
-    #         )
 
     def print_trace(self):
         """ outputs trace """

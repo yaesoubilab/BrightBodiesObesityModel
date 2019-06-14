@@ -6,7 +6,6 @@ from SimPy.DiscreteEventSim import SimulationEvent as Event
 class Priority(Enum):
     """ priority of events (low number implies higher priority)"""
     BIRTH = 0
-    # DEATH = 0
     POP_SURVEY = 1
 
 
@@ -37,27 +36,6 @@ class Birth(Event):
                                   if_schedule_birth=self.ifScheduleBirth)
 
 
-# class Death(Event):
-#     def __init__(self, time, individual, cohort):
-#         """
-#         creates the death of an individual
-#         """
-#         # initialize the master class
-#         Event.__init__(self, time=time, priority=Priority.DEATH.value)
-#
-#         self.individual = individual
-#         self.cohort = cohort
-#
-#         # trace
-#         self.cohort.trace.add_message(
-#             str(individual) + ' will die at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
-#
-#     def process(self):
-#         """ processes the death of an individual """
-#
-#         self.cohort.process_death(individual=self.individual)
-
-
 class PopSurvey(Event):
     def __init__(self, time, individual, cohort):
         """
@@ -73,26 +51,4 @@ class PopSurvey(Event):
         """ processes the population distribution test """
 
         self.cohort.process_pop_survey()
-
-
-# class EvaluateMortality(Event):
-#     def __init__(self, time, individual, cohort):
-#         """
-#         Evaluates death of individual
-#         """
-#         # initialize master class
-#         Event.__init__(self, time=time, priority=Priority.EVALMORT.value)
-#
-#         self.individual = individual
-#         self.cohort = cohort
-#
-#         # trace
-#         self.cohort.trace.add_message(
-#             str(individual) + ' '
-#         )
-#
-#     def process(self):
-#         """ """
-#
-#         self.cohort.evaluate_mortality(individual=self.individual)
 

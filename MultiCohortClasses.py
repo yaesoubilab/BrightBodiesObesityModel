@@ -51,6 +51,8 @@ class MultiSimOutputs:
         self.pyramidPercentagesStart = []
         self.pyramidPercentagesEnd = []
 
+        self.pathOfBMIs = []
+
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
 
@@ -59,4 +61,7 @@ class MultiSimOutputs:
 
         # store all cohort pyramid percentages
         self.pyramidPercentagesStart.append(simulated_cohort.simOutputs.pyramidPercentage[0])
-        self.pyramidPercentagesEnd.append(simulated_cohort.simOutputs.pyramidPercentage[1])
+        # self.pyramidPercentagesEnd.append(simulated_cohort.simOutputs.pyramidPercentage[1])
+
+        self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)
+
