@@ -1,11 +1,8 @@
-import ModelEntities as Cls
 import MultiCohortClasses as MultiCls
 import InputData as D
 import ModelParameters as P
 import SimPy.Plots.SamplePaths as Path
-import SimPy.Plots.FigSupport as Fig
 from SimPy.Plots import PopulationPyramids as Pyr
-import Support as Support
 
 # for MultiCohort
 multiCohort = MultiCls.MultiCohort(
@@ -27,51 +24,11 @@ Path.graph_sample_paths(
 Path.graph_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
     title='Average BMIs',
-    x_label='Sim Year',
-    connect='line'
+    x_label='Simulation Year',
+    connect='line'  # line graph (vs. step wise)
 )
 
-
-# # colors can be chosen from here:
-# # https://www.webucator.com/blog/2015/03/python-color-constants-module/
-# Pyr.plot_pyramids(observed_data=D.rows,
-#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
-#                   x_lim=10,
-#                   title="   Cohort Pyramids at the Initialization",
-#                   colors=('blue', 'red', 'black'),
-#                   length_of_sim_bars=100,
-#                   scale_of_sim_legend=1,
-#                   transparency=0.5)
-# Pyr.plot_pyramids(observed_data=D.rows,
-#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
-#                   x_lim=10,
-#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
-#                   colors=('blue', 'red', 'black'),
-#                   length_of_sim_bars=100,
-#                   scale_of_sim_legend=1,
-#                   transparency=0.5)
-
-# NEW PYRAMIDS FOR BRIGHT BODIES AGES ONLY
-# colors can be chosen from here:
-# https://www.webucator.com/blog/2015/03/python-color-constants-module/
-# Pyr.plot_pyramids(observed_data=D.age_sex_dist,
-#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
-#                   x_lim=10,
-#                   title="   Cohort Pyramids at the Initialization",
-#                   colors=('blue', 'red', 'black'),
-#                   length_of_sim_bars=100,
-#                   scale_of_sim_legend=1,
-#                   transparency=0.5)
-# Pyr.plot_pyramids(observed_data=D.age_sex_dist,
-#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesEnd,
-#                   x_lim=10,
-#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
-#                   colors=('blue', 'red', 'black'),
-#                   length_of_sim_bars=100,
-#                   scale_of_sim_legend=1,
-#                   transparency=0.5)
-# NEW PYRAMID CHARACTERISTICS TO MATCH BB
-# at initialization
+# PYRAMID (cohort with characteristics (age/sex) to match Bright Bodies) - at Initialization
 Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
                   fig_size=(6, 4),
@@ -83,6 +40,19 @@ Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   length_of_sim_bars=250,
                   scale_of_sim_legend=0.75,
                   transparency=0.5)
+
+# Colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
+
+# Example: Pyramid Plot (for other sim years)
+# Pyr.plot_pyramids(observed_data=D.rows,
+#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
+#                   x_lim=10,
+#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
+#                   colors=('blue', 'red', 'black'),
+#                   length_of_sim_bars=100,
+#                   scale_of_sim_legend=1,
+#                   transparency=0.5)
+
 
 
 

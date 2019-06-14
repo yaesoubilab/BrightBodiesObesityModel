@@ -1,7 +1,4 @@
 from ModelEntities import Cohort
-import SimPy.DiscreteEventSim as SimCls
-import SimPy.SimulationSupport as Sim
-import ModelOutputs as O
 import SimPy.RandomVariantGenerators as RVGs
 # use Stat when extracting outcomes
 import SimPy.StatisticalClasses as Stat
@@ -61,7 +58,7 @@ class MultiSimOutputs:
 
         # store all cohort pyramid percentages
         self.pyramidPercentagesStart.append(simulated_cohort.simOutputs.pyramidPercentage[0])
-        # self.pyramidPercentagesEnd.append(simulated_cohort.simOutputs.pyramidPercentage[1])
 
+        # store all cohort average BMI paths
         self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)
 

@@ -5,12 +5,8 @@ import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
-from SimPy.Plots import PopulationPyramids as Pyr
 import Trajectories as T
-
 from math import floor
-import ModelParameters as P
-import SimPy.InOutFunctions as IO
 
 
 class Individual:
@@ -18,7 +14,6 @@ class Individual:
         """ create an individual
         :param id: (integer) patient ID
         :param age_sex: [age, sex]
-        :param t_birth: simulation time of birth
         :param bmi_trajectory: bmi trajectory for individual (based on age/sex)
         """
         self.id = id
@@ -33,7 +28,7 @@ class Individual:
     def get_age(self, current_time):
         """
         :param current_time: current simulation time
-        :return: age (current time - time of birth)
+        :return: age (current time - age at initialization)
         """
         return current_time + self.initialAge
 
@@ -67,8 +62,7 @@ class Cohort:
             # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
-            # time of birth
-
+            # time of "birth" (initialization)
             t_birth = D.SIM_INIT * i / D.POP_SIZE
 
             # find the BMI trajectory
@@ -81,9 +75,7 @@ class Cohort:
                               individual=Individual(id=i,
                                                     age_sex=age_sex,
                                                     bmi_trajectory=bmi_trajectory),
-                              cohort=self,
-                              if_schedule_birth=False)  # if_schedule_birth false so the initial births do not
-                                                        # schedule additional births at time 0
+                              cohort=self)
             )
 
         # schedule population distribution survey event right after initialization period
@@ -136,7 +128,7 @@ class Cohort:
             event=E.PopSurvey(time=9,
                               individual=self,
                               cohort=self))
-        # schedule population distribution survey event at the end of simulation
+        # schedule population distribution survey event at the end of simulation (time 10)
         self.simCal.add_event(
             event=E.PopSurvey(time=D.SIM_DURATION,
                               individual=self,
@@ -159,11 +151,10 @@ class Cohort:
         # collect the end of simulation statistics
         self.simOutputs.collect_end_of_sim_stat()
 
-    def process_birth(self, individual, if_schedule_birth):
+    def process_birth(self, individual):
         """
         process the birth of a new individual
         :param individual: individual
-        :param if_schedule_birth: determined (by True/False) if a given event can schedule future births
         """
 
         # trace
@@ -171,44 +162,10 @@ class Cohort:
             'Processing the birth of ' + str(individual) + '.')
 
         # collect statistics on new birth
-        self.simOutputs.collect_birth(individual=individual)
+        self.simOutputs.collect_birth()
 
         # add the new individual to the population (list of individuals)
         self.individuals.append(individual)
-
-        # # find the time to death for that individual (using mortality distribution)
-        #
-        # time_to_death = self.params.mortalityModel.sample_time_to_death(group=individual.sex,
-        #                                                                 age=individual.get_age(self.simCal.time),
-        #                                                                 rng=self.rng)
-        # # find the time of death (current time + time to death)
-        # time_death = self.simCal.time + time_to_death
-
-        # # schedule the death of this individual
-        # self.simCal.add_event(
-        #     event=E.Death(
-        #         time=time_death,
-        #         individual=individual,
-        #         cohort=self))
-
-        # if schedule birth is True, do this
-        # if schedule birth is False, skip this
-        # if if_schedule_birth:
-        #
-        #     sex = D.SEX.MALE.value  # sex set to male
-        #     if self.rng.sample() < D.PROB_FEMALE:  # prob of being female
-        #         sex = D.SEX.FEMALE.value
-        #
-        #     # find the time of next birth
-        #     time_next_birth = self.simCal.time + self.params.timeToNextBirthDist.sample(rng=self.rng)
-        #
-        #     # schedule the next birth
-        #     self.simCal.add_event(
-        #         event=E.Birth(time=time_next_birth,
-        #                       individual=Individual(id=individual.id + 1, age_sex=[0, sex], t_birth=time_next_birth),
-        #                       cohort=self,
-        #                       if_schedule_birth=True)
-        #     )
 
     def process_pop_survey(self):
         """
@@ -229,16 +186,18 @@ class Cohort:
                 pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
                                          increment=1)
 
-            # record BMI
+            # record BMI for each individual and add to list
             index_by_time = floor(self.simCal.time) + 1
             self.simOutputs.bmiTimeStep.append(individual.trajectory[index_by_time])
-            # self.simOutputs.collect_bmi(individual=individual)
-            print(int(individual.get_age(current_time=self.simCal.time)),
-                  "year old at time step:",
-                  index_by_time,
-                  '=',
-                  individual.trajectory[index_by_time])
 
+            # if want to print details of individual bmi at each time step
+            # print(int(individual.get_age(current_time=self.simCal.time)),
+            #       "year old at time step:",
+            #       index_by_time - 1,
+            #       '=',
+            #       individual.trajectory[index_by_time])
+
+        # calculate average BMI at each time step
         self.simOutputs.collect_bmi()
 
         self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())

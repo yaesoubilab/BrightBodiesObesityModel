@@ -10,20 +10,18 @@ class Priority(Enum):
 
 
 class Birth(Event):
-    def __init__(self, time, individual, cohort, if_schedule_birth):
+    def __init__(self, time, individual, cohort):
         """
         creates the birth of an individual
         :param time: sim time
         :param individual: individual
         :param cohort: cohort
-        :param if_schedule_birth: schedule next births (T/F)
         """
         # initialize the master class
         Event.__init__(self, time=time, priority=Priority.BIRTH.value)
 
         self.individual = individual
         self.cohort = cohort
-        self.ifScheduleBirth = if_schedule_birth
 
         # trace
         self.cohort.trace.add_message(
@@ -32,8 +30,7 @@ class Birth(Event):
     def process(self):
         """ processes birth of a new individual """
 
-        self.cohort.process_birth(individual=self.individual,
-                                  if_schedule_birth=self.ifScheduleBirth)
+        self.cohort.process_birth(individual=self.individual)
 
 
 class PopSurvey(Event):
@@ -46,6 +43,10 @@ class PopSurvey(Event):
 
         self.individual = individual
         self.cohort = cohort
+
+        # trace
+        self.cohort.trace.add_message(
+            'Average BMI of ' + str(cohort) + ' was assessed at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
 
     def process(self):
         """ processes the population distribution test """

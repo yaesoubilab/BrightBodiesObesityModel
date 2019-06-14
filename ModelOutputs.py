@@ -1,5 +1,4 @@
 import SimPy.SamplePathClasses as Path
-from math import floor
 import InputData as D
 
 
@@ -38,7 +37,7 @@ class SimOutputs:
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
-    def collect_birth(self, individual):
+    def collect_birth(self):
         """
         collect statistics on the birth of this individual
         """
@@ -49,12 +48,11 @@ class SimOutputs:
 
     def collect_bmi(self):
         """
-        collect bmi for each individual to calculate average
+        calculate average bmi of cohort at each time step
         """
-        index_by_time = floor(self.simCal.time)
 
         average_bmi = (sum(self.bmiTimeStep))/D.POP_SIZE
 
-        self.pathBMIs.record_value(time=index_by_time, value=average_bmi)
+        self.pathBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
 
