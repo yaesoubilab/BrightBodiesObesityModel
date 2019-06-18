@@ -20,6 +20,10 @@ class SimOutputs:
                                                      initial_size=0,
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
+
+        # TODO: It seems to me that we don't need to collect self.pyramids anymore.
+        #   we are already collecting percentage of population in each age-sex group
+        #   so I guess we can delete self.pyramids and any code referring to it.
         self.pyramids = []  # empty list to be populated with pyramids
         self.pyramidPercentage = []  # group percentages
 
@@ -51,7 +55,8 @@ class SimOutputs:
         calculate average bmi of cohort at each time step
         """
 
-        average_bmi = (sum(self.bmiTimeStep))/D.POP_SIZE
+        # average BMI
+        average_bmi = sum(self.bmiTimeStep)/len(self.bmiTimeStep)
 
         self.pathBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 

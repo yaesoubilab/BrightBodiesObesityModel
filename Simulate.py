@@ -17,6 +17,7 @@ multiCohort.simulate()
 Path.graph_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathPopSizes,
     title='Population Size',
+    y_range=[0, 1.1*D.POP_SIZE],
     x_label='Years'
 )
 
@@ -25,6 +26,7 @@ Path.graph_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
     title='Average BMIs',
     x_label='Simulation Year',
+    y_range=[0, 40],
     connect='line'  # line graph (vs. step wise)
 )
 

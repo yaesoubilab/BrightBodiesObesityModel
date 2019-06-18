@@ -5,7 +5,6 @@ import ModelEvents as E
 import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
-import Trajectories as T
 from math import floor
 
 
@@ -66,8 +65,8 @@ class Cohort:
             t_birth = D.SIM_INIT * i / D.POP_SIZE
 
             # find the BMI trajectory
-            rows = T.df_trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
-            bmi_trajectory = rows.sample_traj(rng=self.rng)
+            set_of_trajs = self.params.df_trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
+            bmi_trajectory = set_of_trajs.sample_traj(rng=self.rng)
 
             # schedule the first "birth" at approximately time 0
             self.simCal.add_event(
@@ -83,56 +82,13 @@ class Cohort:
             event=E.PopSurvey(time=D.SIM_INIT,
                               individual=self,
                               cohort=self))
-        # schedule at time 1
-        self.simCal.add_event(
-            event=E.PopSurvey(time=1,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 2
-        self.simCal.add_event(
-            event=E.PopSurvey(time=2,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 3
-        self.simCal.add_event(
-            event=E.PopSurvey(time=3,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 4
-        self.simCal.add_event(
-            event=E.PopSurvey(time=4,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 5
-        self.simCal.add_event(
-            event=E.PopSurvey(time=5,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 6
-        self.simCal.add_event(
-            event=E.PopSurvey(time=6,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 7
-        self.simCal.add_event(
-            event=E.PopSurvey(time=7,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 8
-        self.simCal.add_event(
-            event=E.PopSurvey(time=8,
-                              individual=self,
-                              cohort=self))
-        # schedule at time 9
-        self.simCal.add_event(
-            event=E.PopSurvey(time=9,
-                              individual=self,
-                              cohort=self))
-        # schedule population distribution survey event at the end of simulation (time 10)
-        self.simCal.add_event(
-            event=E.PopSurvey(time=D.SIM_DURATION,
-                              individual=self,
-                              cohort=self))
+
+        # schedule population survey at times 1, 2, ..., 10
+        for t in range(1, D.SIM_DURATION + 1, 1):
+            self.simCal.add_event(
+                event=E.PopSurvey(time=t,
+                                  individual=self,
+                                  cohort=self))
 
     def simulate(self, sim_duration):
         """ simulate the cohort
@@ -186,10 +142,17 @@ class Cohort:
                 pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
                                          increment=1)
 
-            # record BMI for each individual and add to list
-            index_by_time = floor(self.simCal.time) + 1
-            self.simOutputs.bmiTimeStep.append(individual.trajectory[index_by_time])
+                # TODO: I realize the current assumption is that no one dies but just to be safe,
+                #   the statement below should have been indented so that it would get executed
+                #   only when the individual was alive:
 
+                # record BMI for each individual and add to list
+                # TODO: I renamed 'index_by_time' to 'year_index' to be super clear how this variable
+                #   is being used,
+                year_index = floor(self.simCal.time) + 1
+                self.simOutputs.bmiTimeStep.append(individual.trajectory[year_index])
+
+            # TODO: delete?
             # if want to print details of individual bmi at each time step
             # print(int(individual.get_age(current_time=self.simCal.time)),
             #       "year old at time step:",
@@ -197,7 +160,7 @@ class Cohort:
             #       '=',
             #       individual.trajectory[index_by_time])
 
-        # calculate average BMI at each time step
+        # calculate and store average BMI for this year
         self.simOutputs.collect_bmi()
 
         self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())
