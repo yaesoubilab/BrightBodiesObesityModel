@@ -46,7 +46,6 @@ class MultiSimOutputs:
 
         self.pathPopSizes = []  # empty list to be populated with population sizes
         self.pyramidPercentagesStart = []
-        self.pyramidPercentagesEnd = []
 
         self.pathOfBMIs = []
 

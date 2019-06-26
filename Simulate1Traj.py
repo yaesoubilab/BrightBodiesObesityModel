@@ -23,6 +23,3 @@ Path.graph_sample_path(
 
 # print trace
 myCohort.print_trace()
-
-# print pyramids
-Support.plot_pyramids(sim_outcomes=myCohort.simOutputs)

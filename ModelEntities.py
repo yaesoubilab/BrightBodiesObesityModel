@@ -142,31 +142,14 @@ class Cohort:
                 pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
                                          increment=1)
 
-                # TODO: I realize the current assumption is that no one dies but just to be safe,
-                #   the statement below should have been indented so that it would get executed
-                #   only when the individual was alive:
-
                 # record BMI for each individual and add to list
-                # TODO: I renamed 'index_by_time' to 'year_index' to be super clear how this variable
-                #   is being used,
                 year_index = floor(self.simCal.time) + 1
                 self.simOutputs.bmiTimeStep.append(individual.trajectory[year_index])
-
-            # TODO: delete?
-            # if want to print details of individual bmi at each time step
-            # print(int(individual.get_age(current_time=self.simCal.time)),
-            #       "year old at time step:",
-            #       index_by_time - 1,
-            #       '=',
-            #       individual.trajectory[index_by_time])
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi()
 
         self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())
-
-        # record each pyramid in list in simulation outputs
-        self.simOutputs.pyramids.append(pyramid)
 
     def print_trace(self):
         """ outputs trace """

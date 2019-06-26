@@ -3,6 +3,7 @@ import InputData as D
 import ModelParameters as P
 import SimPy.Plots.SamplePaths as Path
 from SimPy.Plots import PopulationPyramids as Pyr
+import Support as Sup
 
 # for MultiCohort
 multiCohort = MultiCls.MultiCohort(
@@ -44,20 +45,4 @@ Pyr.plot_pyramids(observed_data=D.age_sex_dist,
                   transparency=0.5)
 
 # Colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
-
-# Example: Pyramid Plot (for other sim years)
-# Pyr.plot_pyramids(observed_data=D.rows,
-#                   simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
-#                   x_lim=10,
-#                   title="   Cohort Pyramids at Year {}".format(D.SIM_DURATION),
-#                   colors=('blue', 'red', 'black'),
-#                   length_of_sim_bars=100,
-#                   scale_of_sim_legend=1,
-#                   transparency=0.5)
-
-
-
-
-
-
 

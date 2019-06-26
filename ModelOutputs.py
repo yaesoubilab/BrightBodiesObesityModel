@@ -21,10 +21,6 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
-        # TODO: It seems to me that we don't need to collect self.pyramids anymore.
-        #   we are already collecting percentage of population in each age-sex group
-        #   so I guess we can delete self.pyramids and any code referring to it.
-        self.pyramids = []  # empty list to be populated with pyramids
         self.pyramidPercentage = []  # group percentages
 
         self.bmiTimeStep = []

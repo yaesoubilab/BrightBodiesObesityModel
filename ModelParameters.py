@@ -12,7 +12,6 @@ class SetOfTrajectories:
         self.discreteUniform = RVGs.UniformDiscrete(0, len(rows) - 1)
 
     def sample_traj(self, rng):
-        # i = self.discreteUniform.sample(rnd)
         i = self.discreteUniform.sample(rng)
         return self.rows[i]
 
@@ -26,10 +25,6 @@ class Parameters:
                                                         list_x_min=[8, 0],          # minimum values for age/sex groups
                                                         list_x_max=[16, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
-
-        # TODO: I think the way you are reading trajectories are OK but it is error prone.
-        #   I would write a simple for-loop to populate df_trajectories.
-        #   Something like this:
 
         # Creating DataFrame of Trajectories for Bright Bodies Age Cohort
         self.df_trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
