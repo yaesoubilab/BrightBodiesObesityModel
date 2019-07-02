@@ -45,7 +45,7 @@ class MultiSimOutputs:
     def __init__(self):
 
         self.pathPopSizes = []  # empty list to be populated with population sizes
-        self.pyramidPercentagesStart = []
+        self.pyramidStart = []
 
         self.pathOfBMIs = []
 
@@ -56,7 +56,7 @@ class MultiSimOutputs:
         self.pathPopSizes.append(simulated_cohort.simOutputs.pathPopSize)
 
         # store all cohort pyramid percentages
-        self.pyramidPercentagesStart.append(simulated_cohort.simOutputs.pyramidPercentage[0])
+        self.pyramidStart.append(simulated_cohort.simOutputs.pyramids[0])
 
         # store all cohort average BMI paths
         self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)

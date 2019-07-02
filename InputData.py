@@ -10,8 +10,6 @@ SIM_INIT = 0.00001  # (years) initialization period to create the cohort
 SIM_DURATION = 10   # (years)
 POP_SIZE = 1000     # population size (cohort at initialization)
 
-PROB_FEMALE = 0.5075    # probability of being female
-
 # for MultiCohorts
 N_COHORTS = 2
 
@@ -21,10 +19,9 @@ class SEX(Enum):
     FEMALE = 1
 
 
-# NEW
 class Interventions(Enum):
     """ Bright Bodies v. Clinical Care """
-    CLINICAL_CONTROL = 0
+    CONTROL = 0
     BRIGHT_BODIES = 1
 
 

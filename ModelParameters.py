@@ -43,8 +43,11 @@ class Parameters:
                                              obj=traj)
 
         self.intervention = intervention
+        self.interventionMultipliers = [] # intervention multipliers to reduce BMI over time
 
         if intervention == D.Interventions.BRIGHT_BODIES:
-            self.multiplier = [1.0, 1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+            self.interventionMultipliers \
+                = [1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         else:
-            self.multiplier = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+            self.interventionMultipliers \
+                = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]

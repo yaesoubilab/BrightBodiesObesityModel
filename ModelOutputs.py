@@ -22,9 +22,9 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
-        self.pyramidPercentage = []  # group percentages
-
-        self.bmiTimeStep = []
+        self.pyramids = []  # population pyramids over time (% of population in each age-sex group)
+        #
+        self.annualBMIs = []
         self.pathBMIs = Path.PrevalenceSamplePath(name='BMIs',
                                                   initial_size=0,
                                                   sim_rep=sim_rep,
@@ -47,13 +47,13 @@ class SimOutputs:
         self.popSize += 1
         self.pathPopSize.record_increment(time=self.simCal.time, increment=1)
 
-    def collect_bmi(self):
+    def collect_bmi(self, BMIs):
         """
         calculate average bmi of cohort at each time step
         """
 
         # average BMI
-        average_bmi = sum(self.bmiTimeStep)/len(self.bmiTimeStep)
+        average_bmi = sum(BMIs)/len(BMIs)
 
         self.pathBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 

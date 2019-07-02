@@ -7,9 +7,11 @@ import ModelEntities as Cls
 import SimPy.Plots.FigSupport as Fig
 
 # NEW
+# TODO: you don't need to define these 2 variables and can directly use D.Interventions. instead.
 intervention_BB = D.Interventions.BRIGHT_BODIES
-intervention_CC = D.Interventions.CLINICAL_CONTROL
+intervention_CC = D.Interventions.CONTROL
 
+# TODO: delete this block or move to a new module?
 # Cohort
 cohortBrightBodies = Cls.Cohort(id=1,
                                 parameters=P.Parameters(intervention=intervention_BB))
@@ -17,7 +19,6 @@ cohortClinicalControl = Cls.Cohort(id=2,
                                    parameters=P.Parameters(intervention=intervention_CC))
 cohortBrightBodies.simulate(sim_duration=D.SIM_DURATION)
 cohortClinicalControl.simulate(sim_duration=D.SIM_DURATION)
-
 
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(
@@ -35,12 +36,24 @@ multiCohortCC = MultiCls.MultiCohort(
 # simulate these cohorts (CC)
 multiCohortCC.simulate()
 
+# TODO: I'd start moving the code related to output analysis into a separate module.
 # sample paths for population size
 Path.graph_sample_paths(
     sample_paths=multiCohortBB.multiSimOutputs.pathPopSizes,
     title='Population Size',
     y_range=[0, 1.1*D.POP_SIZE],
     x_label='Years'
+)
+
+Path.graph_sets_of_sample_paths(
+    sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathOfBMIs, multiCohortBB.multiSimOutputs.pathOfBMIs],
+    title='Average BMIs over 10 Years',
+    y_range=[0, 40],
+    x_label='Simulation Year',
+    legends=['Control', 'Bright Bodies'],
+    connect='line',
+    color_codes=['red', 'blue'],
+    transparency=0.5
 )
 
 # sample paths for average BMIs at each time step
@@ -62,7 +75,7 @@ Path.graph_sample_paths(
 
 # PYRAMID (cohort with characteristics (age/sex) to match Bright Bodies) - at Initialization
 Pyr.plot_pyramids(observed_data=D.age_sex_dist,
-                  simulated_data=multiCohortBB.multiSimOutputs.pyramidPercentagesStart,
+                  simulated_data=multiCohortBB.multiSimOutputs.pyramidStart,
                   fig_size=(6, 4),
                   x_lim=10,
                   title="Cohort Pyramids at Initialization",
@@ -75,3 +88,4 @@ Pyr.plot_pyramids(observed_data=D.age_sex_dist,
 
 # Colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
 
+# TODO: another figure to produce reduction in BMI in year 1 and year 2.

@@ -21,6 +21,7 @@ class Individual:
         self.ifAlive = True
         self.trajectory = bmi_trajectory
 
+        # TODO: delete?
         # if self.intervention == D.Interventions.BRIGHT_BODIES:
         #     self.multiplier = [1.0, 1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         # else:
@@ -32,7 +33,7 @@ class Individual:
     def get_age(self, current_time):
         """
         :param current_time: current simulation time
-        :return: age (current time - age at initialization)
+        :return: age (current time + age at initialization)
         """
         return current_time + self.initialAge
 
@@ -69,7 +70,7 @@ class Cohort:
             # time of "birth" (initialization)
             t_birth = D.SIM_INIT * i / D.POP_SIZE
 
-            # find the BMI trajectory
+            # assign randomly the BMI trajectory of this individual based on age and sex
             set_of_trajs = self.params.df_trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
             bmi_trajectory = set_of_trajs.sample_traj(rng=self.rng)
 
@@ -134,6 +135,8 @@ class Cohort:
         collect BMIs to calculate average
         """
 
+        # TODO: it might make sense to separate the calculation of pyramids and BMI average.
+        #   We need to calculate the pyramid only at time 0.
         # new pyramid
         pyramid = Pyramid(list_x_min=[8, 0],
                           list_x_max=[16, 1],
@@ -142,20 +145,25 @@ class Cohort:
 
         # for each individual, record age/sex and increment pyramid by 1
         # x values: [age, sex]
-        self.simOutputs.bmiTimeStep = []
+        bmiTimeStep = []
         for individual in self.individuals:
             if individual.ifAlive is True:
+                # update population pyramid
                 pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
                                          increment=1)
 
-                # record BMI for each individual and add to list
-                year_index = floor(self.simCal.time) + 1
-                self.simOutputs.bmiTimeStep.append(individual.trajectory[year_index] * self.params.multiplier[year_index])
+                # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
+                year_index = floor(self.simCal.time)
+                bmiTimeStep.append(
+                    individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
+                                                         # the individual ID so we need to skip it.
+                    * self.params.interventionMultipliers[year_index])
 
         # calculate and store average BMI for this year
-        self.simOutputs.collect_bmi()
+        self.simOutputs.annualBMIs.append(bmiTimeStep)
+        self.simOutputs.collect_bmi(bmiTimeStep)
 
-        self.simOutputs.pyramidPercentage.append(pyramid.get_percentages())
+        self.simOutputs.pyramids.append(pyramid.get_percentages())
 
     def print_trace(self):
         """ outputs trace """
