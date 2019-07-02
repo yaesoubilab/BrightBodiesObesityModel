@@ -18,7 +18,7 @@ class SetOfTrajectories:
 
 class Parameters:
     # class to contain the parameters of the model
-    def __init__(self):
+    def __init__(self, intervention):
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
         self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,                # life table
@@ -41,3 +41,10 @@ class Parameters:
                 s = 0 if sex == 'male' else 1
                 self.df_trajectories.set_obj(x_value=[age, s],
                                              obj=traj)
+
+        self.intervention = intervention
+
+        if intervention == D.Interventions.BRIGHT_BODIES:
+            self.multiplier = [1.0, 1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        else:
+            self.multiplier = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]

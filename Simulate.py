@@ -3,20 +3,41 @@ import InputData as D
 import ModelParameters as P
 import SimPy.Plots.SamplePaths as Path
 from SimPy.Plots import PopulationPyramids as Pyr
-import Support as Sup
+import ModelEntities as Cls
+import SimPy.Plots.FigSupport as Fig
 
-# for MultiCohort
-multiCohort = MultiCls.MultiCohort(
+# NEW
+intervention_BB = D.Interventions.BRIGHT_BODIES
+intervention_CC = D.Interventions.CLINICAL_CONTROL
+
+# Cohort
+cohortBrightBodies = Cls.Cohort(id=1,
+                                parameters=P.Parameters(intervention=intervention_BB))
+cohortClinicalControl = Cls.Cohort(id=2,
+                                   parameters=P.Parameters(intervention=intervention_CC))
+cohortBrightBodies.simulate(sim_duration=D.SIM_DURATION)
+cohortClinicalControl.simulate(sim_duration=D.SIM_DURATION)
+
+
+# for MultiCohort BRIGHT BODIES
+multiCohortBB = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    parameters=P.Parameters()
+    parameters=P.Parameters(intervention=intervention_BB)
 )
+# simulate these cohorts (BB)
+multiCohortBB.simulate()
 
-# simulate all cohorts
-multiCohort.simulate()
+# for MultiCohort CLINICAL CONTROL
+multiCohortCC = MultiCls.MultiCohort(
+    ids=range(D.N_COHORTS),
+    parameters=P.Parameters(intervention=intervention_CC)
+)
+# simulate these cohorts (CC)
+multiCohortCC.simulate()
 
 # sample paths for population size
 Path.graph_sample_paths(
-    sample_paths=multiCohort.multiSimOutputs.pathPopSizes,
+    sample_paths=multiCohortBB.multiSimOutputs.pathPopSizes,
     title='Population Size',
     y_range=[0, 1.1*D.POP_SIZE],
     x_label='Years'
@@ -24,16 +45,24 @@ Path.graph_sample_paths(
 
 # sample paths for average BMIs at each time step
 Path.graph_sample_paths(
-    sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
-    title='Average BMIs',
+    sample_paths=multiCohortBB.multiSimOutputs.pathOfBMIs,
+    title='Average BMIs for Bright Bodies',
+    x_label='Simulation Year',
+    y_range=[0, 40],
+    connect='line'  # line graph (vs. step wise)
+)
+Path.graph_sample_paths(
+    sample_paths=multiCohortCC.multiSimOutputs.pathOfBMIs,
+    title='Average BMIs for Clinical Control',
     x_label='Simulation Year',
     y_range=[0, 40],
     connect='line'  # line graph (vs. step wise)
 )
 
+
 # PYRAMID (cohort with characteristics (age/sex) to match Bright Bodies) - at Initialization
 Pyr.plot_pyramids(observed_data=D.age_sex_dist,
-                  simulated_data=multiCohort.multiSimOutputs.pyramidPercentagesStart,
+                  simulated_data=multiCohortBB.multiSimOutputs.pyramidPercentagesStart,
                   fig_size=(6, 4),
                   x_lim=10,
                   title="Cohort Pyramids at Initialization",

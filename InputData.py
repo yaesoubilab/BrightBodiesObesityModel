@@ -21,6 +21,13 @@ class SEX(Enum):
     FEMALE = 1
 
 
+# NEW
+class Interventions(Enum):
+    """ Bright Bodies v. Clinical Care """
+    CLINICAL_CONTROL = 0
+    BRIGHT_BODIES = 1
+
+
 # for Bright Bodies (8-16 y/o)
 # use to initialize cohort
 # condensed decimals for now - FIX LATER

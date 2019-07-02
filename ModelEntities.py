@@ -21,6 +21,11 @@ class Individual:
         self.ifAlive = True
         self.trajectory = bmi_trajectory
 
+        # if self.intervention == D.Interventions.BRIGHT_BODIES:
+        #     self.multiplier = [1.0, 1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        # else:
+        #     self.multiplier = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
     def __str__(self):
         return "Individual {0}".format(self.id)
 
@@ -126,6 +131,7 @@ class Cohort:
     def process_pop_survey(self):
         """
         processes the population distribution pyramid (age/sex)
+        collect BMIs to calculate average
         """
 
         # new pyramid
@@ -144,7 +150,7 @@ class Cohort:
 
                 # record BMI for each individual and add to list
                 year_index = floor(self.simCal.time) + 1
-                self.simOutputs.bmiTimeStep.append(individual.trajectory[year_index])
+                self.simOutputs.bmiTimeStep.append(individual.trajectory[year_index] * self.params.multiplier[year_index])
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi()
