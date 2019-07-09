@@ -32,7 +32,7 @@ class Parameters:
                                                      list_x_delta=[1, 'int'])
         for sex in ['male', 'female']:
             for age in range(8, 17, 1):
-                file_name = 'csv_trajectories/{0}_{1}_obese.csv'.format(sex, age)
+                file_name = 'csv_trajectories/{0}_{1}_o.csv'.format(sex, age)
                 rows = InOutSupport.read_csv_rows(file_name=file_name,
                                                   delimiter=',',
                                                   if_del_first_row=True,
@@ -43,7 +43,7 @@ class Parameters:
                                              obj=traj)
 
         self.intervention = intervention
-        self.interventionMultipliers = [] # intervention multipliers to reduce BMI over time
+        self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
 
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \

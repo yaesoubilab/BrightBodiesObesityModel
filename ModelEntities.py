@@ -21,12 +21,6 @@ class Individual:
         self.ifAlive = True
         self.trajectory = bmi_trajectory
 
-        # TODO: delete?
-        # if self.intervention == D.Interventions.BRIGHT_BODIES:
-        #     self.multiplier = [1.0, 1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-        # else:
-        #     self.multiplier = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-
     def __str__(self):
         return "Individual {0}".format(self.id)
 
@@ -89,10 +83,10 @@ class Cohort:
                               individual=self,
                               cohort=self))
 
-        # schedule population survey at times 1, 2, ..., 10
-        for t in range(1, D.SIM_DURATION + 1, 1):
+        # schedule BMI survey at times 0, 1, 2, ..., 10
+        for t in range(0, D.SIM_DURATION + 1, 1):
             self.simCal.add_event(
-                event=E.PopSurvey(time=t,
+                event=E.BMISurvey(time=t,
                                   individual=self,
                                   cohort=self))
 
@@ -129,14 +123,31 @@ class Cohort:
         # add the new individual to the population (list of individuals)
         self.individuals.append(individual)
 
-    def process_pop_survey(self):
+    def process_bmi(self):
         """
         processes the population distribution pyramid (age/sex)
         collect BMIs to calculate average
         """
 
-        # TODO: it might make sense to separate the calculation of pyramids and BMI average.
-        #   We need to calculate the pyramid only at time 0.
+        bmi_time_step = []
+
+        for individual in self.individuals:
+            if individual.ifAlive is True:
+
+                # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
+                year_index = floor(self.simCal.time)
+                bmi_time_step.append(
+                    individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
+                                                         # the individual ID so we need to skip it.
+                    * self.params.interventionMultipliers[year_index])
+
+        # calculate and store average BMI for this year
+        self.simOutputs.annualBMIs.append(bmi_time_step)
+        self.simOutputs.collect_bmi(bmi_time_step)
+
+    def process_pop_survey(self):
+        """ processes the population distribution pyramid (age/sex) """
+
         # new pyramid
         pyramid = Pyramid(list_x_min=[8, 0],
                           list_x_max=[16, 1],
@@ -144,24 +155,12 @@ class Cohort:
                           name='Population Pyramid at Time ' + str(self.simCal.time))
 
         # for each individual, record age/sex and increment pyramid by 1
-        # x values: [age, sex]
-        bmiTimeStep = []
         for individual in self.individuals:
             if individual.ifAlive is True:
                 # update population pyramid
+                # x values: [age, sex]
                 pyramid.record_increment(x_values=[individual.get_age(self.simCal.time), individual.sex],
                                          increment=1)
-
-                # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
-                year_index = floor(self.simCal.time)
-                bmiTimeStep.append(
-                    individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
-                                                         # the individual ID so we need to skip it.
-                    * self.params.interventionMultipliers[year_index])
-
-        # calculate and store average BMI for this year
-        self.simOutputs.annualBMIs.append(bmiTimeStep)
-        self.simOutputs.collect_bmi(bmiTimeStep)
 
         self.simOutputs.pyramids.append(pyramid.get_percentages())
 

@@ -7,6 +7,7 @@ class Priority(Enum):
     """ priority of events (low number implies higher priority)"""
     BIRTH = 0
     POP_SURVEY = 1
+    BMI_SURVEY = 2
 
 
 class Birth(Event):
@@ -33,13 +34,13 @@ class Birth(Event):
         self.cohort.process_birth(individual=self.individual)
 
 
-class PopSurvey(Event):
+class BMISurvey(Event):
     def __init__(self, time, individual, cohort):
         """
         Tests the age/sex characteristics of simulated population (pyramid)
         """
         # initialize master class
-        Event.__init__(self, time=time, priority=Priority.POP_SURVEY.value)
+        Event.__init__(self, time=time, priority=Priority.BMI_SURVEY.value)
 
         self.individual = individual
         self.cohort = cohort
@@ -51,5 +52,21 @@ class PopSurvey(Event):
     def process(self):
         """ processes the population distribution test """
 
-        self.cohort.process_pop_survey()
+        self.cohort.process_bmi()
 
+
+class PopSurvey(Event):
+    def __init__(self, time, individual, cohort):
+        """
+        Tests the age/sex characteristics of simulated population (pyramid)
+        """
+        # initialize master class
+        Event.__init__(self, time=time, priority=Priority.POP_SURVEY.value)
+
+        self.individual = individual
+        self.cohort = cohort
+
+    def process(self):
+        """ processes the population distribution test at initialization """
+
+        self.cohort.process_pop_survey()
