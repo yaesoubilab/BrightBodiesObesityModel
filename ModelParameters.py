@@ -32,7 +32,7 @@ class Parameters:
                                                      list_x_delta=[1, 'int'])
         for sex in ['male', 'female']:
             for age in range(8, 17, 1):
-                file_name = 'csv_trajectories/{0}_{1}_o.csv'.format(sex, age)
+                file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
                 rows = InOutSupport.read_csv_rows(file_name=file_name,
                                                   delimiter=',',
                                                   if_del_first_row=True,
@@ -51,3 +51,10 @@ class Parameters:
         else:
             self.interventionMultipliers \
                 = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+        # COSTS: ANNUAL (per person)
+        if self.intervention == D.Interventions.BRIGHT_BODIES:
+            self.annualInterventionCost = D.cost_bright_bodies
+        else:
+            self.annualInterventionCost = D.cost_clinical_control
+
