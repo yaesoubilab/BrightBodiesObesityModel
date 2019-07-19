@@ -47,14 +47,14 @@ class Parameters:
 
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
-                = [1.0, 0.75, 0.9, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+                = [1.0, 0.91, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         else:
             self.interventionMultipliers \
                 = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
         # COSTS: ANNUAL (per person)
         if self.intervention == D.Interventions.BRIGHT_BODIES:
-            self.annualInterventionCost = D.cost_bright_bodies
+            self.annualInterventionCost = D.cost_BB
         else:
-            self.annualInterventionCost = D.cost_clinical_control
+            self.annualInterventionCost = D.cost_CC
 

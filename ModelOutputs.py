@@ -30,6 +30,9 @@ class SimOutputs:
                                                   sim_rep=sim_rep,
                                                   collect_stat=False)
 
+        self.cost = []
+        self.effect = []
+
     def collect_end_of_sim_stat(self):
         """
         collects the performance statistics at the end of this replication
@@ -37,6 +40,19 @@ class SimOutputs:
 
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
+
+    # COST for CEA
+        # if the intervention is BB...
+        if D.Interventions.BRIGHT_BODIES:
+            # cost = cost of BB per person * number of individuals in cohort
+            cost = D.cost_BB * D.POP_SIZE
+        # if the intervention is CC...
+        else:
+            cost = D.cost_CC * D.POP_SIZE
+        # store cost of this cohort
+        self.cost.append(cost)
+    # EFFECT for CEA
+
 
     def collect_birth(self):
         """

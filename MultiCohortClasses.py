@@ -37,8 +37,6 @@ class MultiCohort:
             # outcomes from simulating all cohorts
             self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
 
-        # calculate summary statistics from all cohorts
-
 
 class MultiSimOutputs:
 
@@ -48,6 +46,10 @@ class MultiSimOutputs:
         self.pyramidStart = []
 
         self.pathOfBMIs = []
+
+        # for CEA
+        self.costs = []
+        self.effects = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -60,4 +62,18 @@ class MultiSimOutputs:
 
         # store all cohort average BMI paths
         self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)
+
+    # # for CEA
+    #     # if the intervention is BB...
+    #     if D.Interventions.BRIGHT_BODIES:
+    #         # cost = cost of BB per person * number of individuals in cohort
+    #         cost = D.cost_BB * D.POP_SIZE
+    #     # if the intervention is CC...
+    #     else:
+    #         cost = D.cost_CC * D.POP_SIZE
+
+        # store all cohort costs
+        self.costs.append(simulated_cohort.simOutputs.cost)
+        # store all cohort effects
+        # self.effects = OA.diffs
 

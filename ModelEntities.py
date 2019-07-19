@@ -84,7 +84,11 @@ class Cohort:
                               cohort=self))
 
         # schedule BMI survey at times 0, 1, 2, ..., 10
-        for t in range(0, D.SIM_DURATION + 1, 1):
+        self.simCal.add_event(
+            event=E.BMISurvey(time=D.SIM_INIT,
+                              individual=self,
+                              cohort=self))
+        for t in range(1, D.SIM_DURATION + 1, 1):
             self.simCal.add_event(
                 event=E.BMISurvey(time=t,
                                   individual=self,
