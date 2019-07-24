@@ -74,6 +74,7 @@ class MultiSimOutputs:
 
         # store all cohort costs
         self.costs.append(simulated_cohort.simOutputs.cost)
+        # print(self.costs)
         # store all cohort effects
         # self.effects = OA.diffs
 
