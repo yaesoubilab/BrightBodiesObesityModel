@@ -35,31 +35,8 @@ Path.graph_sets_of_sample_paths(
     transparency=0.5
 )
 
-# find difference in BMI between interventions
-diffs = []
-for cohortID in range(D.N_COHORTS):
-    values_cc = multiCohortCC.multiSimOutputs.pathOfBMIs[cohortID].get_values()
-    # effect = sum(values_cc)
-    # print(values_control)
-    values_bb = multiCohortBB.multiSimOutputs.pathOfBMIs[cohortID].get_values()
-    # print(values_bright_bodies)
-    difference_bmi = numpy.array(values_cc) - numpy.array(values_bb)
-    diffs.append(difference_bmi)
-print('BMI Differences: Clinical Control v Bright Bodies -->', diffs)
-# print('effect=', effect)
-
-# find average differences overall
-average_diff_1 = []
-average_diff_2 = []
-# at time 1 and time 2
-for diff in diffs:
-    time_1_bmi_diff = diff[1]
-    time_2_bmi_diff = diff[2]
-    average_diff_1.append(time_1_bmi_diff)
-    average_diff_2.append(time_2_bmi_diff)
-print("BB v. Control: Average BMI difference at Time 1:", sum(average_diff_1)/len(average_diff_1))
-print("BB v. Control: Average BMI difference at Time 2:", sum(average_diff_2)/len(average_diff_2))
-
+Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 # print outcomes
 # Support.print_outcomes(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)

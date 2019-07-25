@@ -34,12 +34,28 @@ def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
 def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     """ prints comparative outcomes """
 
-    # change_bmi = Stat.DifferenceStatIndp(
-    #     name='Change in average BMI',
-    #     x=sim_outcomes_BB.pathOfBMIs,
-    #     y_ref=sim_outcomes_CC.pathOfBMIs
-    # )
-    # print(change_bmi)
+    # find difference in BMI between interventions
+    list_of_diff_mean_BMIs = []
+    for cohortID in range(D.N_COHORTS):
+        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
+        # effect = sum(values_cc)
+        # print(values_control)
+        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        # print(values_bright_bodies)
+        diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
+        list_of_diff_mean_BMIs.append(diff_BMI)
+    print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
+    # print('effect=', effect)
+
+    # find average differences overall
+    diff_mean_BMI_y1 = []
+    diff_mean_BMI_y2 = []
+    # at time 1 and time 2
+    for diff_mean_BMIs in list_of_diff_mean_BMIs:
+        diff_mean_BMI_y1.append(diff_mean_BMIs[1])
+        diff_mean_BMI_y2.append(diff_mean_BMIs[2])
+    print("BB v. Control: Average BMI difference at Time 1:", sum(diff_mean_BMI_y1) / len(diff_mean_BMI_y1))
+    print("BB v. Control: Average BMI difference at Time 2:", sum(diff_mean_BMI_y2) / len(diff_mean_BMI_y2))
 
 
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
