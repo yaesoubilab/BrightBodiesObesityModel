@@ -63,18 +63,21 @@ class MultiSimOutputs:
         # store all cohort average BMI paths
         self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)
 
-    # # for CEA
+    # for CEA
     #     # if the intervention is BB...
     #     if D.Interventions.BRIGHT_BODIES:
-    #         # cost = cost of BB per person * number of individuals in cohort
-    #         cost = D.cost_BB * D.POP_SIZE
+    #         # effect
+    #         effect = self.pathOfBMIs[simulated_cohort].get_values()
+    #
     #     # if the intervention is CC...
     #     else:
-    #         cost = D.cost_CC * D.POP_SIZE
+    #         effect =
 
         # store all cohort costs
         self.costs.append(simulated_cohort.simOutputs.cost)
         # print(self.costs)
         # store all cohort effects
-        # self.effects = OA.diffs
+        self.effects.append(simulated_cohort.simOutputs.effect)
+
+
 

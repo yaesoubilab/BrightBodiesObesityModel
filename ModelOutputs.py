@@ -51,8 +51,12 @@ class SimOutputs:
             cost = D.cost_CC * D.POP_SIZE
         # store cost of this cohort
         self.cost.append(cost)
+        print('Total cost:', cost)
     # EFFECT for CEA
-
+        effect_values = self.pathBMIs.get_values()
+        effect = sum(effect_values)
+        self.effect.append(effect)
+        print('Total effect (sum of BMIs):', effect)
 
     def collect_birth(self):
         """
