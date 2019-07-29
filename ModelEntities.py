@@ -157,7 +157,7 @@ class Cohort:
                 individual_costs.append(cost_individual)
 
         # store list of individual costs
-        self.simOutputs.annualCosts.append(individual_costs)
+        # self.simOutputs.annualCosts.append(individual_costs)
         self.simOutputs.collect_cost(individual_costs)
 
         # calculate and store average BMI for this year

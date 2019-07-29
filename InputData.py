@@ -11,7 +11,7 @@ SIM_DURATION = 10   # (years)
 POP_SIZE = 1000     # population size (cohort at initialization)
 
 # for MultiCohorts
-N_COHORTS = 2
+N_COHORTS = 25
 
 # for Costs
 N_CHILDREN_BB = 90

@@ -83,8 +83,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     # do CEA
     CEA = Econ.CEA(
         strategies=[clinical_control_strategy, bright_bodies_strategy],
-        if_paired=True
-        # health_measure='d'
+        if_paired=True,
+        health_measure='d'
     )
 
     # show the cost-effectiveness plane
@@ -94,9 +94,9 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     # show_ce_figure(CEA=CEA)
 
     # # report the CE table
-    # CEA.build_CE_table(
-    #     interval_type='c',
-    #     alpha=0.05,
-    #     cost_digits=0,
-    #     effect_digits=2,
-    #     icer_digits=2)
+    CEA.build_CE_table(
+        interval_type='c',
+        alpha=0.05,
+        cost_digits=0,
+        effect_digits=2,
+        icer_digits=2)

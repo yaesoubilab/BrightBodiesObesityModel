@@ -53,3 +53,4 @@ Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs
 # report cost-effectiveness analysis
 Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+
