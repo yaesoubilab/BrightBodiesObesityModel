@@ -84,6 +84,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     CEA = Econ.CEA(
         strategies=[clinical_control_strategy, bright_bodies_strategy],
         if_paired=True
+        # health_measure='d'
     )
 
     # show the cost-effectiveness plane

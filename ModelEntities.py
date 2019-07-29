@@ -134,6 +134,7 @@ class Cohort:
         """
 
         bmi_time_step = []
+        individual_costs = []
 
         for individual in self.individuals:
             if individual.ifAlive is True:
@@ -144,6 +145,20 @@ class Cohort:
                     individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
                                                          # the individual ID so we need to skip it.
                     * self.params.interventionMultipliers[year_index])
+
+                # update costs of cohort
+                if year_index == 1 or 2:
+                    if D.Interventions.BRIGHT_BODIES:
+                        cost_individual = self.params.annualInterventionCostBB
+                    else:
+                        cost_individual = self.params.annualInterventionCostCC
+                else:
+                    cost_individual = self.params.annualInterventionCostCC
+                individual_costs.append(cost_individual)
+
+        # store list of individual costs
+        self.simOutputs.annualCosts.append(individual_costs)
+        self.simOutputs.collect_cost(individual_costs)
 
         # calculate and store average BMI for this year
         self.simOutputs.annualBMIs.append(bmi_time_step)

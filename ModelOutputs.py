@@ -29,7 +29,7 @@ class SimOutputs:
                                                   initial_size=0,
                                                   sim_rep=sim_rep,
                                                   collect_stat=False)
-
+        self.annualCosts = []
         self.cost = []
         self.effect = []
 
@@ -41,17 +41,17 @@ class SimOutputs:
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
-    # COST for CEA
-        # if the intervention is BB...
-        if D.Interventions.BRIGHT_BODIES:
-            # cost = cost of BB per person * number of individuals in cohort
-            cost = D.cost_BB * D.POP_SIZE
-        # if the intervention is CC...
-        else:
-            cost = D.cost_CC * D.POP_SIZE
-        # store cost of this cohort
-        self.cost.append(cost)
-        print('Total cost:', cost)
+    # # COST for CEA
+    #     # if the intervention is BB...
+    #     if D.Interventions.BRIGHT_BODIES:
+    #         # cost = cost of BB per person * number of individuals in cohort
+    #         cost = D.cost_BB * D.POP_SIZE
+    #     # if the intervention is CC...
+    #     else:
+    #         cost = D.cost_CC * D.POP_SIZE
+    #     # store cost of this cohort
+    #     self.cost.append(cost)
+    #     print('Total cost:', cost)
     # EFFECT for CEA
         effect_values = self.pathBMIs.get_values()
         effect = sum(effect_values)
@@ -76,5 +76,9 @@ class SimOutputs:
         average_bmi = sum(BMIs)/len(BMIs)
 
         self.pathBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
+
+    def collect_cost(self, costs):
+        cohort_cost_total = sum(costs)
+        self.annualCosts.append(cohort_cost_total)
 
 
