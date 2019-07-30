@@ -4,9 +4,19 @@
 import matplotlib.pyplot as plt
 
 x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-y = [0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+sim_ys = [[0, 1.5, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+          [0, 1.2, 0.9, 0, 0, 0, 0, 0, 0, 0, 0]]
+bb_ys = [1.1, 1.4]
+
 f, ax = plt.subplots()
-ax.plot(x, y)
+
+for sim_y in sim_ys:
+    ax.plot(x, sim_y)
+
+# adding bright bodies data
+ax.scatter([1, 2], bb_ys)
+ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4)
+
 ax.set_title('Difference in Avg BMI by Intervention')
 plt.xlim((0.0, 10.5))
 plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
