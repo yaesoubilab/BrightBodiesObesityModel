@@ -148,7 +148,7 @@ class Cohort:
 
                 # update costs of cohort
                 if year_index == 1 or 2:
-                    if D.Interventions.BRIGHT_BODIES:
+                    if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
                     else:
                         cost_individual = self.params.annualInterventionCostCC
