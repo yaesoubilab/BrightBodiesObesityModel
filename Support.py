@@ -88,12 +88,10 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     # show the cost-effectiveness plane
-    CEA.show_CE_plane()
+    # CEA.show_CE_plane()
+    CEA.show_CE_plane(x_label='BMI Units Averted (kg/m^2)')
 
-    # show the cost-effectiveness plane
-    # show_ce_figure(CEA=CEA)
-
-    # # report the CE table
+    # report the CE table
     CEA.build_CE_table(
         interval_type='c',
         alpha=0.05,
