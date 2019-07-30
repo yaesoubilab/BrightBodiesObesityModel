@@ -1,7 +1,9 @@
-# to create figure showing differences between model/RCT
+# to create figure showing BMI differences between control/bb in model
+# compare to RCT
 
 # import plotting library
 import matplotlib.pyplot as plt
+import matplotlib.patches as patch
 
 x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 sim_ys = [[0, 1.5, 1, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -11,18 +13,22 @@ bb_ys = [1.1, 1.4]
 f, ax = plt.subplots()
 
 for sim_y in sim_ys:
-    ax.plot(x, sim_y)
+    ax.plot(x, sim_y, color='maroon')
 
 # adding bright bodies data
-ax.scatter([1, 2], bb_ys)
-ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4)
+ax.scatter([1, 2], bb_ys, color='orange')
+ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4, ecolor='orange')
 
-ax.set_title('Difference in Avg BMI by Intervention')
+ax.set_title('Difference in Average BMI by Intervention')
 plt.xlim((0.0, 10.5))
 plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 plt.yticks([0, 0.5, 1.0, 1.5, 2.0])
 plt.xlabel('Sim Years')
 plt.ylabel('Difference in BMI (kg/m^2)')
+# Show legend
+model_data_color = patch.Patch(color='maroon', label='Sim: BMI Differences')
+rct_data_color = patch.Patch(color='orange', label='RCT: BMI Differences')
+plt.legend(loc='upper right', handles=[model_data_color, rct_data_color])
 plt.show()
 
 

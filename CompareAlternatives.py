@@ -54,3 +54,6 @@ Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs
 Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
+Support.plot_bmi_figure(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                        sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+

@@ -3,7 +3,8 @@ import SimPy.Plots.SamplePaths as Path
 import SimPy.EconEval as Econ
 import InputData as D
 import numpy
-import Simulate as Sim
+import matplotlib.pyplot as plt
+import matplotlib.patches as patch
 
 
 def print_outcomes(sim_outcomes, intervention):
@@ -45,7 +46,6 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
     print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
-    # print('effect=', effect)
 
     # find average differences overall
     diff_mean_BMI_y1 = []
@@ -100,3 +100,50 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         cost_digits=0,
         effect_digits=2,
         icer_digits=2)
+
+
+def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
+    """ plot differences in BMI by intervention
+    and compare to RCT data """
+
+    # find difference in BMI between interventions
+    list_of_diff_mean_BMIs = []
+    for cohortID in range(D.N_COHORTS):
+        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
+        # effect = sum(values_cc)
+        # print(values_control)
+        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        # print(values_bright_bodies)
+        diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
+        list_of_diff_mean_BMIs.append(diff_BMI)
+    print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
+
+    # to produce figure
+    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    sim_ys = list_of_diff_mean_BMIs
+    # rct data: treatment effect at year 1 and 2
+    bb_ys = [1.8, 0.9]
+
+    f, ax = plt.subplots()
+
+    for sim_y in sim_ys:
+        ax.plot(x, sim_y, color='maroon')
+
+    # adding bright bodies data
+    ax.scatter([1, 2], bb_ys, color='orange')
+    ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4, ecolor='orange')
+
+    ax.set_title('Difference in Average BMI by Intervention')
+    plt.xlim((0.0, 10.5))
+    plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    plt.yticks([0, 0.5, 1.0, 1.5, 2.0])
+    plt.xlabel('Sim Years')
+    plt.ylabel('Difference in BMI (kg/m^2)')
+    # Show legend
+    model_data_color = patch.Patch(color='maroon', label='Sim: BMI Differences')
+    rct_data_color = patch.Patch(color='orange', label='RCT: BMI Differences')
+    plt.legend(loc='upper right', handles=[model_data_color, rct_data_color])
+    plt.show()
+
+
+

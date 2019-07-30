@@ -162,7 +162,7 @@ class Parameters:
 
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
-                = [1.0, 0.91, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+                = [1.0, 0.94, 0.97, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         else:
             self.interventionMultipliers \
                 = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
