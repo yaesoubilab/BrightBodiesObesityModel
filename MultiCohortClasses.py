@@ -70,8 +70,6 @@ class MultiSimOutputs:
         # store all cohort costs
         self.costs.append(total_cost)
 
-        # self.costs.append(simulated_cohort.simOutputs.annualCosts)
-        # print(self.costs)
         # store all cohort effects
         self.effects.append(simulated_cohort.simOutputs.effect)
 

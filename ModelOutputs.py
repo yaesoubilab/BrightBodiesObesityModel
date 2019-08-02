@@ -1,6 +1,5 @@
 import SimPy.SamplePathClasses as Path
 import InputData as D
-import ModelParameters as P
 
 
 class SimOutputs:
@@ -41,22 +40,12 @@ class SimOutputs:
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
-    # # COST for CEA
-    #     # if the intervention is BB...
-    #     if D.Interventions.BRIGHT_BODIES:
-    #         # cost = cost of BB per person * number of individuals in cohort
-    #         cost = D.cost_BB * D.POP_SIZE
-    #     # if the intervention is CC...
-    #     else:
-    #         cost = D.cost_CC * D.POP_SIZE
-    #     # store cost of this cohort
-    #     self.cost.append(cost)
-    #     print('Total cost:', cost)
     # EFFECT for CEA
         effect_values = self.pathBMIs.get_values()
+        # print(effect_values)
         effect = sum(effect_values)
         self.effect.append(effect)
-        print('Total effect (sum of BMIs):', effect)
+        # print('Total effect (sum of BMIs):', effect)
 
     def collect_birth(self):
         """
@@ -79,6 +68,9 @@ class SimOutputs:
 
     def collect_cost(self, costs):
         cohort_cost_total = sum(costs)
-        self.annualCosts.append(cohort_cost_total)
+        # print('cost total', cohort_cost_total)
+        cost_per_person = cohort_cost_total/D.POP_SIZE
+        # print('cost pp', cost_per_person)
+        self.annualCosts.append(cost_per_person)
 
 

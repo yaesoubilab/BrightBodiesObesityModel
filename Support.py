@@ -10,6 +10,25 @@ import matplotlib.patches as patch
 def print_outcomes(sim_outcomes, intervention):
     """ prints the outcomes of a simulated cohort """
 
+    # year 1 vs 0
+    year_one_v_zero = []
+    # year 2 vs 1
+    year_two_v_one = []
+
+    # CONTROL VALIDATION
+    for cohortID in range(D.N_COHORTS):
+        values = sim_outcomes.pathOfBMIs[cohortID].get_values()
+        # FOR YEAR SPECIFIC COMPARISONS
+        # year 1 minus year 0
+        year_1_v_0 = values[1] - values[0]
+        year_one_v_zero.append(year_1_v_0)
+        # year 2 minus year 1
+        year_2_v_1 = values[2] - values[1]
+        year_two_v_one.append(year_2_v_1)
+
+    print(intervention, 'BMI change y1 - y0 -->', year_one_v_zero)
+    print(intervention, 'BMI change y2 - y1 -->', year_two_v_one)
+
 
 def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
     """ generates graphs """
@@ -37,6 +56,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
 
     # find difference in BMI between interventions
     list_of_diff_mean_BMIs = []
+
     for cohortID in range(D.N_COHORTS):
         values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
         # effect = sum(values_cc)
@@ -45,6 +65,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
         # print(values_bright_bodies)
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
+
     print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # find average differences overall
@@ -88,7 +109,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     # show the cost-effectiveness plane
-    CEA.show_CE_plane(x_label='BMI Units Averted (kg/m^2)')
+    CEA.show_CE_plane(x_label='Average BMI Units Averted (kg/m^2)',
+                      y_label='Additional Cost (per person)')
 
     # report the CE table
     CEA.build_CE_table(
@@ -119,7 +141,7 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     sim_ys = list_of_diff_mean_BMIs
     # rct data: treatment effect at year 1 and 2
-    bb_ys = [1.8, 0.9]
+    bb_ys = [3.7, 2.8]
 
     f, ax = plt.subplots()
 
@@ -128,12 +150,12 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
 
     # adding bright bodies data
     ax.scatter([1, 2], bb_ys, color='orange')
-    ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4, ecolor='orange')
+    ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4, ecolor='orange', elinewidth=2)
 
     ax.set_title('Difference in Average BMI by Intervention')
     plt.xlim((0.0, 10.5))
     plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    plt.yticks([0, 0.5, 1.0, 1.5, 2.0])
+    plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0])
     plt.xlabel('Sim Years')
     plt.ylabel('Difference in BMI (kg/m^2)')
     # Show legend
