@@ -78,47 +78,15 @@ avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
 print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
 print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
 
-# TO PRODUCE SCATTER: VALIDATION TO RCT
+# TO PRODUCE BAR: VALIDATION TO RCT
 x = [0, 1, 2]
 # rct data: treatment effect at year 1 and 2
 model_year_diffs = [avg_year_1_v_0, avg_year_2_v_1]
+print(model_year_diffs)
+
 rct_control_year_diffs = [1.9, 0.0]
 rct_bb_year_diffs = [-1.8, 0.9]
 
-f, ax = plt.subplots()
-
-# adding bright bodies data
-ax.scatter([1, 2], model_year_diffs, color='teal')
-ax.set_title('Difference in Average BMI by Year')
-plt.annotate(('Sim', model_year_diffs[0]), xy=(1, model_year_diffs[0]))
-plt.annotate(('Sim', model_year_diffs[1]), xy=(2, model_year_diffs[1]))
-
-if multiCohort.params.intervention == bright_bodies:
-    ax.scatter([1, 2], rct_bb_year_diffs, color='red')
-    plt.annotate(rct_bb_year_diffs[0], xy=(1, rct_bb_year_diffs[0]+.2))
-    plt.annotate(rct_bb_year_diffs[1], xy=(2, rct_bb_year_diffs[1]+.2))
-    rct_color = patch.Patch(color='red', label='RCT: Bright Bodies')
-else:
-    ax.scatter([1, 2], rct_control_year_diffs, color='blue')
-    plt.annotate(rct_control_year_diffs[0], xy=(1, rct_control_year_diffs[0]+.2))
-    plt.annotate(rct_control_year_diffs[1], xy=(2, rct_control_year_diffs[1]+.2))
-    rct_color = patch.Patch(color='blue', label='RCT: Control')
-
-plt.xlim((0.0, 3.0))
-plt.xticks([0, 1, 2])
-plt.yticks([-2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5])
-plt.xlabel('Sim Years')
-plt.ylabel('Difference in BMI (kg/m^2) relative to previous year')
-
-ax.set_xticks(np.arange(len(x)))
-ax.set_xticklabels(('0', 'Year 0 to 1', 'Year 1 to 2'))
-
-# Show legend
-model_data_color = patch.Patch(color='teal', label='Simulation')
-plt.legend(loc='upper right', handles=[model_data_color, rct_color])
-plt.show()
-
-# TO PRODUCE BAR: VALIDATION TO RCT
 if multiCohort.params.intervention == bright_bodies:
     rct_year_diffs = rct_bb_year_diffs
 else:
@@ -162,4 +130,6 @@ else:
     plt.annotate(model_year_diffs[1], xy=(1.0, 0.1))
 
 plt.show()
+
+
 

@@ -1,10 +1,11 @@
-import SimPy.StatisticalClasses as Stat
 import SimPy.Plots.SamplePaths as Path
 import SimPy.EconEval as Econ
 import InputData as D
 import numpy
 import matplotlib.pyplot as plt
 import matplotlib.patches as patch
+import numpy as np
+import SimPy.StatisticalClasses as Stat
 
 
 def print_outcomes(sim_outcomes, intervention):
@@ -28,6 +29,90 @@ def print_outcomes(sim_outcomes, intervention):
 
     print(intervention, 'BMI change y1 - y0 -->', year_one_v_zero)
     print(intervention, 'BMI change y2 - y1 -->', year_two_v_one)
+
+
+def plot_rct_validation(sim_outcomes, intervention):
+    """ generates validation graphs: BMI differences by year """
+
+    # TO DETERMINE BMI DIFFERENCES BY YEAR
+    year_one_vs_zero = []
+    year_two_vs_one = []
+
+    for cohortID in range(D.N_COHORTS):
+        bmi_values = sim_outcomes.pathOfBMIs[cohortID].get_values()
+
+        # year 1 minus year 0
+        year_1_v_0 = bmi_values[1] - bmi_values[0]
+        year_one_vs_zero.append(year_1_v_0)
+
+        # year 2 minus year 1
+        year_2_v_1 = bmi_values[2] - bmi_values[1]
+        year_two_vs_one.append(year_2_v_1)
+
+    print('BMI change y1 - y0 -->', year_one_vs_zero)
+    print('BMI change y2 - y1 -->', year_two_vs_one)
+
+    # find average change between year 0 and 1
+    avg_year_1_v_0 = sum(year_one_vs_zero)/len(year_one_vs_zero)
+    # find average change between year 1 and 2
+    avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
+
+    print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
+    print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
+
+# TO PRODUCE BAR: VALIDATION TO RCT
+
+    # rct data: treatment effect at year 1 and 2
+    model_year_diffs = [avg_year_1_v_0, avg_year_2_v_1]
+    print(model_year_diffs)
+    rct_control_year_diffs = [1.9, 0.0]
+    rct_bb_year_diffs = [-1.8, 0.9]
+
+    if intervention == D.Interventions.BRIGHT_BODIES:
+        rct_year_diffs = rct_bb_year_diffs
+    else:
+        rct_year_diffs = rct_control_year_diffs
+
+    ind = np.arange(len(rct_year_diffs))  # the x locations for the groups
+    width = 0.25  # the width of the bars
+
+    fig, ax = plt.subplots()
+    rct_bar = ax.bar(ind - width/2,
+                     rct_year_diffs,
+                     width,
+                     yerr=np.std(rct_year_diffs),
+                     label='RCT Diffs')
+    sim_bar = ax.bar(ind + width/2,
+                     model_year_diffs,
+                     width,
+                     yerr=np.std(model_year_diffs),
+                     label='Simulation Diffs')
+
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('BMI Difference (kg/m^2)')
+    ax.set_xticks(ind)
+    ax.set_xticklabels(('Year 0 to 1', 'Year 1 to 2'))
+    ax.legend()
+    plt.yticks([-2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5])
+
+    if intervention == D.Interventions.BRIGHT_BODIES:
+        ax.set_title('Bright Bodies Validation: BMI Differences by Year')
+        # year 0 to 1
+    #     plt.annotate(rct_year_diffs[0], xy=(-0.25, 0.1))
+    #     plt.annotate(model_year_diffs[0], xy=(0.0, 0.1))
+    #     # year 1 to 2
+    #     plt.annotate(rct_year_diffs[1], xy=(0.75, -0.2))
+    #     plt.annotate(model_year_diffs[1], xy=(1.0, -0.2))
+    else:
+        ax.set_title('Control Validation: Differences by Year')
+        # year 0 to 1
+        # plt.annotate(rct_year_diffs[0], xy=(-0.25, -0.2))
+        # plt.annotate(model_year_diffs[0], xy=(0.0, -0.2))
+        # # year 1 to 2
+        # plt.annotate(rct_year_diffs[1], xy=(0.75, 0.1))
+        # plt.annotate(model_year_diffs[1], xy=(1.0, 0.1))
+
+    plt.show()
 
 
 def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
@@ -59,10 +144,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
 
     for cohortID in range(D.N_COHORTS):
         values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        # effect = sum(values_cc)
-        # print(values_control)
         values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
-        # print(values_bright_bodies)
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
 
@@ -129,10 +211,7 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     list_of_diff_mean_BMIs = []
     for cohortID in range(D.N_COHORTS):
         values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        # effect = sum(values_cc)
-        # print(values_control)
         values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
-        # print(values_bright_bodies)
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
     print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)

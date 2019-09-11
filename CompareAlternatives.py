@@ -38,17 +38,9 @@ Path.graph_sets_of_sample_paths(
 Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-# print outcomes
-# Support.print_outcomes(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)
-# Support.print_outcomes(sim_outcomes=multiCohortCC.multiSimOutputs, intervention=D.Interventions.CONTROL)
-#
-# # print comparative outcomes
-# # Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-# #                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
-#
-# # plot graphs
-# Support.plot_graphs(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-#                     sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+# plot RCT validation: BMI differences (year 0/1 and 1/2)
+Support.plot_rct_validation(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)
+Support.plot_rct_validation(sim_outcomes=multiCohortCC.multiSimOutputs, intervention=D.Interventions.CONTROL)
 
 # report cost-effectiveness analysis
 Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
