@@ -1,5 +1,6 @@
 import SimPy.SamplePathClasses as Path
 import InputData as D
+import SimPy.StatisticalClasses as Stat
 
 
 class SimOutputs:

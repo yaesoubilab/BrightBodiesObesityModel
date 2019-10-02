@@ -51,6 +51,10 @@ class MultiSimOutputs:
         self.costs = []
         self.effects = []
 
+        # NEW: for bmi diff figures
+        self.meanBMIDiffs = []
+        self.statMeanBMIDiff = None
+
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
 
@@ -73,5 +77,9 @@ class MultiSimOutputs:
         # store all cohort effects
         self.effects.append(simulated_cohort.simOutputs.effect)
 
-
+    # NEW: for bmi diff figures
+    #     self.meanBMIDiffs.append(simulated_cohort.simOutputs.pathOfBMIs.get_mean())
+    #
+    #     self.statMeanBMIDiff = Stat.SummaryStat(name='mean BMI diffs',
+    #                                             data=self.meanBMIDiffs)
 

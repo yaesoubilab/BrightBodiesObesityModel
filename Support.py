@@ -54,9 +54,31 @@ def plot_rct_validation(sim_outcomes, intervention):
 
     # find average change between year 0 and 1
     avg_year_1_v_0 = sum(year_one_vs_zero)/len(year_one_vs_zero)
+    avgYear1v0SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
+                                          data=year_one_vs_zero)
+    estimate_and_PI_1v0 = avgYear1v0SummStat.get_formatted_mean_and_interval(interval_type='p',
+                                                                             alpha=0.05,
+                                                                             deci=2)
+    estimate_1v0 = avgYear1v0SummStat.get_mean()
+    PI_1v0 = avgYear1v0SummStat.get_interval(interval_type='p',
+                                             alpha=0.05)
+    print('Estimate 1v0:', estimate_1v0)
+    print('PI 1v0:', PI_1v0)
     # find average change between year 1 and 2
     avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
+    avgYear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
+                                          data=year_two_vs_one)
+    estimate_and_PI_2v1 = avgYear2v1SummStat.get_formatted_mean_and_interval(interval_type='p',
+                                                                             alpha=0.05,
+                                                                             deci=2)
+    estimate_2v1 = avgYear2v1SummStat.get_mean()
+    PI_2v1 = avgYear2v1SummStat.get_interval(interval_type='p',
+                                             alpha=0.05)
+    print('Estimate 2v1:', estimate_2v1)
+    print('PI 2v1:', PI_2v1)
 
+    print('Estimate and PI: BMI diffs year 1 v 0:', estimate_and_PI_1v0)
+    print('Estimate and PI: BMI diffs year 2 v 1:', estimate_and_PI_2v1)
     print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
     print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
 
@@ -85,7 +107,7 @@ def plot_rct_validation(sim_outcomes, intervention):
     sim_bar = ax.bar(ind + width/2,
                      model_year_diffs,
                      width,
-                     yerr=np.std(model_year_diffs),
+                     yerr=((PI_1v0[0], PI_1v0[1]), (PI_2v1[0], PI_2v1[1])),
                      label='Simulation Diffs')
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
@@ -97,20 +119,9 @@ def plot_rct_validation(sim_outcomes, intervention):
 
     if intervention == D.Interventions.BRIGHT_BODIES:
         ax.set_title('Bright Bodies Validation: BMI Differences by Year')
-        # year 0 to 1
-    #     plt.annotate(rct_year_diffs[0], xy=(-0.25, 0.1))
-    #     plt.annotate(model_year_diffs[0], xy=(0.0, 0.1))
-    #     # year 1 to 2
-    #     plt.annotate(rct_year_diffs[1], xy=(0.75, -0.2))
-    #     plt.annotate(model_year_diffs[1], xy=(1.0, -0.2))
+
     else:
         ax.set_title('Control Validation: Differences by Year')
-        # year 0 to 1
-        # plt.annotate(rct_year_diffs[0], xy=(-0.25, -0.2))
-        # plt.annotate(model_year_diffs[0], xy=(0.0, -0.2))
-        # # year 1 to 2
-        # plt.annotate(rct_year_diffs[1], xy=(0.75, 0.1))
-        # plt.annotate(model_year_diffs[1], xy=(1.0, 0.1))
 
     plt.show()
 

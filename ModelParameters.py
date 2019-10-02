@@ -1,5 +1,4 @@
 import InputData as D
-# for age/sex distribution
 import SimPy.DataFrames as df
 from SimPy import InOutFunctions as InOutSupport
 from SimPy import RandomVariantGenerators as RVGs

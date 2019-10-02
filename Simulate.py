@@ -3,9 +3,6 @@ import InputData as D
 import ModelParameters as P
 import SimPy.Plots.SamplePaths as Path
 from SimPy.Plots import PopulationPyramids as Pyr
-import matplotlib.pyplot as plt
-import matplotlib.patches as patch
-import numpy as np
 
 # SIMULATE ONE INTERVENTION AND INDIVIDUAL OUTCOMES
 
@@ -78,58 +75,7 @@ avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
 print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
 print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
 
-# TO PRODUCE BAR: VALIDATION TO RCT
-x = [0, 1, 2]
-# rct data: treatment effect at year 1 and 2
-model_year_diffs = [avg_year_1_v_0, avg_year_2_v_1]
-print(model_year_diffs)
 
-rct_control_year_diffs = [1.9, 0.0]
-rct_bb_year_diffs = [-1.8, 0.9]
-
-if multiCohort.params.intervention == bright_bodies:
-    rct_year_diffs = rct_bb_year_diffs
-else:
-    rct_year_diffs = rct_control_year_diffs
-
-ind = np.arange(len(rct_year_diffs))  # the x locations for the groups
-width = 0.25  # the width of the bars
-
-fig, ax = plt.subplots()
-rct_bar = ax.bar(ind - width/2,
-                 rct_year_diffs,
-                 width,
-                 label='RCT Diffs')
-sim_bar = ax.bar(ind + width/2,
-                 model_year_diffs,
-                 width,
-                 label='Simulation Diffs')
-
-# Add some text for labels, title and custom x-axis tick labels, etc.
-ax.set_ylabel('BMI Difference (kg/m^2)')
-ax.set_xticks(ind)
-ax.set_xticklabels(('Year 0 to 1', 'Year 1 to 2'))
-ax.legend()
-plt.yticks([-2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5])
-
-if multiCohort.params.intervention == bright_bodies:
-    ax.set_title('Bright Bodies Validation: BMI Differences by Year')
-    # year 0 to 1
-    plt.annotate(rct_year_diffs[0], xy=(-0.25, 0.1))
-    plt.annotate(model_year_diffs[0], xy=(0.0, 0.1))
-    # year 1 to 2
-    plt.annotate(rct_year_diffs[1], xy=(0.75, -0.2))
-    plt.annotate(model_year_diffs[1], xy=(1.0, -0.2))
-else:
-    ax.set_title('Control Validation: Differences by Year')
-    # year 0 to 1
-    plt.annotate(rct_year_diffs[0], xy=(-0.25, -0.2))
-    plt.annotate(model_year_diffs[0], xy=(0.0, -0.2))
-    # year 1 to 2
-    plt.annotate(rct_year_diffs[1], xy=(0.75, 0.1))
-    plt.annotate(model_year_diffs[1], xy=(1.0, 0.1))
-
-plt.show()
 
 
 
