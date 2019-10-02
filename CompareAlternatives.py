@@ -3,7 +3,6 @@ import InputData as D
 import ModelParameters as P
 import Support
 import SimPy.Plots.SamplePaths as Path
-import numpy
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
