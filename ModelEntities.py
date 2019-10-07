@@ -127,6 +127,8 @@ class Cohort:
         # add the new individual to the population (list of individuals)
         self.individuals.append(individual)
 
+    # TODO: I guess we are processing cost and effect here as well.
+    #       So maybe this should be renamed to process_obesity_outcomes. or something like that?
     def process_bmi(self):
         """
         processes the population distribution pyramid (age/sex)

@@ -24,7 +24,15 @@ class SimOutputs:
 
         self.pyramids = []  # population pyramids over time (% of population in each age-sex group)
         #
+        # TODO: I found what is happening in this class a little confusing and maybe could be
+        #       simplified a little.
+
+        # TODO: I am not sure what we need this.
+        #       You are updating it from outside but I am not sure if we ever use it,
         self.annualBMIs = []
+
+        # TODO: maybe this should be renamed to self.pathAveBMIs to make it explicit that
+        #       the sample path here is the average BMI of the population over time
         self.pathBMIs = Path.PrevalenceSamplePath(name='BMIs',
                                                   initial_size=0,
                                                   sim_rep=sim_rep,
@@ -41,9 +49,9 @@ class SimOutputs:
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
-    # EFFECT for CEA
+        # effect for CEA
         effect_values = self.pathBMIs.get_values()
-        # print(effect_values)
+        # TODO: isn't the effect the average BMI over the simulation horizon?
         effect = sum(effect_values)
         self.effect.append(effect)
         # print('Total effect (sum of BMIs):', effect)
@@ -59,7 +67,8 @@ class SimOutputs:
 
     def collect_bmi(self, BMIs):
         """
-        calculate average bmi of cohort at each time step
+        calculate average bmi of cohort at this time step
+        :param BMIs: (list) of the population's BMIs
         """
 
         # average BMI

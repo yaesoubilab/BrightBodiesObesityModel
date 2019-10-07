@@ -61,6 +61,9 @@ class Parameters:
         self.annualInterventionCostBB = annualInterventionCostBB
         self.annualInterventionCostCC = annualInterventionCostCC
 
+        # TODO: I would make separate parameters for the ratios in years 1 and 2
+        #       so that later when you want to do uncertainty analysis or calibration, you can
+        #       modify them from outside.
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
                 = [1.0, 0.925, 0.951, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
