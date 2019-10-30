@@ -129,7 +129,7 @@ class Cohort:
 
     # TODO: I guess we are processing cost and effect here as well.
     #       So maybe this should be renamed to process_obesity_outcomes. or something like that?
-    def process_bmi(self):
+    def process_obesity_outcomes(self):
         """
         processes the population distribution pyramid (age/sex)
         collect BMIs to calculate average

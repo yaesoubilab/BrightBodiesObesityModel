@@ -1,7 +1,5 @@
 from ModelEntities import Cohort
 import SimPy.RandomVariantGenerators as RVGs
-# use Stat when extracting outcomes
-import SimPy.StatisticalClasses as Stat
 import InputData as D
 
 
@@ -65,7 +63,7 @@ class MultiSimOutputs:
         self.pyramidStart.append(simulated_cohort.simOutputs.pyramids[0])
 
         # store all cohort average BMI paths
-        self.pathOfBMIs.append(simulated_cohort.simOutputs.pathBMIs)
+        self.pathOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
 
     # for CEA
 
@@ -76,10 +74,4 @@ class MultiSimOutputs:
 
         # store all cohort effects
         self.effects.append(simulated_cohort.simOutputs.effect)
-
-    # NEW: for bmi diff figures
-    #     self.meanBMIDiffs.append(simulated_cohort.simOutputs.pathOfBMIs.get_mean())
-    #
-    #     self.statMeanBMIDiff = Stat.SummaryStat(name='mean BMI diffs',
-    #                                             data=self.meanBMIDiffs)
 

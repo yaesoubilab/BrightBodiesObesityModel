@@ -1,6 +1,5 @@
 import SimPy.SamplePathClasses as Path
 import InputData as D
-import SimPy.StatisticalClasses as Stat
 
 
 class SimOutputs:
@@ -31,12 +30,11 @@ class SimOutputs:
         #       You are updating it from outside but I am not sure if we ever use it,
         self.annualBMIs = []
 
-        # TODO: maybe this should be renamed to self.pathAveBMIs to make it explicit that
-        #       the sample path here is the average BMI of the population over time
-        self.pathBMIs = Path.PrevalenceSamplePath(name='BMIs',
-                                                  initial_size=0,
-                                                  sim_rep=sim_rep,
-                                                  collect_stat=False)
+        # sample path: average BMI of population over time
+        self.pathAveBMIs = Path.PrevalenceSamplePath(name='BMIs',
+                                                     initial_size=0,
+                                                     sim_rep=sim_rep,
+                                                     collect_stat=False)
         self.annualCosts = []
         self.cost = []
         self.effect = []
@@ -50,11 +48,12 @@ class SimOutputs:
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
         # effect for CEA
-        effect_values = self.pathBMIs.get_values()
+        effect_values = self.pathAveBMIs.get_values()
         # TODO: isn't the effect the average BMI over the simulation horizon?
-        effect = sum(effect_values)
+        # Calculate Effect: Average BMI over Simulation Time Horizon
+        effect = sum(effect_values)/D.SIM_DURATION
         self.effect.append(effect)
-        # print('Total effect (sum of BMIs):', effect)
+        print('Total effect (avg bmi over sim horizon):', effect)
 
     def collect_birth(self):
         """
@@ -74,7 +73,7 @@ class SimOutputs:
         # average BMI
         average_bmi = sum(BMIs)/len(BMIs)
 
-        self.pathBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
+        self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
     def collect_cost(self, costs):
         cohort_cost_total = sum(costs)

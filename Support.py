@@ -82,6 +82,38 @@ def plot_rct_validation(sim_outcomes, intervention):
     print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
     print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
 
+# NEW FIGURE:
+
+    rct_control_year_diffs = [1.9, 0.0]
+    rct_bb_year_diffs = [-1.8, 0.9]
+    x = [1, 2]
+    sim_ys = [year_one_vs_zero, year_two_vs_one]
+    f, ax = plt.subplots()
+
+    if intervention == D.Interventions.BRIGHT_BODIES:
+        bb_ys = rct_bb_year_diffs
+        ax.set_title('RCT Validation: BB Differences in Average BMI by Year')
+    else:
+        bb_ys = rct_control_year_diffs
+        ax.set_title('RCT Validation: Control Differences in Average BMI by Year')
+
+    for this_y in year_one_vs_zero:
+        ax.scatter(1, this_y, color='blue', marker='_', s=200)
+    for this_y in year_two_vs_one:
+        ax.scatter(2, this_y, color='blue', marker='_', s=200)
+    # adding bright bodies data
+    ax.scatter([1, 2], bb_ys, color='red')
+    # adding error bars
+    ax.errorbar([1, 2], bb_ys, yerr=(PI_1v0, PI_2v1), fmt='none', capsize=4, ecolor='orange')
+
+    plt.xlim((0.0, 2.5))
+    plt.xticks([0, 1, 2, 3])
+    plt.yticks([-1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    plt.xlabel('Sim Years')
+    plt.ylabel('Difference in BMI (kg/m^2)')
+
+    plt.show()
+
 # TO PRODUCE BAR: VALIDATION TO RCT
 
     # rct data: treatment effect at year 1 and 2
