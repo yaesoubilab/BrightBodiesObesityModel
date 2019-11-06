@@ -63,15 +63,18 @@ class Parameters:
         self.annualInterventionCostBB = annualInterventionCostBB
         self.annualInterventionCostCC = annualInterventionCostCC
 
-        # TODO: I would make separate parameters for the ratios in years 1 and 2
-        #       so that later when you want to do uncertainty analysis or calibration, you can
-        #       modify them from outside.
+        self.multBB1 = 0.925
+        self.multBB2 = 0.951
+        self.multCC = (1.05 + 1.048) / 2
+
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
-                = [1.0, 0.925, 0.951, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+                = [1.0, self.multBB1, self.multBB2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
         else:
-            self.interventionMultipliers \
-                = [1.0, 1.05, 1.048, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+            self.interventionMultipliers = [1]
+            for i in range(10):
+                self.interventionMultipliers.append(self.multCC)
+            #, self.multCC, self.multCC, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 
 class ParamGenerator:
@@ -206,13 +209,14 @@ class ParamGenerator:
                                    param_clinic_equipment_supplies)
 
         # OVERALL cost: BB
-        overall_total_bright_bodies = total_exercise_sessions + total_nutrition_behavior_sessions + \
+        param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
             total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
 
         # OVERALL cost: Control
+        # TODO: use param.
         overall_total_control = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
             total_administration_control + total_weigh_ins_control + total_medical_director_control + \
             total_rent_utilities
 
-        return param, overall_total_bright_bodies, overall_total_control
+        return param
 

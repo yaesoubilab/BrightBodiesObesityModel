@@ -68,6 +68,7 @@ class MultiSimOutputs:
     # for CEA
 
         # sum annual costs and then run
+        # TODO: change annualcost to totalCost
         total_cost = sum(simulated_cohort.simOutputs.annualCosts)
         # store all cohort costs
         self.costs.append(total_cost)
