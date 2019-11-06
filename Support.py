@@ -101,61 +101,27 @@ def plot_rct_validation(sim_outcomes, intervention):
         ax.scatter(1, this_y, color='blue', marker='_', s=200)
     for this_y in year_two_vs_one:
         ax.scatter(2, this_y, color='blue', marker='_', s=200)
+    #ax.scatter(1, year_one_vs_zero[0], color='blue', marker='_', s=200, label="Sim Average Difference in BMI")
     # adding bright bodies data
-    ax.scatter([1, 2], bb_ys, color='red')
+    ax.scatter([1, 2], bb_ys, color='red', label="RCT Average Difference in BMI")
     # adding error bars
-    ax.errorbar([1, 2], bb_ys, yerr=(PI_1v0, PI_2v1), fmt='none', capsize=4, ecolor='orange')
+    ax.errorbar([1, 2], bb_ys, yerr=(1, 1), fmt='none', capsize=4, ecolor='orange')
+
+    # add confidence intervals from RCT
 
     plt.xlim((0.0, 2.5))
-    plt.xticks([0, 1, 2, 3])
-    plt.yticks([-1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    ticks = [1, 2]
+    plt.xticks(ticks, labels=['Year 0 to 1', 'Year 1 to 2'])
+    plt.yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
     plt.xlabel('Sim Years')
     plt.ylabel('Difference in BMI (kg/m^2)')
 
-    plt.show()
+    plt.legend(loc='upper right')
 
-# TO PRODUCE BAR: VALIDATION TO RCT
-
-    # rct data: treatment effect at year 1 and 2
-    model_year_diffs = [avg_year_1_v_0, avg_year_2_v_1]
-    print(model_year_diffs)
-    rct_control_year_diffs = [1.9, 0.0]
-    rct_bb_year_diffs = [-1.8, 0.9]
-
-    if intervention == D.Interventions.BRIGHT_BODIES:
-        rct_year_diffs = rct_bb_year_diffs
-    else:
-        rct_year_diffs = rct_control_year_diffs
-
-    ind = np.arange(len(rct_year_diffs))  # the x locations for the groups
-    width = 0.25  # the width of the bars
-
-    fig, ax = plt.subplots()
-    rct_bar = ax.bar(ind - width/2,
-                     rct_year_diffs,
-                     width,
-                     yerr=np.std(rct_year_diffs),
-                     label='RCT Diffs')
-    sim_bar = ax.bar(ind + width/2,
-                     model_year_diffs,
-                     width,
-                     yerr=((PI_1v0[0], PI_1v0[1]), (PI_2v1[0], PI_2v1[1])),
-                     label='Simulation Diffs')
-
-    # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('BMI Difference (kg/m^2)')
-    ax.set_xticks(ind)
-    ax.set_xticklabels(('Year 0 to 1', 'Year 1 to 2'))
-    ax.legend()
-    plt.yticks([-2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5])
-
-    if intervention == D.Interventions.BRIGHT_BODIES:
-        ax.set_title('Bright Bodies Validation: BMI Differences by Year')
-
-    else:
-        ax.set_title('Control Validation: Differences by Year')
-
-    plt.show()
+    # to save plotted figures
+    # bbox_inches set to tight: cleans up figures
+    plt.savefig("Figures/figure.png", dpi=300)
+    # plt.show()
 
 
 def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
