@@ -92,22 +92,22 @@ def plot_rct_validation(sim_outcomes, intervention):
 
     if intervention == D.Interventions.BRIGHT_BODIES:
         bb_ys = rct_bb_year_diffs
+        bb_ci = []
         ax.set_title('RCT Validation: BB Differences in Average BMI by Year')
     else:
         bb_ys = rct_control_year_diffs
+        bb_ci = []
         ax.set_title('RCT Validation: Control Differences in Average BMI by Year')
 
     for this_y in year_one_vs_zero:
         ax.scatter(1, this_y, color='blue', marker='_', s=200)
     for this_y in year_two_vs_one:
         ax.scatter(2, this_y, color='blue', marker='_', s=200)
-    #ax.scatter(1, year_one_vs_zero[0], color='blue', marker='_', s=200, label="Sim Average Difference in BMI")
+
     # adding bright bodies data
     ax.scatter([1, 2], bb_ys, color='red', label="RCT Average Difference in BMI")
     # adding error bars
     ax.errorbar([1, 2], bb_ys, yerr=(1, 1), fmt='none', capsize=4, ecolor='orange')
-
-    # add confidence intervals from RCT
 
     plt.xlim((0.0, 2.5))
     ticks = [1, 2]

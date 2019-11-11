@@ -127,8 +127,6 @@ class Cohort:
         # add the new individual to the population (list of individuals)
         self.individuals.append(individual)
 
-    # TODO: I guess we are processing cost and effect here as well.
-    #       So maybe this should be renamed to process_obesity_outcomes. or something like that?
     def process_obesity_outcomes(self):
         """
         processes the population distribution pyramid (age/sex)
@@ -159,11 +157,9 @@ class Cohort:
                 individual_costs.append(cost_individual)
 
         # store list of individual costs
-        # self.simOutputs.annualCosts.append(individual_costs)
         self.simOutputs.collect_cost(individual_costs)
 
         # calculate and store average BMI for this year
-        self.simOutputs.annualBMIs.append(bmi_time_step)
         self.simOutputs.collect_bmi(bmi_time_step)
 
     def process_pop_survey(self):

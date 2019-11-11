@@ -22,20 +22,15 @@ class SimOutputs:
                                                      collect_stat=False)
 
         self.pyramids = []  # population pyramids over time (% of population in each age-sex group)
-        #
-        # TODO: I found what is happening in this class a little confusing and maybe could be
-        #       simplified a little.
-
-        # TODO: I am not sure what we need this.
-        #       You are updating it from outside but I am not sure if we ever use it,
-        self.annualBMIs = []
 
         # sample path: average BMI of population over time
         self.pathAveBMIs = Path.PrevalenceSamplePath(name='BMIs',
                                                      initial_size=0,
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
-        self.annualCosts = []
+
+        # new
+        self.totalCosts = []
         self.cost = []
         self.effect = []
 
@@ -47,9 +42,8 @@ class SimOutputs:
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
 
-        # effect for CEA
+        # effect for CEA: Average BMI over Simulation Horizon
         effect_values = self.pathAveBMIs.get_values()
-        # TODO: isn't the effect the average BMI over the simulation horizon?
         # Calculate Effect: Average BMI over Simulation Time Horizon
         effect = sum(effect_values)/D.SIM_DURATION
         self.effect.append(effect)
@@ -77,9 +71,10 @@ class SimOutputs:
 
     def collect_cost(self, costs):
         cohort_cost_total = sum(costs)
-        # print('cost total', cohort_cost_total)
+        print('cost total', cohort_cost_total)
         cost_per_person = cohort_cost_total/D.POP_SIZE
-        # print('cost pp', cost_per_person)
-        self.annualCosts.append(cost_per_person)
+        print('cost pp', cost_per_person)
 
+        # COST: list of total cohort cost
+        self.totalCosts.append(cohort_cost_total)
 

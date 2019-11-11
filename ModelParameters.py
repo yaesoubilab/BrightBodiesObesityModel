@@ -74,7 +74,6 @@ class Parameters:
             self.interventionMultipliers = [1]
             for i in range(10):
                 self.interventionMultipliers.append(self.multCC)
-            #, self.multCC, self.multCC, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 
 class ParamGenerator:
@@ -209,12 +208,13 @@ class ParamGenerator:
                                    param_clinic_equipment_supplies)
 
         # OVERALL cost: BB
+        # BB COST PARAM
         param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
             total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
 
         # OVERALL cost: Control
-        # TODO: use param.
-        overall_total_control = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
+        # CC COST PARAM
+        param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
             total_administration_control + total_weigh_ins_control + total_medical_director_control + \
             total_rent_utilities
 
