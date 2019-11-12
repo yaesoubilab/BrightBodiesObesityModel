@@ -46,6 +46,7 @@ class MultiSimOutputs:
         self.pathOfBMIs = []
 
         # for CEA
+        # TODO: I'd suggest adding a short sentence to define exactly what you are using as cost and effect.
         self.costs = []
         self.effects = []
 

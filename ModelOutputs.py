@@ -30,6 +30,10 @@ class SimOutputs:
                                                      collect_stat=False)
 
         # new
+        # TODO: would you please define these?
+        #   for example, I am not sure why totalCost is a list. Shouldn't it be a float that keeps accumulating
+        #   as we progress through the simulation?
+        #   and will self.cost contain the annual costs? same question for self.effect.
         self.totalCosts = []
         self.cost = []
         self.effect = []
@@ -61,7 +65,7 @@ class SimOutputs:
     def collect_bmi(self, BMIs):
         """
         calculate average bmi of cohort at this time step
-        :param BMIs: (list) of the population's BMIs
+        :param BMIs: (list) of the population's BMIs at the current time step
         """
 
         # average BMI
@@ -70,6 +74,13 @@ class SimOutputs:
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
     def collect_cost(self, costs):
+        """
+        :param costs:
+        """
+
+        # TODO: what do you expect to receive for the 'costs' argument?
+        #  Is it a list of every person's costs at this year? Maybe add a sentence in the function docstring above.
+
         cohort_cost_total = sum(costs)
         print('cost total', cohort_cost_total)
         cost_per_person = cohort_cost_total/D.POP_SIZE

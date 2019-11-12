@@ -133,7 +133,7 @@ class Cohort:
         collect BMIs to calculate average
         """
 
-        bmi_time_step = []
+        bmis_at_this_time = []  # list of all BMIs at the current time
         individual_costs = []
 
         for individual in self.individuals:
@@ -141,13 +141,13 @@ class Cohort:
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 year_index = floor(self.simCal.time)
-                bmi_time_step.append(
+                bmis_at_this_time.append(
                     individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
                                                          # the individual ID so we need to skip it.
                     * self.params.interventionMultipliers[year_index])
 
                 # update costs of cohort
-                if year_index == 1 or 2:
+                if year_index in (1, 2):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
                     else:
@@ -160,7 +160,7 @@ class Cohort:
         self.simOutputs.collect_cost(individual_costs)
 
         # calculate and store average BMI for this year
-        self.simOutputs.collect_bmi(bmi_time_step)
+        self.simOutputs.collect_bmi(bmis_at_this_time)
 
     def process_pop_survey(self):
         """ processes the population distribution pyramid (age/sex) """

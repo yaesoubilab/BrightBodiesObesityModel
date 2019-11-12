@@ -35,7 +35,7 @@ class Parameters:
                 file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
                 rows = InOutSupport.read_csv_rows(file_name=file_name,
                                                   delimiter=',',
-                                                  if_del_first_row=True,
+                                                  if_ignore_first_row=True,
                                                   if_convert_float=True)
                 traj = SetOfTrajectories(rows=rows)
                 s = 0 if sex == 'male' else 1
