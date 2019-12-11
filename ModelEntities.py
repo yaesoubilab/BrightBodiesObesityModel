@@ -133,7 +133,7 @@ class Cohort:
         collect BMIs to calculate average
         """
 
-        bmis_at_this_time = []  # list of all BMIs at the current time
+        bmis_at_this_time = []  # list of all BMIs at the current time (for 100 individuals)
         individual_costs = []
 
         for individual in self.individuals:
@@ -146,6 +146,9 @@ class Cohort:
                                                          # the individual ID so we need to skip it.
                     * self.params.interventionMultipliers[year_index])
 
+                # print("bmis: ", bmis_at_this_time)
+                # print(len(bmis_at_this_time))
+
                 # update costs of cohort
                 if year_index in (1, 2):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
@@ -154,7 +157,12 @@ class Cohort:
                         cost_individual = self.params.annualInterventionCostCC
                 else:
                     cost_individual = self.params.annualInterventionCostCC
+                # individual_costs = list of individual cost at each time step
+                # ex. [266, 294, 294...]
                 individual_costs.append(cost_individual)
+                # print("cost individual =", individual_costs)
+                # print('cost len', len(individual_costs))
+                # print(year_index)
 
         # store list of individual costs
         self.simOutputs.collect_cost(individual_costs)

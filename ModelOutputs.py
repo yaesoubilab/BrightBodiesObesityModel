@@ -29,14 +29,10 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
-        # new
-        # TODO: would you please define these?
-        #   for example, I am not sure why totalCost is a list. Shouldn't it be a float that keeps accumulating
-        #   as we progress through the simulation?
-        #   and will self.cost contain the annual costs? same question for self.effect.
+        # totalCosts: list that holds the cost of all of the cohorts
         self.totalCosts = []
-        self.cost = []
-        self.effect = []
+        # effects_cohort: list of average BMI over simulation for given cohort
+        self.effects_cohort = []
 
     def collect_end_of_sim_stat(self):
         """
@@ -45,13 +41,6 @@ class SimOutputs:
 
         # update sample paths
         self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
-
-        # effect for CEA: Average BMI over Simulation Horizon
-        effect_values = self.pathAveBMIs.get_values()
-        # Calculate Effect: Average BMI over Simulation Time Horizon
-        effect = sum(effect_values)/D.SIM_DURATION
-        self.effect.append(effect)
-        print('Total effect (avg bmi over sim horizon):', effect)
 
     def collect_birth(self):
         """
@@ -73,19 +62,35 @@ class SimOutputs:
 
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
+        # EFFECT for CEA: Average BMI over Simulation Horizon
+
+        # effect_values: list of average BMI for cohort at each time step
+        effect_values = self.pathAveBMIs.get_values()
+        # print("effect values", effect_values)
+        # print(len(effect_values))
+
+        # Calculate Effect: Average BMI over Simulation Time Horizon for given cohort
+
+        # effect: average BMI for cohort over entire sim duration
+        # effect = (sum(effect_values))/D.SIM_DURATION
+        effect = sum(effect_values)
+        # print('Sum of avg. BMIs over sim:', effect)
+
+        # effects: list of average BMI for each cohort
+        self.effects_cohort.append(effect)
+
     def collect_cost(self, costs):
         """
-        :param costs:
+        :param costs: (list) of costs of each individual per year of sim time
+        ex. [266, 294, 294, ...]
         """
 
-        # TODO: what do you expect to receive for the 'costs' argument?
-        #  Is it a list of every person's costs at this year? Maybe add a sentence in the function docstring above.
-
+        # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
-        print('cost total', cohort_cost_total)
+        # print('cost total', cohort_cost_total)
         cost_per_person = cohort_cost_total/D.POP_SIZE
-        print('cost pp', cost_per_person)
+        # print('cost pp', cost_per_person)
 
-        # COST: list of total cohort cost
+        # COST: list of cohort cost per year (to get total cost)
         self.totalCosts.append(cohort_cost_total)
 

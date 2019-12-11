@@ -200,8 +200,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     # show the cost-effectiveness plane
-    CEA.show_CE_plane(x_label='Average BMI Units Averted (kg/m^2)',
-                      y_label='Additional Cost (per person)')
+    CEA.show_CE_plane(x_label='Average BMI Unit Reduction (kg/m^2) per person over 10 years',
+                      y_label='Average Additional Cost per person over 10 years')
 
     # report the CE table
     CEA.build_CE_table(

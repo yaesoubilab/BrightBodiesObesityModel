@@ -46,8 +46,9 @@ class MultiSimOutputs:
         self.pathOfBMIs = []
 
         # for CEA
-        # TODO: I'd suggest adding a short sentence to define exactly what you are using as cost and effect.
+        # costs = list of total cost for all participants over entire sim duration, per cohort
         self.costs = []
+        # effects = list of the average effect over entire sim duration, per cohort
         self.effects = []
 
         # NEW: for bmi diff figures
@@ -69,12 +70,27 @@ class MultiSimOutputs:
     # for CEA
 
         # NEW
+        # sum cost per year for all participants to get total cohort cost
+        # over sim duration
         total_cost = sum(simulated_cohort.simOutputs.totalCosts)
         print('NEW TOTAL COST', total_cost)
+        # ~ 298,000 ( ~ 266 * 100 p = 26600 per year * 10 years = 298,491)
 
-        # store all cohort costs
-        self.costs.append(total_cost)
+        average_cost = total_cost/D.POP_SIZE
 
-        # store all cohort effects
-        self.effects.append(simulated_cohort.simOutputs.effect)
+        # store costs for use in CEA
+        self.costs.append(average_cost)
+
+        # NEW
+        # total_effect: sum of average BMIs (by year) for sim duration
+        total_effect = sum(simulated_cohort.simOutputs.pathAveBMIs.get_values())
+
+        average_effect = total_effect/D.POP_SIZE
+        # average_effect = total_effect/D.SIM_DURATION
+
+        print("AVERAGE EFFECT:", average_effect)
+        # print("TOTAL EFFECT", total_effect)
+
+        # store all cohort effects for use in CEA
+        self.effects.append(average_effect)
 
