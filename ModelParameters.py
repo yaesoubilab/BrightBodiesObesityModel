@@ -5,8 +5,8 @@ import SimPy.FittingProbDist_MM as MM
 from ParamSupport import *
 
 
-# class to select random row from rows (specific to age/sex)
 class SetOfTrajectories:
+    # class to select random row from rows (specific to age/sex)
     def __init__(self, rows):
         self.rows = rows
         self.discreteUniform = RVGs.UniformDiscrete(0, len(rows) - 1)
@@ -21,7 +21,7 @@ class Parameters:
     def __init__(self, intervention):
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
-        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,                # life table
+        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,        # life table
                                                         list_x_min=[8, 0],          # minimum values for age/sex groups
                                                         list_x_max=[16, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
