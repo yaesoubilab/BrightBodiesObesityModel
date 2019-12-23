@@ -88,9 +88,9 @@ class SimOutputs:
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
         # print('cost total', cohort_cost_total)
-        cost_per_person = cohort_cost_total/D.POP_SIZE
+        cost_per_person = cohort_cost_total/D.N_CHILDREN_BB
         # print('cost pp', cost_per_person)
 
         # COST: list of cohort cost per year (to get total cost)
-        self.totalCosts.append(cohort_cost_total)
+        self.totalCosts.append(cost_per_person)
 

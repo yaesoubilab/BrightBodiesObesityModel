@@ -63,6 +63,8 @@ class Parameters:
         self.annualInterventionCostBB = annualInterventionCostBB
         self.annualInterventionCostCC = annualInterventionCostCC
 
+
+        # EFFECTS
         # first year BB reduction
         self.multBB1 = 0.925
         # second year BB reduction
@@ -72,13 +74,15 @@ class Parameters:
 
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
-                = [1.0, self.multBB1, self.multBB2]  # 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-            for i in range(10):
-                self.interventionMultipliers.append(self.multCC)
+                = [1.0, self.multBB1, self.multBB2]
+            # for i in range(10):
+            #    self.interventionMultipliers.append(self.multCC)
         else:
             self.interventionMultipliers = [1]
-            for i in range(10):
+            for i in range(2):
                 self.interventionMultipliers.append(self.multCC)
+            # for i in range(10):
+            #    self.interventionMultipliers.append(self.multCC)
 
 
 class ParamGenerator:
@@ -91,97 +95,97 @@ class ParamGenerator:
 
         # create gamma dist for exercise physiologist cost (BRIGHT BODIES)
         fit_output = MM.get_gamma_params(mean=exercise_physiologist,
-                                         st_dev=0)
+                                         st_dev=0.1*exercise_physiologist)
         self.exphysRVG = RVGs.Gamma(a=fit_output["a"],
                                     loc=0,
                                     scale=fit_output["scale"])
         # create gamma dist for games_equipment
         fit_output = MM.get_gamma_params(mean=games_equipment,
-                                         st_dev=0)
+                                         st_dev=0.1*games_equipment)
         self.gamesRVG = RVGs.Gamma(a=fit_output["a"],
                                    loc=0,
                                    scale=fit_output["scale"])
         # create gamma dist for motivational_tools
         fit_output = MM.get_gamma_params(mean=motivational_tools,
-                                         st_dev=0)
+                                         st_dev=0.1*motivational_tools)
         self.motivtoolsRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
         # create gamma dist for printed_materials
         fit_output = MM.get_gamma_params(mean=printed_materials,
-                                         st_dev=0)
+                                         st_dev=0.1*printed_materials)
         self.printedmaterialRVG = RVGs.Gamma(a=fit_output["a"],
                                              loc=0,
                                              scale=fit_output["scale"])
         # create gamma dist for gym_room_utilities
         fit_output = MM.get_gamma_params(mean=gym_room_utilities,
-                                         st_dev=0)
+                                         st_dev=0.1*gym_room_utilities)
         self.gymroomRVG = RVGs.Gamma(a=fit_output["a"],
                                      loc=0,
                                      scale=fit_output["scale"])
         # create gamma dist for first_aid_kit
         fit_output = MM.get_gamma_params(mean=first_aid_kit,
-                                         st_dev=0)
+                                         st_dev=0.1*first_aid_kit)
         self.firstaidRVG = RVGs.Gamma(a=fit_output["a"],
                                       loc=0,
                                       scale=fit_output["scale"])
         # create gamma dist for registered_dietitian
         fit_output = MM.get_gamma_params(mean=registered_dietitian,
-                                         st_dev=0)
+                                         st_dev=0.1*registered_dietitian)
         self.regdietRVG = RVGs.Gamma(a=fit_output["a"],
                                      loc=0,
                                      scale=fit_output["scale"])
         # create gamma dist for social_worker
         fit_output = MM.get_gamma_params(mean=social_worker,
-                                         st_dev=0)
+                                         st_dev=0.1*social_worker)
         self.socialworkerRVG = RVGs.Gamma(a=fit_output["a"],
                                           loc=0,
                                           scale=fit_output["scale"])
         # create gamma dist for educational_tools
         fit_output = MM.get_gamma_params(mean=educational_tools,
-                                         st_dev=0)
+                                         st_dev=0.1*educational_tools)
         self.edutoolsRVG = RVGs.Gamma(a=fit_output["a"],
                                       loc=0,
                                       scale=fit_output["scale"])
         # create gamma dist for classroom_utilities
         fit_output = MM.get_gamma_params(mean=classroom_utilities,
-                                         st_dev=0)
+                                         st_dev=0.1*classroom_utilities)
         self.classroomRVG = RVGs.Gamma(a=fit_output["a"],
                                        loc=0,
                                        scale=fit_output["scale"])
         # create gamma dist for exercise_physiologist_admin
         fit_output = MM.get_gamma_params(mean=exercise_physiologist_admin,
-                                         st_dev=0)
+                                         st_dev=0.1*exercise_physiologist_admin)
         self.exphysCoorRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
         # create gamma dist for registered_dietitian_admin
         fit_output = MM.get_gamma_params(mean=registered_dietitian_admin,
-                                         st_dev=0)
+                                         st_dev=0.1*registered_dietitian_admin)
         self.regdietCoorRVG = RVGs.Gamma(a=fit_output["a"],
                                          loc=0,
                                          scale=fit_output["scale"])
         # create gamma dist for technician
         fit_output = MM.get_gamma_params(mean=technician,
-                                         st_dev=0)
+                                         st_dev=0.1*technician)
         self.technicianRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
         # create gamma dist for body_fat_analyzer_scale
         fit_output = MM.get_gamma_params(mean=body_fat_analyzer_scale,
-                                         st_dev=0)
+                                         st_dev=0.1*body_fat_analyzer_scale)
         self.bfanalyserRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
         # create gamma dist for stadiometer
         fit_output = MM.get_gamma_params(mean=stadiometer,
-                                         st_dev=0)
+                                         st_dev=0.1*stadiometer)
         self.stadiometerRVG = RVGs.Gamma(a=fit_output["a"],
                                          loc=0,
                                          scale=fit_output["scale"])
         # create gamma dist for medical_consultation
         fit_output = MM.get_gamma_params(mean=medical_consultation,
-                                         st_dev=0)
+                                         st_dev=0.1*medical_consultation)
         self.medconsultRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
@@ -189,67 +193,67 @@ class ParamGenerator:
         # CLINICAL CONTROL
         # create gamma dist for nurse_practitioner
         fit_output = MM.get_gamma_params(mean=nurse_practitioner,
-                                         st_dev=0)
+                                         st_dev=0.1*nurse_practitioner)
         self.nursepractitionerRVG = RVGs.Gamma(a=fit_output["a"],
                                                loc=0,
                                                scale=fit_output["scale"])
         # create gamma dist for registered_dietitian_cc
         fit_output = MM.get_gamma_params(mean=registered_dietitian_cc,
-                                         st_dev=0)
+                                         st_dev=0.1*registered_dietitian_cc)
         self.regdiet_controlRVG = RVGs.Gamma(a=fit_output["a"],
                                              loc=0,
                                              scale=fit_output["scale"])
         # create gamma dist for social_worker_cc
         fit_output = MM.get_gamma_params(mean=social_worker_cc,
-                                         st_dev=0)
+                                         st_dev=0.1*social_worker_cc)
         self.socialworker_controlRVG = RVGs.Gamma(a=fit_output["a"],
                                                   loc=0,
                                                   scale=fit_output["scale"])
         # create gamma dist for dept_clinical_secretary
         fit_output = MM.get_gamma_params(mean=dept_clinical_secretary,
-                                         st_dev=0)
+                                         st_dev=0.1*dept_clinical_secretary)
         self.deptclinsecretaryRVG = RVGs.Gamma(a=fit_output["a"],
                                                loc=0,
                                                scale=fit_output["scale"])
         # create gamma dist for clinical_secretary
         fit_output = MM.get_gamma_params(mean=clinical_secretary,
-                                         st_dev=0)
+                                         st_dev=0.1*clinical_secretary)
         self.clinsecretaryRVG = RVGs.Gamma(a=fit_output["a"],
                                            loc=0,
                                            scale=fit_output["scale"])
         # create gamma dist for typing
         fit_output = MM.get_gamma_params(mean=typing,
-                                         st_dev=0)
+                                         st_dev=0.1*typing)
         self.typingRVG = RVGs.Gamma(a=fit_output["a"],
                                     loc=0,
                                     scale=fit_output["scale"])
         # create gamma dist for lab_technician
         fit_output = MM.get_gamma_params(mean=lab_technician,
-                                         st_dev=0)
+                                         st_dev=0.1*lab_technician)
         self.labtechRVG = RVGs.Gamma(a=fit_output["a"],
                                      loc=0,
                                      scale=fit_output["scale"])
         # create gamma dist for medical_consultation_cc
         fit_output = MM.get_gamma_params(mean=medical_consultation_cc,
-                                         st_dev=0)
+                                         st_dev=0.1*medical_consultation_cc)
         self.medconsult_controlRVG = RVGs.Gamma(a=fit_output["a"],
                                                 loc=0,
                                                 scale=fit_output["scale"])
         # create gamma dist for rent_space_utilities
         fit_output = MM.get_gamma_params(mean=rent_space_utilities,
-                                         st_dev=0)
+                                         st_dev=0.1*rent_space_utilities)
         self.rentspaceRVG = RVGs.Gamma(a=fit_output["a"],
                                        loc=0,
                                        scale=fit_output["scale"])
         # create gamma dist for cleaning_service
         fit_output = MM.get_gamma_params(mean=cleaning_service,
-                                         st_dev=0)
+                                         st_dev=0.1*cleaning_service)
         self.cleaningRVG = RVGs.Gamma(a=fit_output["a"],
                                       loc=0,
                                       scale=fit_output["scale"])
         # create gamma dist for clinic_equipment_supplies
         fit_output = MM.get_gamma_params(mean=clinic_equipment_supplies,
-                                         st_dev=0)
+                                         st_dev=0.1*clinic_equipment_supplies)
         self.clinicequipRVG = RVGs.Gamma(a=fit_output["a"],
                                          loc=0,
                                          scale=fit_output["scale"])

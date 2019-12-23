@@ -150,7 +150,8 @@ class Cohort:
                 # print(len(bmis_at_this_time))
 
                 # update costs of cohort
-                if year_index in (1, 2):
+                if year_index is 0:
+                # if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
                     else:
