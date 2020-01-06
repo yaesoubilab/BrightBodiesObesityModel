@@ -9,7 +9,8 @@ import SimPy.Plots.SamplePaths as Path
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    parameters=P.Parameters(intervention=D.Interventions.BRIGHT_BODIES)
+    intervention=D.Interventions.BRIGHT_BODIES
+    #parameters=P.Parameters(intervention=D.Interventions.BRIGHT_BODIES)
 )
 # simulate these cohorts (BB)
 multiCohortBB.simulate()
@@ -17,7 +18,8 @@ multiCohortBB.simulate()
 # for MultiCohort CLINICAL CONTROL
 multiCohortCC = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    parameters=P.Parameters(intervention=D.Interventions.CONTROL)
+    intervention=D.Interventions.CONTROL
+    #parameters=P.Parameters(intervention=D.Interventions.CONTROL)
 )
 # simulate these cohorts (CC)
 multiCohortCC.simulate()

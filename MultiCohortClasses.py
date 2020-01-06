@@ -1,12 +1,14 @@
 from ModelEntities import Cohort
 import SimPy.RandomVariantGenerators as RVGs
 import InputData as D
+from ModelParameters import ParamGenerator
 
 
 class MultiCohort:
     """ simulates multiple cohorts """
 
-    def __init__(self, ids, parameters):
+    #def __init__(self, ids, parameters):
+    def __init__(self, ids, intervention):
         """
         :param ids: (list) of ids for cohorts to simulate
         :param parameters: cohort parameters
@@ -14,12 +16,16 @@ class MultiCohort:
 
         self.ids = ids
         self.rng = RVGs.RNG(seed=ids)
-        self.params = parameters
+        #self.params = parameters
 
         self.cohorts = []       # list of cohorts
+        self.param_sets = []  # list of parameter sets (for each cohort)
 
         # for cohort outcomes
         self.multiSimOutputs = MultiSimOutputs()
+
+        # create parameter sets
+        self.__populate_parameter_sets(intervention=intervention)
 
     def simulate(self):
         """ simulates all cohorts """
@@ -27,13 +33,25 @@ class MultiCohort:
         for i in range(len(self.ids)):
 
             # create cohort
-            cohort = Cohort(id=self.ids[i], parameters=self.params)
+            # cohort = Cohort(id=self.ids[i], parameters=self.params)
+            cohort = Cohort(id=self.ids[i], parameters=self.param_sets[i])
 
             # simulate the cohort
             cohort.simulate(sim_duration=D.SIM_DURATION)
 
             # outcomes from simulating all cohorts
             self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
+
+    def __populate_parameter_sets(self, intervention):
+
+        param_generator = ParamGenerator(intervention=intervention)
+
+        # create as many sets of parameters as the number of cohorts
+        for i in range(len(self.ids)):
+            # create new rng for each parameter set
+            rng = RVGs.RNG(seed=i)
+            # get and store new set of parameters
+            self.param_sets.append(param_generator.get_new_parameters(rng=rng))
 
 
 class MultiSimOutputs:

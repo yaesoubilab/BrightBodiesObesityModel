@@ -155,6 +155,7 @@ class Cohort:
                 if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
+                        # cost_individual = Param.ParamGenerator.get_new_parameters(rng=RVGs.RNG)
                     else:
                         cost_individual = self.params.annualInterventionCostCC
                 else:

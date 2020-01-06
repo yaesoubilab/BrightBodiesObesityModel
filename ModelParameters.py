@@ -118,11 +118,11 @@ class ParamGenerator:
                                              loc=0,
                                              scale=fit_output["scale"])
         # create gamma dist for gym_room_utilities
-        fit_output = MM.get_gamma_params(mean=gym_room_utilities,
-                                         st_dev=0.1*gym_room_utilities)
-        self.gymroomRVG = RVGs.Gamma(a=fit_output["a"],
-                                     loc=0,
-                                     scale=fit_output["scale"])
+        # fit_output = MM.get_gamma_params(mean=gym_room_utilities,
+        #                                  st_dev=0.1*gym_room_utilities)
+        # self.gymroomRVG = RVGs.Gamma(a=fit_output["a"],
+        #                              loc=0,
+        #                              scale=fit_output["scale"])
         # create gamma dist for first_aid_kit
         fit_output = MM.get_gamma_params(mean=first_aid_kit,
                                          st_dev=0.1*first_aid_kit)
@@ -148,11 +148,11 @@ class ParamGenerator:
                                       loc=0,
                                       scale=fit_output["scale"])
         # create gamma dist for classroom_utilities
-        fit_output = MM.get_gamma_params(mean=classroom_utilities,
-                                         st_dev=0.1*classroom_utilities)
-        self.classroomRVG = RVGs.Gamma(a=fit_output["a"],
-                                       loc=0,
-                                       scale=fit_output["scale"])
+        # fit_output = MM.get_gamma_params(mean=classroom_utilities,
+        #                                  st_dev=0.1*classroom_utilities)
+        # self.classroomRVG = RVGs.Gamma(a=fit_output["a"],
+        #                                loc=0,
+        #                                scale=fit_output["scale"])
         # create gamma dist for exercise_physiologist_admin
         fit_output = MM.get_gamma_params(mean=exercise_physiologist_admin,
                                          st_dev=0.1*exercise_physiologist_admin)
@@ -312,85 +312,92 @@ class ParamGenerator:
     # sample from distributions
         # BRIGHT BODIES
         # exercise sessions
-        param_exercise_physiologist = self.exphysRVG.sample(rng)
-        param_games_equipment = self.gamesRVG.sample(rng)
-        param_motivational_tools = self.motivtoolsRVG.sample(rng)
-        param_printed_materials = self.printedmaterialRVG.sample(rng)
-        param_gym_room_utilities = self.gymroomRVG.sample(rng)
-        param_first_aid_kit = self.firstaidRVG.sample(rng)
-        # nutrition behavior modification
-        param_registered_dietitian = self.regdietRVG.sample(rng)
-        param_social_worker = self.socialworkerRVG.sample(rng)
-        param_educational_tools = self.edutoolsRVG.sample(rng)
-        param_classroom_utilities = self.classroomRVG.sample(rng)
-        # parent sessions
-        param_social_worker_2 = self.socialworkerRVG.sample(rng)
-        param_printed_materials_2 = self.printedmaterialRVG.sample(rng)
-        param_classroom_utilities_2 = self.classroomRVG.sample(rng)
-        # administration
-        param_exercise_physiologist_admin = self.exphysCoorRVG.sample(rng)
-        param_registered_dietitian_admin = self.regdietCoorRVG.sample(rng)
-        # weigh ins
-        param_technician = self.technicianRVG.sample(rng)
-        param_body_fat_analyzer_scale = self.bfanalyserRVG.sample(rng)
-        param_stadiometer = self.stadiometerRVG.sample(rng)
-        # medical director
-        param_medical_consultation = self.medconsultRVG.sample(rng)
+        if self.intervention is D.Interventions.BRIGHT_BODIES:
+            param_exercise_physiologist = self.exphysRVG.sample(rng)
+            param_games_equipment = self.gamesRVG.sample(rng)
+            param_motivational_tools = self.motivtoolsRVG.sample(rng)
+            param_printed_materials = self.printedmaterialRVG.sample(rng)
+            #param_gym_room_utilities = self.gymroomRVG.sample(rng)
+            param_first_aid_kit = self.firstaidRVG.sample(rng)
+            # nutrition behavior modification
+            param_registered_dietitian = self.regdietRVG.sample(rng)
+            param_social_worker = self.socialworkerRVG.sample(rng)
+            param_educational_tools = self.edutoolsRVG.sample(rng)
+            #param_classroom_utilities = self.classroomRVG.sample(rng)
+            # parent sessions
+            param_social_worker_2 = self.socialworkerRVG.sample(rng)
+            param_printed_materials_2 = self.printedmaterialRVG.sample(rng)
+            #param_classroom_utilities_2 = self.classroomRVG.sample(rng)
+            # administration
+            param_exercise_physiologist_admin = self.exphysCoorRVG.sample(rng)
+            param_registered_dietitian_admin = self.regdietCoorRVG.sample(rng)
+            # weigh ins
+            param_technician = self.technicianRVG.sample(rng)
+            param_body_fat_analyzer_scale = self.bfanalyserRVG.sample(rng)
+            param_stadiometer = self.stadiometerRVG.sample(rng)
+            # medical director
+            param_medical_consultation = self.medconsultRVG.sample(rng)
+
+            # calculate category totals: BRIGHT BODIES
+            total_exercise_sessions = (
+                param_exercise_physiologist + param_games_equipment + param_motivational_tools
+                + param_printed_materials + param_first_aid_kit)
+                # + param_gym_room_utilities
+            total_nutrition_behavior_sessions = (param_registered_dietitian + param_social_worker + param_educational_tools)
+                                                    # + param_classroom_utilities
+            total_parent_sessions = (param_social_worker_2 + param_printed_materials_2)
+                                        #+ param_classroom_utilities_2
+            total_administration = (param_exercise_physiologist_admin + param_registered_dietitian_admin)
+            total_weigh_ins = (param_technician + param_body_fat_analyzer_scale + param_stadiometer)
+            total_medical_director = param_medical_consultation
+
+            # OVERALL cost: BB
+            # BB COST PARAM
+            param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
+                                  total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
+
+            param.annualInterventionCostBB = param.total_cost_bb / D.N_CHILDREN_BB
 
         # CONTROL
-        # nurse visit and follow up
-        param_nurse_practitioner = self.nursepractitionerRVG.sample(rng)
-        # nutrition visit and follow up
-        param_registered_dietitian_cc = self.regdiet_controlRVG.sample(rng)
-        # behavioral counseling visit and follow up
-        param_social_worker_cc = self.socialworker_controlRVG.sample(rng)
-        # administration
-        param_dept_clinical_secretary = self.deptclinsecretaryRVG.sample(rng)
-        param_clinical_secretary = self.clinsecretaryRVG.sample(rng)
-        param_typing = self.typingRVG.sample(rng)
-        # weigh ins and labs
-        param_lab_technician = self.labtechRVG.sample(rng)
-        # medical director visit and follow up
-        param_medical_consultation_cc = self.medconsult_controlRVG.sample(rng)
-        # rent space/utilities and cleaning service
-        param_rent_space_utilities = self.rentspaceRVG.sample(rng)
-        param_cleaning_service = self.cleaningRVG.sample(rng)
-        param_clinic_equipment_supplies = self.clinicequipRVG.sample(rng)
+        if self.intervention is D.Interventions.CONTROL:
+            # nurse visit and follow up
+            param_nurse_practitioner = self.nursepractitionerRVG.sample(rng)
+            # nutrition visit and follow up
+            param_registered_dietitian_cc = self.regdiet_controlRVG.sample(rng)
+            # behavioral counseling visit and follow up
+            param_social_worker_cc = self.socialworker_controlRVG.sample(rng)
+            # administration
+            param_dept_clinical_secretary = self.deptclinsecretaryRVG.sample(rng)
+            param_clinical_secretary = self.clinsecretaryRVG.sample(rng)
+            param_typing = self.typingRVG.sample(rng)
+            # weigh ins and labs
+            param_lab_technician = self.labtechRVG.sample(rng)
+            # medical director visit and follow up
+            param_medical_consultation_cc = self.medconsult_controlRVG.sample(rng)
+            # rent space/utilities and cleaning service
+            param_rent_space_utilities = self.rentspaceRVG.sample(rng)
+            param_cleaning_service = self.cleaningRVG.sample(rng)
+            param_clinic_equipment_supplies = self.clinicequipRVG.sample(rng)
 
-        # calculate category totals: BRIGHT BODIES
-        total_exercise_sessions = sum(param_exercise_physiologist + param_games_equipment + param_motivational_tools +
-                                      param_printed_materials + param_gym_room_utilities + param_first_aid_kit)
-        total_nutrition_behavior_sessions = sum(param_registered_dietitian + param_social_worker +
-                                                param_educational_tools + param_classroom_utilities)
-        total_parent_sessions = sum(param_social_worker_2 + param_printed_materials_2 + param_classroom_utilities_2)
-        total_administration = sum(param_exercise_physiologist_admin + param_registered_dietitian_admin)
-        total_weigh_ins = sum(param_technician + param_body_fat_analyzer_scale + param_stadiometer)
-        total_medical_director = param_medical_consultation
+            # calculate category totals: CONTROL
+            total_nurse_visit = param_nurse_practitioner
+            total_nutrition_visit = param_registered_dietitian_cc
+            total_behavior_counseling = param_social_worker_cc
+            total_administration_control = (param_dept_clinical_secretary + param_clinical_secretary + param_typing)
+            total_weigh_ins_control = param_lab_technician
+            total_medical_director_control = param_medical_consultation_cc
+            total_rent_utilities = (param_rent_space_utilities + param_cleaning_service +
+                                       param_clinic_equipment_supplies)
 
-        # calculate category totals: CONTROL
-        total_nurse_visit = param_nurse_practitioner
-        total_nutrition_visit = param_registered_dietitian_cc
-        total_behavior_counseling = param_social_worker_cc
-        total_administration_control = sum(param_dept_clinical_secretary + param_clinical_secretary + param_typing)
-        total_weigh_ins_control = param_lab_technician
-        total_medical_director_control = param_medical_consultation_cc
-        total_rent_utilities = sum(param_rent_space_utilities + param_cleaning_service +
-                                   param_clinic_equipment_supplies)
+            # OVERALL cost: Control
+            # CC COST PARAM
+            param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
+                total_administration_control + total_weigh_ins_control + total_medical_director_control + \
+                total_rent_utilities
 
-        # OVERALL cost: BB
-        # BB COST PARAM
-        param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
-            total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
+            param.annualInterventionCostCC = param.total_cost_cc/D.N_CHILDREN_BB
 
-        param.annualInterventionCostBB = param.total_cost_bb/D.N_CHILDREN_BB
-
-        # OVERALL cost: Control
-        # CC COST PARAM
-        param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
-            total_administration_control + total_weigh_ins_control + total_medical_director_control + \
-            total_rent_utilities
-
-        param.annualInterventionCostCC = param.total_cost_cc/D.N_CHILDREN_BB
-
+        # return the parameter set
         return param
+
 
