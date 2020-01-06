@@ -72,6 +72,7 @@ class MultiSimOutputs:
         # NEW
         # sum cost per year for all participants to get total cohort cost
         # over sim duration
+        print(simulated_cohort.simOutputs.totalCosts)
         total_cost = sum(simulated_cohort.simOutputs.totalCosts)
         print('NEW TOTAL COST', total_cost)
         # ~ 298,000 ( ~ 266 * 100 p = 26600 per year * 10 years = 298,491)
@@ -82,15 +83,19 @@ class MultiSimOutputs:
         self.costs.append(average_cost)
 
         # NEW
+        print(simulated_cohort.simOutputs.pathAveBMIs.get_values())
+        effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
         # total_effect: sum of average BMIs (by year) for sim duration
-        total_effect = sum(simulated_cohort.simOutputs.pathAveBMIs.get_values())
+        # total_effect = sum(simulated_cohort.simOutputs.pathAveBMIs.get_values())
+        total_effect = effect_values[1] + effect_values[2]
 
-        average_effect = total_effect/D.POP_SIZE
-        # average_effect = total_effect/D.SIM_DURATION
+        # do NOT need to divide by pop size because values are already an average over the cohort
+        average_effect = total_effect/D.YEARS_RCT
 
-        print("AVERAGE EFFECT:", average_effect)
-        # print("TOTAL EFFECT", total_effect)
+        # print("AVERAGE EFFECT:", average_effect)
+        print("TOTAL EFFECT", total_effect)
 
         # store all cohort effects for use in CEA
+        # use TOTAL EFFECT because the values are already an average
         self.effects.append(average_effect)
 

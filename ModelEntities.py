@@ -6,6 +6,7 @@ import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
 from math import floor
+import ModelParameters as Param
 
 
 class Individual:
@@ -150,16 +151,16 @@ class Cohort:
                 # print(len(bmis_at_this_time))
 
                 # update costs of cohort
-                if year_index is 0:
-                # if year_index in (0, 1):
+                # if year_index is 0:
+                if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
                     else:
                         cost_individual = self.params.annualInterventionCostCC
                 else:
-                    cost_individual = self.params.annualInterventionCostCC
+                    # cost_individual = self.params.annualInterventionCostCC
+                    cost_individual = 0
                 # individual_costs = list of individual cost at each time step
-                # ex. [266, 294, 294...]
                 individual_costs.append(cost_individual)
                 # print("cost individual =", individual_costs)
                 # print('cost len', len(individual_costs))

@@ -82,15 +82,17 @@ class SimOutputs:
     def collect_cost(self, costs):
         """
         :param costs: (list) of costs of each individual per year of sim time
-        ex. [266, 294, 294, ...]
+        ex. [532, 588, 588, ...]
         """
 
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
-        # print('cost total', cohort_cost_total)
+        print('cost total', cohort_cost_total)
         cost_per_person = cohort_cost_total/D.N_CHILDREN_BB
-        # print('cost pp', cost_per_person)
+        print('cost pp', cost_per_person)
 
         # COST: list of cohort cost per year (to get total cost)
-        self.totalCosts.append(cost_per_person)
+        # self.totalCosts.append(cost_per_person)
+        self.totalCosts.append(cohort_cost_total)
+
 

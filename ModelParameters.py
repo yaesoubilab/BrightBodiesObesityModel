@@ -3,6 +3,7 @@ from SimPy import InOutFunctions as InOutSupport
 from SimPy import RandomVariantGenerators as RVGs
 import SimPy.FittingProbDist_MM as MM
 from ParamSupport import *
+import InputData as D
 
 
 class SetOfTrajectories:
@@ -62,7 +63,6 @@ class Parameters:
         self.annualInterventionCost = []
         self.annualInterventionCostBB = annualInterventionCostBB
         self.annualInterventionCostCC = annualInterventionCostCC
-
 
         # EFFECTS
         # first year BB reduction
@@ -382,11 +382,15 @@ class ParamGenerator:
         param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
             total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
 
+        param.annualInterventionCostBB = param.total_cost_bb/D.N_CHILDREN_BB
+
         # OVERALL cost: Control
         # CC COST PARAM
         param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
             total_administration_control + total_weigh_ins_control + total_medical_director_control + \
             total_rent_utilities
+
+        param.annualInterventionCostCC = param.total_cost_cc/D.N_CHILDREN_BB
 
         return param
 
