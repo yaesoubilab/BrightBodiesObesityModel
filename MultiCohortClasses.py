@@ -93,7 +93,6 @@ class MultiSimOutputs:
         print(simulated_cohort.simOutputs.totalCosts)
         total_cost = sum(simulated_cohort.simOutputs.totalCosts)
         print('NEW TOTAL COST', total_cost)
-        # ~ 298,000 ( ~ 266 * 100 p = 26600 per year * 10 years = 298,491)
 
         average_cost = total_cost/D.POP_SIZE
 
@@ -102,18 +101,31 @@ class MultiSimOutputs:
 
         # NEW
         print(simulated_cohort.simOutputs.pathAveBMIs.get_values())
+        # average BMI by year
         effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
         # total_effect: sum of average BMIs (by year) for sim duration
         # total_effect = sum(simulated_cohort.simOutputs.pathAveBMIs.get_values())
-        total_effect = effect_values[1] + effect_values[2]
+
+        # represent RCT effect (skip index 0 because that's baseline)
+        rct_effect = effect_values[1] + effect_values[2]
+        # represent 10 year effect
+        ten_year_effect = (effect_values[1] + effect_values[2] +
+                           effect_values[3] + effect_values[4] +
+                           effect_values[5] + effect_values[6] +
+                           effect_values[7] + effect_values[8] +
+                           effect_values[9] + effect_values[10])
 
         # do NOT need to divide by pop size because values are already an average over the cohort
-        average_effect = total_effect/D.YEARS_RCT
+        average_rct_effect = rct_effect/D.YEARS_RCT
+        average_effect_ten_years = ten_year_effect/D.SIM_DURATION
 
-        # print("AVERAGE EFFECT:", average_effect)
-        print("TOTAL EFFECT", total_effect)
+        print("AVERAGE 10 year EFFECT:", average_effect_ten_years)
+        print("TOTAL RCT EFFECT (sum of year 1 and 2 avg. bmi)", rct_effect)
 
         # store all cohort effects for use in CEA
-        # use TOTAL EFFECT because the values are already an average
-        self.effects.append(average_effect)
+        # EFFECT FOR 2 YEARS RCT
+        # self.effects.append(average_rct_effect)
+        # EFFECT FOR 10 YEARS SIM
+        self.effects.append(average_effect_ten_years)
+
 

@@ -75,14 +75,14 @@ class Parameters:
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionMultipliers \
                 = [1.0, self.multBB1, self.multBB2]
-            # for i in range(10):
-            #    self.interventionMultipliers.append(self.multCC)
+            for i in range(10):
+                self.interventionMultipliers.append(self.multCC)
         else:
             self.interventionMultipliers = [1]
-            for i in range(2):
-                self.interventionMultipliers.append(self.multCC)
-            # for i in range(10):
+            # for i in range(2):
             #    self.interventionMultipliers.append(self.multCC)
+            for i in range(10):
+                self.interventionMultipliers.append(self.multCC)
 
 
 class ParamGenerator:

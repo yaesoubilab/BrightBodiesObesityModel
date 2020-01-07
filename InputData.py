@@ -7,7 +7,7 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 
 # simulation settings
 SIM_INIT = 0.00001  # (years) initialization period to create the cohort
-SIM_DURATION = 2   # (years) - changed from 10 for manuscript
+SIM_DURATION = 10   # (years) - changed from 10 for manuscript
 POP_SIZE = 90     # population size (cohort at initialization)
 
 # for MultiCohorts

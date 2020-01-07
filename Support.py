@@ -228,8 +228,8 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # to produce figure
-    # x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    x = [0, 1, 2]
+    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    # x = [0, 1, 2]
     sim_ys = list_of_diff_mean_BMIs
     # rct data: treatment effect at year 1 and 2
     bb_ys = [3.7, 2.8]
@@ -244,10 +244,10 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     ax.errorbar([1, 2], bb_ys, yerr=[[0.1, 0.2], [0.3, 0.4]], fmt='none', capsize=4, ecolor='orange', elinewidth=2)
 
     ax.set_title('Difference in Average BMI by Intervention')
-    # plt.xlim((0.0, 10.5))
-    plt.xlim((0.0, 3.0))
-    plt.xticks([0, 1, 2])
-    # plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    plt.xlim((0.0, 10.5))
+    # plt.xlim((0.0, 3.0))
+    # plt.xticks([0, 1, 2])
+    plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0])
     plt.xlabel('Sim Years')
     plt.ylabel('Difference in BMI (kg/m^2)')
