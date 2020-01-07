@@ -21,6 +21,8 @@ class Individual:
         self.initialAge = age_sex[0]
         self.ifAlive = True
         self.trajectory = bmi_trajectory
+        # NEW
+        self.ifLessThan95th = False
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -136,19 +138,152 @@ class Cohort:
 
         bmis_at_this_time = []  # list of all BMIs at the current time (for 100 individuals)
         individual_costs = []
+        health_care_expenditures = []
 
         for individual in self.individuals:
             if individual.ifAlive is True:
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 year_index = floor(self.simCal.time)
-                bmis_at_this_time.append(
-                    individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
-                                                         # the individual ID so we need to skip it.
-                    * self.params.interventionMultipliers[year_index])
+                bmi_individual = (individual.trajectory[year_index+1])*(self.params.interventionMultipliers[year_index])
+                # bmis_at_this_time.append(
+                #     individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
+                #                                          # the individual ID so we need to skip it.
+                #     * self.params.interventionMultipliers[year_index])
+                bmis_at_this_time.append(bmi_individual)
 
                 # print("bmis: ", bmis_at_this_time)
                 # print(len(bmis_at_this_time))
+
+                # NEW
+                # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
+                age = floor(individual.get_age(current_time=self.simCal.time))
+                # if Female
+                if individual.sex == 1:
+                    if age == 8:
+                        if bmi_individual < 20.6:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 9:
+                        if bmi_individual < 21.8:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 10:
+                        if bmi_individual < 22.9:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 11:
+                        if bmi_individual < 24.1:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 12:
+                        if bmi_individual < 25.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 13:
+                        if bmi_individual < 26.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 14:
+                        if bmi_individual < 27.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 15:
+                        if bmi_individual < 28.1:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 16:
+                        if bmi_individual < 28.9:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 17:
+                        if bmi_individual < 29.6:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 18:
+                        if bmi_individual < 30:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    # for all older ages
+                    else:
+                        if bmi_individual < 30:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                # if Male
+                if individual.sex == 0:
+                    if age == 8:
+                        if bmi_individual < 20.0:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 9:
+                        if bmi_individual < 21.1:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 10:
+                        if bmi_individual < 22.1:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 11:
+                        if bmi_individual < 23.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 12:
+                        if bmi_individual < 24.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 13:
+                        if bmi_individual < 25.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 14:
+                        if bmi_individual < 26.0:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 15:
+                        if bmi_individual < 26.8:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 16:
+                        if bmi_individual < 27.5:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 17:
+                        if bmi_individual < 28.2:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    if age == 18:
+                        if bmi_individual < 30:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
+                    # for all older ages
+                    else:
+                        if bmi_individual < 30:
+                            individual.ifLessThan95th = True
+                        else:
+                            individual.ifLessThan95th = False
 
                 # update costs of cohort
                 # if year_index is 0:
@@ -163,12 +298,26 @@ class Cohort:
                     cost_individual = 0
                 # individual_costs = list of individual cost at each time step
                 individual_costs.append(cost_individual)
-                # print("cost individual =", individual_costs)
-                # print('cost len', len(individual_costs))
-                # print(year_index)
 
-        # store list of individual costs
-        self.simOutputs.collect_cost(individual_costs)
+                # NEW
+                # ATTRIBUTABLE HEALTH CARE EXPENDITURES
+                if age < 19:
+                    if individual.ifLessThan95th is False:
+                        # annual HC expenditure for >95th (per individual)
+                        annual_hc_exp = 220
+                    else:
+                        # annual HC expenditure for <95th (per individual)
+                        annual_hc_exp = 180
+                else:
+                    if individual.ifLessThan95th is False:
+                        annual_hc_exp = 3429
+                    else:
+                        annual_hc_exp = 0
+                health_care_expenditures.append(annual_hc_exp)
+                # print('health care exp', health_care_expenditures)
+
+        # store list of individual costs and health
+        self.simOutputs.collect_cost(individual_costs, health_care_expenditures)
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(bmis_at_this_time)

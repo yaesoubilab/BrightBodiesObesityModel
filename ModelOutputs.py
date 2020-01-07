@@ -79,10 +79,11 @@ class SimOutputs:
         # effects: list of average BMI for each cohort
         self.effects_cohort.append(effect)
 
-    def collect_cost(self, costs):
+    def collect_cost(self, costs, expenditures):
         """
         :param costs: (list) of costs of each individual per year of sim time
         ex. [532, 588, 588, ...]
+        :param expenditures: (list) of annual health care expenditures for each individual
         """
 
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
@@ -94,5 +95,11 @@ class SimOutputs:
         # COST: list of cohort cost per year (to get total cost)
         # self.totalCosts.append(cost_per_person)
         self.totalCosts.append(cohort_cost_total)
+
+        # EXPENDITURES
+        cohort_expenditure_total = sum(expenditures)
+        print('expenditure total', cohort_expenditure_total)
+        expenditure_per_person = cohort_expenditure_total/D.N_CHILDREN_BB
+        print('expenditure pp', expenditure_per_person)
 
 
