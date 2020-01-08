@@ -69,6 +69,13 @@ class MultiSimOutputs:
         # effects = list of the average effect over entire sim duration, per cohort
         self.effects = []
 
+        # expenditures = list of average expenditures per year per person over entire sim duration, per cohort
+        self.expenditures = []
+        # totalExpenditures = list of total expenditures for all people over 10 years, per cohort
+        self.totalExpenditures = []
+        # individualTotalExpenditure = list of individual expenditures over 10 years
+        self.individualTotalExpenditure = []
+
         # NEW: for bmi diff figures
         self.meanBMIDiffs = []
         self.statMeanBMIDiff = None
@@ -127,5 +134,26 @@ class MultiSimOutputs:
         # self.effects.append(average_rct_effect)
         # EFFECT FOR 10 YEARS SIM
         self.effects.append(average_effect_ten_years)
+
+        # EXPENDITURES
+        print('EXP MULTI', simulated_cohort.simOutputs.totalExpenditures)
+        # total expenditures over 10 years (for cohort)
+        total_expenditures = sum(simulated_cohort.simOutputs.totalExpenditures)
+        # average expenditure per year (over 10 years)
+        annual_avg_expenditure = total_expenditures/D.SIM_DURATION
+        # total expenditure per person over 10 years
+        individual_total_expenditure = total_expenditures/D.N_CHILDREN_BB
+        # average expenditure per year PER PERSON (over 10 years)
+        individual_annual_expenditure = annual_avg_expenditure/D.N_CHILDREN_BB
+        print('INDIVIDUAL EXPEN OVER 10 YR', individual_total_expenditure)
+        # store average expenditures
+        self.expenditures.append(individual_annual_expenditure)
+        # store total expenditures
+        self.totalExpenditures.append(total_expenditures)
+        # store individual expenditure over 10 years
+        self.individualTotalExpenditure.append(individual_total_expenditure)
+
+
+
 
 

@@ -31,6 +31,8 @@ class SimOutputs:
 
         # totalCosts: list that holds the cost of all of the cohorts
         self.totalCosts = []
+        # totalExpenditures: list that holds the expenditures
+        self.totalExpenditures = []
         # effects_cohort: list of average BMI over simulation for given cohort
         self.effects_cohort = []
 
@@ -101,5 +103,7 @@ class SimOutputs:
         print('expenditure total', cohort_expenditure_total)
         expenditure_per_person = cohort_expenditure_total/D.N_CHILDREN_BB
         print('expenditure pp', expenditure_per_person)
+
+        self.totalExpenditures.append(cohort_expenditure_total)
 
 

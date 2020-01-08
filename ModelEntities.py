@@ -301,7 +301,8 @@ class Cohort:
 
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
-                if age < 19:
+                bmi_unit_above_30 = bmi_individual - 30
+                if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
                         annual_hc_exp = 220
@@ -309,10 +310,16 @@ class Cohort:
                         # annual HC expenditure for <95th (per individual)
                         annual_hc_exp = 180
                 else:
-                    if individual.ifLessThan95th is False:
-                        annual_hc_exp = 3429
-                    else:
+                    # if less than 95th (which is 30)
+                    if individual.ifLessThan95th is True:
+                        # no additional attributable expenditure
                         annual_hc_exp = 0
+                    else:
+                        if bmi_unit_above_30 < 0:
+                            annual_hc_exp = 0
+                        else:
+                            annual_hc_exp = bmi_unit_above_30*197
+
                 health_care_expenditures.append(annual_hc_exp)
                 # print('health care exp', health_care_expenditures)
 
