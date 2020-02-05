@@ -158,6 +158,7 @@ class Cohort:
                 # NEW
                 # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
                 age = floor(individual.get_age(current_time=self.simCal.time))
+                # TODO: put them in the same format as age_sex_dist
                 # if Female
                 if individual.sex == 1:
                     if age == 8:
@@ -301,14 +302,16 @@ class Cohort:
 
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
+                # TODO: have a parameter for $220 and $180
+                # TODO: define a constant INFLATION for 0.02
                 bmi_unit_above_30 = bmi_individual - 30
                 if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
-                        annual_hc_exp = 220*((1+0.02)**(2020-2008))
+                        annual_hc_exp = 220*((1+0.02)**(2020-2008 + year_index))
                     else:
                         # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = 180*((1+0.02)**(2020-2008))
+                        annual_hc_exp = 180*((1+0.02)**(2020-2008 + year_index))
                 else:
                     # if less than 95th (which is 30)
                     if individual.ifLessThan95th is True:

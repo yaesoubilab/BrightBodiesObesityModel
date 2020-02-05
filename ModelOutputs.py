@@ -88,6 +88,8 @@ class SimOutputs:
         :param expenditures: (list) of annual health care expenditures for each individual
         """
 
+        # TODO: Maybe only keep overall cost (for the cohort over 10 years)
+
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
         print('cost total', cohort_cost_total)
