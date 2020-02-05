@@ -7,7 +7,6 @@ from ModelParameters import ParamGenerator
 class MultiCohort:
     """ simulates multiple cohorts """
 
-    #def __init__(self, ids, parameters):
     def __init__(self, ids, intervention):
         """
         :param ids: (list) of ids for cohorts to simulate
@@ -16,7 +15,6 @@ class MultiCohort:
 
         self.ids = ids
         self.rng = RVGs.RNG(seed=ids)
-        #self.params = parameters
 
         self.cohorts = []       # list of cohorts
         self.param_sets = []  # list of parameter sets (for each cohort)
@@ -33,7 +31,6 @@ class MultiCohort:
         for i in range(len(self.ids)):
 
             # create cohort
-            # cohort = Cohort(id=self.ids[i], parameters=self.params)
             cohort = Cohort(id=self.ids[i], parameters=self.param_sets[i])
 
             # simulate the cohort

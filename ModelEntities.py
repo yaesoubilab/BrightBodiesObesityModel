@@ -305,10 +305,10 @@ class Cohort:
                 if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
-                        annual_hc_exp = 220
+                        annual_hc_exp = 220*((1+0.02)**(2020-2008))
                     else:
                         # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = 180
+                        annual_hc_exp = 180*((1+0.02)**(2020-2008))
                 else:
                     # if less than 95th (which is 30)
                     if individual.ifLessThan95th is True:
@@ -318,7 +318,7 @@ class Cohort:
                         if bmi_unit_above_30 < 0:
                             annual_hc_exp = 0
                         else:
-                            annual_hc_exp = bmi_unit_above_30*197
+                            annual_hc_exp = bmi_unit_above_30*(197*((1+0.02)**(2020-2017)))
 
                 health_care_expenditures.append(annual_hc_exp)
                 # print('health care exp', health_care_expenditures)

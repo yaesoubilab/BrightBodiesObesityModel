@@ -354,7 +354,10 @@ class ParamGenerator:
             # OVERALL cost: BB
             # BB COST PARAM
             param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
-                                  total_parent_sessions + total_administration + total_weigh_ins + total_medical_director
+                total_parent_sessions + total_administration + total_weigh_ins + \
+                total_medical_director
+            # adjusting for inflation (2007 dollar --> 2020 dollar)
+            param.total_cost_bb = param.total_cost_bb*((1+0.02)**(2020-2007))
 
             param.annualInterventionCostBB = param.total_cost_bb / D.N_CHILDREN_BB
 
@@ -387,13 +390,15 @@ class ParamGenerator:
             total_weigh_ins_control = param_lab_technician
             total_medical_director_control = param_medical_consultation_cc
             total_rent_utilities = (param_rent_space_utilities + param_cleaning_service +
-                                       param_clinic_equipment_supplies)
+                                    param_clinic_equipment_supplies)
 
             # OVERALL cost: Control
             # CC COST PARAM
             param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
                 total_administration_control + total_weigh_ins_control + total_medical_director_control + \
                 total_rent_utilities
+            # adjusting for inflation (2007 dollar --> 2020 dollar)
+            param.total_cost_cc = param.total_cost_cc*((1+0.02)**(2020-2007))
 
             param.annualInterventionCostCC = param.total_cost_cc/D.N_CHILDREN_BB
 

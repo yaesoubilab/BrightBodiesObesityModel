@@ -25,7 +25,7 @@ multiCohortCC = MultiCls.MultiCohort(
 multiCohortCC.simulate()
 
 # COMPARATIVE: average BMIs over 10 years
-Path.graph_sets_of_sample_paths(
+Path.plot_sets_of_sample_paths(
     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathOfBMIs, multiCohortBB.multiSimOutputs.pathOfBMIs],
     title='Average BMIs over 10 Years',
     y_range=[0, 40],

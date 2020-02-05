@@ -13,13 +13,14 @@ clinical_control = D.Interventions.CONTROL
 # for MultiCohort for specified intervention
 multiCohort = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    parameters=P.Parameters(intervention=bright_bodies)
+    intervention=bright_bodies
+    # parameters=P.Parameters(intervention=bright_bodies)
 )
 # Simulate cohorts
 multiCohort.simulate()
 
 # sample paths for population size
-Path.graph_sample_paths(
+Path.plot_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathPopSizes,
     title='Population Size',
     y_range=[0, 1.1*D.POP_SIZE],
@@ -41,7 +42,7 @@ Pyr.plot_pyramids(observed_data=D.age_sex_dist,
 # Colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
 
 # sample paths for average BMIs at each time step
-Path.graph_sample_paths(
+Path.plot_sample_paths(
     sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
     title='Average BMIs for Bright Bodies',
     x_label='Simulation Year',
