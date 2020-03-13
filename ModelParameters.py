@@ -31,6 +31,7 @@ class Parameters:
         self.df_trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
                                                      list_x_max=[16, 1],
                                                      list_x_delta=[1, 'int'])
+
         for sex in ['male', 'female']:
             for age in range(8, 17, 1):
                 file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
@@ -61,8 +62,8 @@ class Parameters:
 
         # COSTS: ANNUAL (per person)
         self.annualInterventionCost = []
-        self.annualInterventionCostBB = annualInterventionCostBB
-        self.annualInterventionCostCC = annualInterventionCostCC
+        # self.annualInterventionCostBB = annualInterventionCostBB
+        # self.annualInterventionCostCC = annualInterventionCostCC
 
         # EFFECTS
         # first year BB reduction
@@ -72,17 +73,43 @@ class Parameters:
         # control multiplier
         self.multCC = (1.05 + 1.048) / 2
 
-        if intervention == D.Interventions.BRIGHT_BODIES:
-            self.interventionMultipliers \
-                = [1.0, self.multBB1, self.multBB2]
-            for i in range(10):
-                self.interventionMultipliers.append(self.multCC)
+        # if full maintenance of effect
+        if D.FULL_MAINTENENCE is True:
+            if intervention == D.Interventions.BRIGHT_BODIES:
+                self.interventionMultipliers \
+                    = [1.0, self.multBB1, self.multBB2]
+                for i in range(10):
+                    self.interventionMultipliers.append(self.multBB2)
+            else:
+                self.interventionMultipliers = [1]
+                for i in range(10):
+                    self.interventionMultipliers.append(self.multCC)
         else:
-            self.interventionMultipliers = [1]
-            # for i in range(2):
-            #    self.interventionMultipliers.append(self.multCC)
-            for i in range(10):
-                self.interventionMultipliers.append(self.multCC)
+            # if no maintenance of effect
+            if D.DEPREC is False:
+                if intervention == D.Interventions.BRIGHT_BODIES:
+                    self.interventionMultipliers \
+                        = [1.0, self.multBB1, self.multBB2]
+                    for i in range(10):
+                        self.interventionMultipliers.append(self.multCC)
+                else:
+                    self.interventionMultipliers = [1]
+                    for i in range(10):
+                        self.interventionMultipliers.append(self.multCC)
+            # if depreciation of effect (Full=False, Deprec=True)
+            else:
+                if intervention == D.Interventions.BRIGHT_BODIES:
+                    self.interventionMultipliers \
+                        = [1.0, self.multBB1, self.multBB2]
+                    for i in range(10):
+                        deprec_difference = self.multCC - self.multBB2
+                        deprec_value = deprec_difference/8
+                        deprec_multiplier = self.multBB2+(deprec_value*i)
+                        self.interventionMultipliers.append(deprec_multiplier)
+                else:
+                    self.interventionMultipliers = [1]
+                    for i in range(10):
+                        self.interventionMultipliers.append(self.multCC)
 
 
 class ParamGenerator:
@@ -117,12 +144,6 @@ class ParamGenerator:
         self.printedmaterialRVG = RVGs.Gamma(a=fit_output["a"],
                                              loc=0,
                                              scale=fit_output["scale"])
-        # create gamma dist for gym_room_utilities
-        # fit_output = MM.get_gamma_params(mean=gym_room_utilities,
-        #                                  st_dev=0.1*gym_room_utilities)
-        # self.gymroomRVG = RVGs.Gamma(a=fit_output["a"],
-        #                              loc=0,
-        #                              scale=fit_output["scale"])
         # create gamma dist for first_aid_kit
         fit_output = MM.get_gamma_params(mean=first_aid_kit,
                                          st_dev=0.1*first_aid_kit)
@@ -147,12 +168,6 @@ class ParamGenerator:
         self.edutoolsRVG = RVGs.Gamma(a=fit_output["a"],
                                       loc=0,
                                       scale=fit_output["scale"])
-        # create gamma dist for classroom_utilities
-        # fit_output = MM.get_gamma_params(mean=classroom_utilities,
-        #                                  st_dev=0.1*classroom_utilities)
-        # self.classroomRVG = RVGs.Gamma(a=fit_output["a"],
-        #                                loc=0,
-        #                                scale=fit_output["scale"])
         # create gamma dist for exercise_physiologist_admin
         fit_output = MM.get_gamma_params(mean=exercise_physiologist_admin,
                                          st_dev=0.1*exercise_physiologist_admin)
@@ -189,8 +204,10 @@ class ParamGenerator:
         self.medconsultRVG = RVGs.Gamma(a=fit_output["a"],
                                         loc=0,
                                         scale=fit_output["scale"])
+        # ***gym room utilities and classroom utilities costs are 0
 
         # CLINICAL CONTROL
+
         # create gamma dist for nurse_practitioner
         fit_output = MM.get_gamma_params(mean=nurse_practitioner,
                                          st_dev=0.1*nurse_practitioner)
@@ -258,76 +275,51 @@ class ParamGenerator:
                                          loc=0,
                                          scale=fit_output["scale"])
 
-    # CONSTANTS
-        # BRIGHT BODIES
-        # exercise sessions
-        # self.gamesRVG = RVGs.Constant(value=games_equipment)
-        # self.motivtoolsRVG = RVGs.Constant(value=motivational_tools)
-        # self.printedmaterialRVG = RVGs.Constant(value=printed_materials)
-        # self.gymroomRVG = RVGs.Constant(value=gym_room_utilities)
-        # self.firstaidRVG = RVGs.Constant(value=first_aid_kit)
-        # # nutrition behavior modification sessions
-        # self.regdietRVG = RVGs.Constant(value=registered_dietitian)
-        # self.socialworkerRVG = RVGs.Constant(value=social_worker)
-        # self.edutoolsRVG = RVGs.Constant(value=educational_tools)
-        # self.classroomRVG = RVGs.Constant(value=classroom_utilities)
-        # # parent sessions (all included in previous sections)
-        # self.socialworkerRVG = RVGs.Constant(value=social_worker)
-        # self.printedmaterialRVG = RVGs.Constant(value=printed_materials)
-        # self.classroomRVG = RVGs.Constant(value=classroom_utilities)
-        # # administration
-        # self.exphysCoorRVG = RVGs.Constant(value=exercise_physiologist_admin)
-        # self.regdietCoorRVG = RVGs.Constant(value=registered_dietitian_admin)
-        # # weigh ins
-        # self.technicianRVG = RVGs.Constant(value=technician)
-        # self.bfanalyserRVG = RVGs.Constant(value=body_fat_analyzer_scale)
-        # self.stadiometerRVG = RVGs.Constant(value=stadiometer)
-        # # medical director
-        # self.medconsultRVG = RVGs.Constant(value=medical_consultation)
-        #
-        # # CONTROL
-        # # Nurse Visit and Follow Up
-        # self.nursepractitionerRVG = RVGs.Constant(value=nurse_practitioner)
-        # # Nutrition Visit and Follow Up
-        # self.regdiet_controlRVG = RVGs.Constant(value=registered_dietitian_cc)
-        # # Behavioral Counseling Visit and Follow Up
-        # self.socialworker_controlRVG = RVGs.Constant(value=social_worker_cc)
-        # # Administration
-        # self.deptclinsecretaryRVG = RVGs.Constant(value=dept_clinical_secretary)
-        # self.clinsecretaryRVG = RVGs.Constant(value=clinical_secretary)
-        # self.typingRVG = RVGs.Constant(value=typing)
-        # # Weigh Ins + Labs
-        # self.labtechRVG = RVGs.Constant(value=lab_technician)
-        # # Medical Director Visit and Follow Up
-        # self.medconsult_controlRVG = RVGs.Constant(value=medical_consultation_cc)
-        # # Rent Space/Utilities + Cleaning Service + Clinic Equipment/Supplies
-        # self.rentspaceRVG = RVGs.Constant(value=rent_space_utilities)
-        # self.cleaningRVG = RVGs.Constant(value=cleaning_service)
-        # self.clinicequipRVG = RVGs.Constant(value=clinic_equipment_supplies)
+    # ATTRIBUTABLE HC EXPENDITURE: generate distributions
+        # <18 years, >95th %ile
+        cost_above_95th = 220
+        # <18 years, <95th %ile
+        cost_below_95th = 180
+        # >18 years
+        cost_per_unit_bmi_above_95th_adult = 197
+        fit_output = MM.get_gamma_params(mean=cost_above_95th,
+                                         st_dev=0.1*cost_above_95th)
+        self.costAbove95th = RVGs.Gamma(a=fit_output["a"],
+                                        loc=0,
+                                        scale=fit_output["scale"])
+        fit_output = MM.get_gamma_params(mean=cost_below_95th,
+                                         st_dev=0.1*cost_below_95th)
+        self.costBelow95th = RVGs.Gamma(a=fit_output["a"],
+                                        loc=0,
+                                        scale=fit_output["scale"])
+        fit_output = MM.get_gamma_params(mean=cost_per_unit_bmi_above_95th_adult,
+                                         st_dev=0.1*cost_per_unit_bmi_above_95th_adult)
+        self.costPerUnitBMI_Adult = RVGs.Gamma(a=fit_output["a"],
+                                               loc=0,
+                                               scale=fit_output["scale"])
 
     def get_new_parameters(self, rng):
 
         param = Parameters(intervention=self.intervention)
 
     # sample from distributions
+
         # BRIGHT BODIES
+
         # exercise sessions
         if self.intervention is D.Interventions.BRIGHT_BODIES:
             param_exercise_physiologist = self.exphysRVG.sample(rng)
             param_games_equipment = self.gamesRVG.sample(rng)
             param_motivational_tools = self.motivtoolsRVG.sample(rng)
             param_printed_materials = self.printedmaterialRVG.sample(rng)
-            #param_gym_room_utilities = self.gymroomRVG.sample(rng)
             param_first_aid_kit = self.firstaidRVG.sample(rng)
             # nutrition behavior modification
             param_registered_dietitian = self.regdietRVG.sample(rng)
             param_social_worker = self.socialworkerRVG.sample(rng)
             param_educational_tools = self.edutoolsRVG.sample(rng)
-            #param_classroom_utilities = self.classroomRVG.sample(rng)
             # parent sessions
             param_social_worker_2 = self.socialworkerRVG.sample(rng)
             param_printed_materials_2 = self.printedmaterialRVG.sample(rng)
-            #param_classroom_utilities_2 = self.classroomRVG.sample(rng)
             # administration
             param_exercise_physiologist_admin = self.exphysCoorRVG.sample(rng)
             param_registered_dietitian_admin = self.regdietCoorRVG.sample(rng)
@@ -342,24 +334,30 @@ class ParamGenerator:
             total_exercise_sessions = (
                 param_exercise_physiologist + param_games_equipment + param_motivational_tools
                 + param_printed_materials + param_first_aid_kit)
-                # + param_gym_room_utilities
             total_nutrition_behavior_sessions = (param_registered_dietitian + param_social_worker + param_educational_tools)
-                                                    # + param_classroom_utilities
             total_parent_sessions = (param_social_worker_2 + param_printed_materials_2)
-                                        #+ param_classroom_utilities_2
             total_administration = (param_exercise_physiologist_admin + param_registered_dietitian_admin)
             total_weigh_ins = (param_technician + param_body_fat_analyzer_scale + param_stadiometer)
             total_medical_director = param_medical_consultation
 
             # OVERALL cost: BB
-            # BB COST PARAM
             param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
                 total_parent_sessions + total_administration + total_weigh_ins + \
                 total_medical_director
             # adjusting for inflation (2007 dollar --> 2020 dollar)
             param.total_cost_bb = param.total_cost_bb*((1+0.02)**(2020-2007))
 
+            # INDIVIDUAL cost: BB
             param.annualInterventionCostBB = param.total_cost_bb / D.N_CHILDREN_BB
+
+            # HC EXPENDITURE
+            # sample, generate params
+            param_cost_above = self.costAbove95th.sample(rng)
+            param_cost_below = self.costBelow95th.sample(rng)
+            param_cost_per_unit_adult = self.costPerUnitBMI_Adult.sample(rng)
+            param.costAbove95thP = param_cost_above
+            param.costBelow95thP = param_cost_below
+            param.costPerUnitBMIAdultP = param_cost_per_unit_adult
 
         # CONTROL
         if self.intervention is D.Interventions.CONTROL:
@@ -392,15 +390,23 @@ class ParamGenerator:
             total_rent_utilities = (param_rent_space_utilities + param_cleaning_service +
                                     param_clinic_equipment_supplies)
 
-            # OVERALL cost: Control
-            # CC COST PARAM
+            # OVERALL cost: CC
             param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \
                 total_administration_control + total_weigh_ins_control + total_medical_director_control + \
                 total_rent_utilities
             # adjusting for inflation (2007 dollar --> 2020 dollar)
             param.total_cost_cc = param.total_cost_cc*((1+0.02)**(2020-2007))
 
+            # INDIVIDUAL cost: CC
             param.annualInterventionCostCC = param.total_cost_cc/D.N_CHILDREN_BB
+
+            # attributable hc expenditure
+            param_cost_above = self.costAbove95th.sample(rng)
+            param_cost_below = self.costBelow95th.sample(rng)
+            param_cost_per_unit_adult = self.costPerUnitBMI_Adult.sample(rng)
+            param.costAbove95thP = param_cost_above
+            param.costBelow95thP = param_cost_below
+            param.costPerUnitBMIAdultP = param_cost_per_unit_adult
 
         # return the parameter set
         return param

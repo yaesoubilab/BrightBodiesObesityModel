@@ -21,7 +21,6 @@ class Individual:
         self.initialAge = age_sex[0]
         self.ifAlive = True
         self.trajectory = bmi_trajectory
-        # NEW
         self.ifLessThan95th = False
 
     def __str__(self):
@@ -146,19 +145,12 @@ class Cohort:
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 year_index = floor(self.simCal.time)
                 bmi_individual = (individual.trajectory[year_index+1])*(self.params.interventionMultipliers[year_index])
-                # bmis_at_this_time.append(
-                #     individual.trajectory[year_index+1]  # note the first element of individual.trajectory is
-                #                                          # the individual ID so we need to skip it.
-                #     * self.params.interventionMultipliers[year_index])
+
                 bmis_at_this_time.append(bmi_individual)
 
-                # print("bmis: ", bmis_at_this_time)
-                # print(len(bmis_at_this_time))
-
-                # NEW
                 # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
                 age = floor(individual.get_age(current_time=self.simCal.time))
-                # TODO: put them in the same format as age_sex_dist
+
                 # if Female
                 if individual.sex == 1:
                     if age == 8:
@@ -291,27 +283,25 @@ class Cohort:
                 if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
                         cost_individual = self.params.annualInterventionCostBB
-                        # cost_individual = Param.ParamGenerator.get_new_parameters(rng=RVGs.RNG)
                     else:
                         cost_individual = self.params.annualInterventionCostCC
                 else:
-                    # cost_individual = self.params.annualInterventionCostCC
                     cost_individual = 0
                 # individual_costs = list of individual cost at each time step
                 individual_costs.append(cost_individual)
 
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
-                # TODO: have a parameter for $220 and $180
-                # TODO: define a constant INFLATION for 0.02
                 bmi_unit_above_30 = bmi_individual - 30
+                inflation_constant = 0.02
                 if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
-                        annual_hc_exp = 220*((1+0.02)**(2020-2008 + year_index))
+                        # annual_hc_exp = 220*((1+inflation_constant)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costAbove95thP*((1+inflation_constant)**(2020-2008 + year_index))
                     else:
                         # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = 180*((1+0.02)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costBelow95thP*((1+inflation_constant)**(2020-2008 + year_index))
                 else:
                     # if less than 95th (which is 30)
                     if individual.ifLessThan95th is True:
@@ -321,10 +311,10 @@ class Cohort:
                         if bmi_unit_above_30 < 0:
                             annual_hc_exp = 0
                         else:
-                            annual_hc_exp = bmi_unit_above_30*(197*((1+0.02)**(2020-2017)))
+                            # annual_hc_exp = bmi_unit_above_30*(197*((1+inflation_constant)**(2020-2017)))
+                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP*((1+inflation_constant)**(2020-2017)))
 
                 health_care_expenditures.append(annual_hc_exp)
-                # print('health care exp', health_care_expenditures)
 
         # store list of individual costs and health
         self.simOutputs.collect_cost(individual_costs, health_care_expenditures)

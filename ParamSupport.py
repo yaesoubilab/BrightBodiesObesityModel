@@ -112,9 +112,9 @@ total_cost_cc = nurse_visit_fu_total + nutrition_visit_fu_total + \
 # Total per Child (based on 90 children - full BB capacity)
 total_per_child_cc = total_cost_cc / D.N_CHILDREN_BB
 
-# COSTS: ANNUAL (per person)
-annualInterventionCostBB = total_per_child_bb  # should be 588
-print('ANNUAL BB', annualInterventionCostBB)
-annualInterventionCostCC = total_per_child_cc  # should be 533
-print('ANNUAL C', annualInterventionCostCC)
+# # COSTS: ANNUAL (per person)
+# annualInterventionCostBB = total_per_child_bb  # should be 588
+# print('ANNUAL BB', annualInterventionCostBB)
+# annualInterventionCostCC = total_per_child_cc  # should be 533
+# print('ANNUAL C', annualInterventionCostCC)
 

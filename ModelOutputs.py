@@ -1,5 +1,4 @@
 import SimPy.SamplePathClasses as Path
-import InputData as D
 
 
 class SimOutputs:
@@ -68,15 +67,9 @@ class SimOutputs:
 
         # effect_values: list of average BMI for cohort at each time step
         effect_values = self.pathAveBMIs.get_values()
-        # print("effect values", effect_values)
-        # print(len(effect_values))
-
-        # Calculate Effect: Average BMI over Simulation Time Horizon for given cohort
 
         # effect: average BMI for cohort over entire sim duration
-        # effect = (sum(effect_values))/D.SIM_DURATION
         effect = sum(effect_values)
-        # print('Sum of avg. BMIs over sim:', effect)
 
         # effects: list of average BMI for each cohort
         self.effects_cohort.append(effect)
@@ -84,28 +77,21 @@ class SimOutputs:
     def collect_cost(self, costs, expenditures):
         """
         :param costs: (list) of costs of each individual per year of sim time
-        ex. [532, 588, 588, ...]
         :param expenditures: (list) of annual health care expenditures for each individual
         """
-
-        # TODO: Maybe only keep overall cost (for the cohort over 10 years)
 
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
         print('cost total', cohort_cost_total)
-        cost_per_person = cohort_cost_total/D.N_CHILDREN_BB
-        print('cost pp', cost_per_person)
 
-        # COST: list of cohort cost per year (to get total cost)
-        # self.totalCosts.append(cost_per_person)
+        # totalCosts: list of cohort cost per year (to get total cost)
         self.totalCosts.append(cohort_cost_total)
 
         # EXPENDITURES
         cohort_expenditure_total = sum(expenditures)
         print('expenditure total', cohort_expenditure_total)
-        expenditure_per_person = cohort_expenditure_total/D.N_CHILDREN_BB
-        print('expenditure pp', expenditure_per_person)
 
+        # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
         self.totalExpenditures.append(cohort_expenditure_total)
 
 
