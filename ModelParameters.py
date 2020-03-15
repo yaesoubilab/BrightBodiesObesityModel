@@ -52,9 +52,11 @@ class Parameters:
         self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
 
     # COSTS
-        # TODO: I think you only need one class attribute here
-        #   (say self.annualInterventionCost). Then you set its value depending
-        #   on the intervention that is passed as an argument of __init__
+        # TODO: I think you only need 4 class attributes here
+        #   (say self.annualInterventionCost,
+        #   self.costAbove95thP, self.costBelow95thP, and self.costPerUnitBMIAdultP).
+        #   Then you set the value of these depending
+        #   on the intervention that is passed as the argument of __init__ above
 
         # BRIGHT BODIES
         # Total Overall for BB
@@ -129,6 +131,8 @@ class ParamGenerator:
     # create variable for each cost item
 
         # BRIGHT BODIES
+        # TODO: it's minor but could you use camelCase for all class attributes here?
+        #   For example elf.excPhysRVG instead of elf.exphysRVG
 
         # create gamma dist for exercise physiologist cost (BRIGHT BODIES)
         fit_output = MM.get_gamma_params(mean=exercise_physiologist,
@@ -286,13 +290,14 @@ class ParamGenerator:
                                          scale=fit_output["scale"])
 
     # ATTRIBUTABLE HC EXPENDITURE: generate distributions
-        # TODO: would use a CONSTANT in InputData.py for these 3
+        # TODO: would use a CONSTANT in ParamSupport.py for these 3 constants
         # <18 years, >95th %ile
         cost_above_95th = 220
         # <18 years, <95th %ile
         cost_below_95th = 180
         # >18 years
         cost_per_unit_bmi_above_95th_adult = 197
+
         fit_output = MM.get_gamma_params(mean=cost_above_95th,
                                          st_dev=0.1*cost_above_95th)
         self.costAbove95th = RVGs.Gamma(a=fit_output["a"],

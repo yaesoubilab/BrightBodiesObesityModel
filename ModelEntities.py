@@ -135,8 +135,14 @@ class Cohort:
         """
 
         bmis_at_this_time = []  # list of BMI values of all individuals at the current time
-        individual_costs = []   # TODO: could you add what this collects?
-        health_care_expenditures = []   # TODO: could you add what this collects?
+
+        # TODO: I don't think you need to store the intervention cost and the
+        #   health care expenditure of every individual (it slows your code a little)
+        #   I would just have two variables here (one for intervention cost
+        #   and one for health care expenditure) and accumulate them for each individual.
+
+        individual_costs = []
+        health_care_expenditures = []
 
         for individual in self.individuals:
             if individual.ifAlive is True:
@@ -294,7 +300,7 @@ class Cohort:
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
                 bmi_unit_above_30 = bmi_individual - 30
-                inflation_constant = 0.02
+                inflation_constant = 0.02   # TODO: Use a CONSTANT for it in InputData.py
                 if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
