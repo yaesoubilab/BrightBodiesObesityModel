@@ -17,6 +17,7 @@ N_CHILDREN_BB = 90
 YEARS_RCT = 2
 
 # Maintenance of Effect Levels:
+# TODO: I'd suggest using an Enum to represent maintenance effect.
 FULL_MAINTENENCE = False
 DEPREC = True
 

@@ -19,7 +19,11 @@ class SetOfTrajectories:
 
 class Parameters:
     # class to contain the parameters of the model
-    def __init__(self, intervention):
+    def __init__(self, intervention, maintenance_scenario):
+        # TODO: I think you should take the scenarios for maintenance effect as an
+        #   argument (similar to 'intervention' above)
+        #   That way, to simulate a cohort, you pass the intervention and the
+        #   maintenance_scenario.
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
         self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,        # life table
@@ -48,6 +52,10 @@ class Parameters:
         self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
 
     # COSTS
+        # TODO: I think you only need one class attribute here
+        #   (say self.annualInterventionCost). Then you set its value depending
+        #   on the intervention that is passed as an argument of __init__
+
         # BRIGHT BODIES
         # Total Overall for BB
         self.total_cost_bb = total_cost_bb
@@ -67,6 +75,7 @@ class Parameters:
 
         # EFFECTS
         # first year BB reduction
+        # TODO: I think you should define CONSTANTs for these multipliers in InputData.py file
         self.multBB1 = 0.925
         # second year BB reduction
         self.multBB2 = 0.951
@@ -74,6 +83,7 @@ class Parameters:
         self.multCC = (1.05 + 1.048) / 2
 
         # if full maintenance of effect
+        # TODO: would instead use "if maintenance_scenario == D.Scenario.Full" ...
         if D.FULL_MAINTENENCE is True:
             if intervention == D.Interventions.BRIGHT_BODIES:
                 self.interventionMultipliers \
@@ -276,6 +286,7 @@ class ParamGenerator:
                                          scale=fit_output["scale"])
 
     # ATTRIBUTABLE HC EXPENDITURE: generate distributions
+        # TODO: would use a CONSTANT in InputData.py for these 3
         # <18 years, >95th %ile
         cost_above_95th = 220
         # <18 years, <95th %ile

@@ -131,21 +131,19 @@ class Cohort:
 
     def process_obesity_outcomes(self):
         """
-        processes the population distribution pyramid (age/sex)
         collect BMIs to calculate average
         """
 
-        bmis_at_this_time = []  # list of all BMIs at the current time (for 100 individuals)
-        individual_costs = []
-        health_care_expenditures = []
+        bmis_at_this_time = []  # list of BMI values of all individuals at the current time
+        individual_costs = []   # TODO: could you add what this collects?
+        health_care_expenditures = []   # TODO: could you add what this collects?
 
         for individual in self.individuals:
             if individual.ifAlive is True:
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 year_index = floor(self.simCal.time)
-                bmi_individual = (individual.trajectory[year_index+1])*(self.params.interventionMultipliers[year_index])
-
+                bmi_individual = individual.trajectory[year_index+1]*self.params.interventionMultipliers[year_index]
                 bmis_at_this_time.append(bmi_individual)
 
                 # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
