@@ -75,8 +75,3 @@ avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
 
 print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
 print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
-
-
-
-
-

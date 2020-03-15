@@ -28,6 +28,9 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
+        # TODO: Will the first two variables hold
+        #  the intervention cost and HC expenditure
+        #  of the cohort during years of the simulation?
         # totalCosts: list that holds the cost of all of the cohorts
         self.totalCosts = []
         # totalExpenditures: list that holds the expenditures
@@ -40,8 +43,8 @@ class SimOutputs:
         collects the performance statistics at the end of this replication
         """
 
-        # update sample paths
-        self.pathPopSize.record_increment(time=self.simCal.time, increment=0)
+        # close sample paths
+        self.pathPopSize.close(time=self.simCal.time)
 
     def collect_birth(self):
         """
@@ -64,6 +67,9 @@ class SimOutputs:
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
         # EFFECT for CEA: Average BMI over Simulation Horizon
+
+        # TODO: I am a little confused about how effect is being calculate,
+        #   let's talk about it.
 
         # effect_values: list of average BMI for cohort at each time step
         effect_values = self.pathAveBMIs.get_values()

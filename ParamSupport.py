@@ -10,6 +10,8 @@ printed_materials = 25.00
 gym_room_utilities = 0.00  # note: provided at no charge for BB
 first_aid_kit = 150.00
 # Category Total
+# TODO: do you still need to calculate these totals in this file?
+#   Might be better to remove them to keep this file clean.
 exercise_sessions_total = exercise_physiologist + \
     games_equipment + \
     motivational_tools + \

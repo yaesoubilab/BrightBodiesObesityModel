@@ -19,7 +19,7 @@ class SetOfTrajectories:
 
 class Parameters:
     # class to contain the parameters of the model
-    def __init__(self, intervention, maintenance_scenario):
+    def __init__(self, intervention):
         # TODO: I think you should take the scenarios for maintenance effect as an
         #   argument (similar to 'intervention' above)
         #   That way, to simulate a cohort, you pass the intervention and the
@@ -132,7 +132,7 @@ class ParamGenerator:
 
         # BRIGHT BODIES
         # TODO: it's minor but could you use camelCase for all class attributes here?
-        #   For example elf.excPhysRVG instead of elf.exphysRVG
+        #   For example self.excPhysRVG instead of self.exphysRVG
 
         # create gamma dist for exercise physiologist cost (BRIGHT BODIES)
         fit_output = MM.get_gamma_params(mean=exercise_physiologist,

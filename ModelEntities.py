@@ -136,12 +136,7 @@ class Cohort:
 
         bmis_at_this_time = []  # list of BMI values of all individuals at the current time
 
-        # TODO: I don't think you need to store the intervention cost and the
-        #   health care expenditure of every individual (it slows your code a little)
-        #   I would just have two variables here (one for intervention cost
-        #   and one for health care expenditure) and accumulate them for each individual.
-
-        individual_costs = []
+        individual_costs = []   # TODO: are you collecting intervention cost here?
         health_care_expenditures = []
 
         for individual in self.individuals:
