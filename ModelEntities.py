@@ -151,6 +151,9 @@ class Cohort:
                 # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
                 age = floor(individual.get_age(current_time=self.simCal.time))
 
+                # TODO: if you put these thresholds in the same format as
+                #   age_sex_dist (in the InputData.py file), we can simply this.
+                #   I can help.
                 # if Female
                 if individual.sex == 1:
                     if age == 8:

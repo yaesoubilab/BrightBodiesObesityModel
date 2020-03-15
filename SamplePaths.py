@@ -171,7 +171,10 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     # set the minimum of y-axis to zero
     ax.set_ylim(bottom=0)  # the minimum has to be set after plotting the values
     # output figure
-    Fig.output_figure(fig, output_type, title)
+    if output_type == 'show':
+        fig.show()
+    else:
+        Fig.output_figure(fig, output_type)
 
 
 def add_sample_path_to_ax(sample_path, ax, color_code=None, legend=None, transparency=1, connect='step'):
