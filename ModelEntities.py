@@ -6,7 +6,6 @@ import InputData as D
 import ModelOutputs as O
 from SimPy.DataFrames import Pyramid
 from math import floor
-import ModelParameters as Param
 
 
 class Individual:
@@ -136,7 +135,9 @@ class Cohort:
 
         bmis_at_this_time = []  # list of BMI values of all individuals at the current time
 
-        individual_costs = []   # TODO: are you collecting intervention cost here?
+        # individual_costs: list to collect intervention costs (per individual)
+        individual_costs = []
+        # health_care_expenditures: list to collect hc expenditures (per individual)
         health_care_expenditures = []
 
         for individual in self.individuals:
@@ -284,9 +285,9 @@ class Cohort:
                 # if year_index is 0:
                 if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
-                        cost_individual = self.params.annualInterventionCostBB
+                        cost_individual = self.params.annualInterventionCost
                     else:
-                        cost_individual = self.params.annualInterventionCostCC
+                        cost_individual = self.params.annualInterventionCost
                 else:
                     cost_individual = 0
                 # individual_costs = list of individual cost at each time step
@@ -295,15 +296,14 @@ class Cohort:
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
                 bmi_unit_above_30 = bmi_individual - 30
-                inflation_constant = 0.02   # TODO: Use a CONSTANT for it in InputData.py
                 if age < 18:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
                         # annual_hc_exp = 220*((1+inflation_constant)**(2020-2008 + year_index))
-                        annual_hc_exp = self.params.costAbove95thP*((1+inflation_constant)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costAbove95thP*((1+D.inflation_constant)**(2020-2008 + year_index))
                     else:
                         # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = self.params.costBelow95thP*((1+inflation_constant)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costBelow95thP*((1+D.inflation_constant)**(2020-2008 + year_index))
                 else:
                     # if less than 95th (which is 30)
                     if individual.ifLessThan95th is True:
@@ -314,7 +314,7 @@ class Cohort:
                             annual_hc_exp = 0
                         else:
                             # annual_hc_exp = bmi_unit_above_30*(197*((1+inflation_constant)**(2020-2017)))
-                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP*((1+inflation_constant)**(2020-2017)))
+                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP*((1+D.inflation_constant)**(2020-2017)))
 
                 health_care_expenditures.append(annual_hc_exp)
 

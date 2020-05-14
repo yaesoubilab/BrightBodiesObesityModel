@@ -28,15 +28,10 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
-        # TODO: Will the first two variables hold
-        #  the intervention cost and HC expenditure
-        #  of the cohort during years of the simulation?
-        # totalCosts: list that holds the cost of all of the cohorts
+        # totalCosts: list that holds the cost of all of the cohorts during the simulation
         self.totalCosts = []
-        # totalExpenditures: list that holds the expenditures
+        # totalExpenditures: list that holds the expenditures of the cohorts during the simulation
         self.totalExpenditures = []
-        # effects_cohort: list of average BMI over simulation for given cohort
-        self.effects_cohort = []
 
     def collect_end_of_sim_stat(self):
         """
@@ -61,24 +56,10 @@ class SimOutputs:
         :param BMIs: (list) of the population's BMIs at the current time step
         """
 
-        # average BMI
+        # average BMI of cohort
         average_bmi = sum(BMIs)/len(BMIs)
 
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
-
-        # EFFECT for CEA: Average BMI over Simulation Horizon
-
-        # TODO: I am a little confused about how effect is being calculate,
-        #   let's talk about it.
-
-        # effect_values: list of average BMI for cohort at each time step
-        effect_values = self.pathAveBMIs.get_values()
-
-        # effect: average BMI for cohort over entire sim duration
-        effect = sum(effect_values)
-
-        # effects: list of average BMI for each cohort
-        self.effects_cohort.append(effect)
 
     def collect_cost(self, costs, expenditures):
         """
@@ -88,14 +69,12 @@ class SimOutputs:
 
         # cohort_cost_total: sum of each person's cost in a given cohort (by year)
         cohort_cost_total = sum(costs)
-        print('cost total', cohort_cost_total)
 
         # totalCosts: list of cohort cost per year (to get total cost)
         self.totalCosts.append(cohort_cost_total)
 
         # EXPENDITURES
         cohort_expenditure_total = sum(expenditures)
-        print('expenditure total', cohort_expenditure_total)
 
         # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
         self.totalExpenditures.append(cohort_expenditure_total)

@@ -7,7 +7,7 @@ from ModelParameters import ParamGenerator
 class MultiCohort:
     """ simulates multiple cohorts """
 
-    def __init__(self, ids, intervention):
+    def __init__(self, ids, intervention, maintenance_scenario):
         """
         :param ids: (list) of ids for cohorts to simulate
         :param parameters: cohort parameters
@@ -23,7 +23,8 @@ class MultiCohort:
         self.multiSimOutputs = MultiSimOutputs()
 
         # create parameter sets
-        self.__populate_parameter_sets(intervention=intervention)
+        self.__populate_parameter_sets(intervention=intervention,
+                                       maintenance_scenario=maintenance_scenario)
 
     def simulate(self):
         """ simulates all cohorts """
@@ -39,9 +40,10 @@ class MultiCohort:
             # outcomes from simulating all cohorts
             self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
 
-    def __populate_parameter_sets(self, intervention):
+    def __populate_parameter_sets(self, intervention, maintenance_scenario):
 
-        param_generator = ParamGenerator(intervention=intervention)
+        param_generator = ParamGenerator(intervention=intervention,
+                                         maintenance_scenario=maintenance_scenario)
 
         # create as many sets of parameters as the number of cohorts
         for i in range(len(self.ids)):
@@ -107,8 +109,6 @@ class MultiSimOutputs:
         print(simulated_cohort.simOutputs.pathAveBMIs.get_values())
         # average BMI by year
         effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
-        # total_effect: sum of average BMIs (by year) for sim duration
-        # total_effect = sum(simulated_cohort.simOutputs.pathAveBMIs.get_values())
 
         # represent RCT effect (skip index 0 because that's baseline)
         rct_effect = effect_values[1] + effect_values[2]
@@ -120,7 +120,7 @@ class MultiSimOutputs:
                            effect_values[9] + effect_values[10])
 
         # do NOT need to divide by pop size because values are already an average over the cohort
-        average_rct_effect = rct_effect/D.YEARS_RCT
+        # average_rct_effect = rct_effect/D.YEARS_RCT
         average_effect_ten_years = ten_year_effect/D.SIM_DURATION
 
         print("AVERAGE 10 year EFFECT:", average_effect_ten_years)

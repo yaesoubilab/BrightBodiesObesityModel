@@ -5,10 +5,13 @@ import SamplePaths as MyPath
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
+# *** Alter maintenance scenarios via MAINTENANCE_OF_EFFECT.
+
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    intervention=D.Interventions.BRIGHT_BODIES
+    intervention=D.Interventions.BRIGHT_BODIES,
+    maintenance_scenario=D.MAINTENANCE_OF_EFFECT.NONE
 )
 # simulate these cohorts (BB)
 multiCohortBB.simulate()
@@ -16,7 +19,8 @@ multiCohortBB.simulate()
 # for MultiCohort CLINICAL CONTROL
 multiCohortCC = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    intervention=D.Interventions.CONTROL
+    intervention=D.Interventions.CONTROL,
+    maintenance_scenario=D.MAINTENANCE_OF_EFFECT.NONE
 )
 # simulate these cohorts (CC)
 multiCohortCC.simulate()

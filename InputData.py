@@ -10,16 +10,28 @@ SIM_DURATION = 10   # (years) - changed from 10 for manuscript
 POP_SIZE = 90     # population size (cohort at initialization)
 
 # for MultiCohorts
-N_COHORTS = 25
+N_COHORTS = 100
 
 # for Costs
 N_CHILDREN_BB = 90
 YEARS_RCT = 2
 
+inflation_constant = 0.02
+
+# Multipliers:
+# BB Year 1 reduction
+multBB1 = 0.925
+# BB Year 2 reduction
+multBB2 = 0.951
+# CC Multiplier
+multCC = (1.05 + 1.048) / 2
+
+
 # Maintenance of Effect Levels:
-# TODO: I'd suggest using an Enum to represent maintenance effect.
-FULL_MAINTENENCE = False
-DEPREC = True
+class MAINTENANCE_OF_EFFECT(Enum):
+    NONE = 0
+    DEPREC = 1
+    FULL = 2
 
 
 class SEX(Enum):
