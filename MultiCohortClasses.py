@@ -2,6 +2,7 @@ from ModelEntities import Cohort
 import SimPy.RandomVariantGenerators as RVGs
 import InputData as D
 from ModelParameters import ParamGenerator
+import multiprocessing as mp
 
 
 class MultiCohort:
@@ -22,19 +23,38 @@ class MultiCohort:
         self.__populate_parameter_sets(intervention=intervention,
                                        maintenance_scenario=maintenance_scenario)
 
-    def simulate(self):
+    def simulate(self, sim_duration, if_run_in_parallel=False):
         """ simulates all cohorts """
 
-        for i in range(len(self.ids)):
+        if not if_run_in_parallel:
+            for i in range(len(self.ids)):
 
-            # create cohort
-            cohort = Cohort(id=self.ids[i], parameters=self.param_sets[i])
+                # create cohort
+                cohort = Cohort(id=self.ids[i], parameters=self.param_sets[i])
 
-            # simulate the cohort
-            cohort.simulate(sim_duration=D.SIM_DURATION)
+                # simulate the cohort
+                cohort.simulate(sim_duration=sim_duration)
+
+                # outcomes from simulating all cohorts
+                self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
+        else:
+            # create cohorts
+            cohorts = []
+            for i in range(len(self.ids)):
+                cohorts.append(Cohort(id=self.ids[i],
+                                      parameters=self.param_sets[i]))
+
+            # create a list of arguments for simulating the cohorts in parallel
+            args = [(cohort, sim_duration) for cohort in cohorts]
+
+            # simulate all cohorts in parallel
+            n_processes = mp.cpu_count()  # maximum number of processors
+            with mp.Pool(n_processes) as pl:
+                simulated_cohorts = pl.starmap(simulate_this_cohort, args)
 
             # outcomes from simulating all cohorts
-            self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
+            for cohort in simulated_cohorts:
+                self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
 
     def __populate_parameter_sets(self, intervention, maintenance_scenario):
 
@@ -147,6 +167,16 @@ class MultiSimOutputs:
         self.individualTotalExpenditure.append(individual_total_expenditure)
 
 
+def simulate_this_cohort(cohort, sim_duration):
+    """
+    :param cohort: a cohort of patients
+    :param sim_duration: simulation length
+    :return: cohort after being simulated
+    """
+
+    # simulate and return the cohort
+    cohort.simulate(sim_duration)
+    return cohort
 
 
 
