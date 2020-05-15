@@ -64,13 +64,13 @@ if __name__ == '__main__':
         year_2_v_1 = bmi_values[2] - bmi_values[1]
         year_two_vs_one.append(year_2_v_1)
 
-    print('BMI change y1 - y0 -->', year_one_vs_zero)
-    print('BMI change y2 - y1 -->', year_two_vs_one)
+    # print('BMI change y1 - y0 -->', year_one_vs_zero)
+    # print('BMI change y2 - y1 -->', year_two_vs_one)
 
     # find average change between year 0 and 1
     avg_year_1_v_0 = sum(year_one_vs_zero)/len(year_one_vs_zero)
     # find average change between year 1 and 2
     avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
 
-    print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
-    print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
+    # print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
+    # print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)

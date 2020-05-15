@@ -48,8 +48,8 @@ def plot_rct_validation(sim_outcomes, intervention):
         year_2_v_1 = bmi_values[2] - bmi_values[1]
         year_two_vs_one.append(year_2_v_1)
 
-    print('BMI change y1 - y0 -->', year_one_vs_zero)
-    print('BMI change y2 - y1 -->', year_two_vs_one)
+    # print('BMI change y1 - y0 -->', year_one_vs_zero)
+    # print('BMI change y2 - y1 -->', year_two_vs_one)
 
     # find average change between year 0 and 1
     avg_year_1_v_0 = sum(year_one_vs_zero)/len(year_one_vs_zero)
@@ -61,8 +61,9 @@ def plot_rct_validation(sim_outcomes, intervention):
     estimate_1v0 = avgYear1v0SummStat.get_mean()
     PI_1v0 = avgYear1v0SummStat.get_interval(interval_type='p',
                                              alpha=0.05)
-    print('Estimate 1v0:', estimate_1v0)
-    print('PI 1v0:', PI_1v0)
+    # print('Estimate 1v0:', estimate_1v0)
+    # print('PI 1v0:', PI_1v0)
+
     # find average change between year 1 and 2
     avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
     avgYear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
@@ -73,13 +74,13 @@ def plot_rct_validation(sim_outcomes, intervention):
     estimate_2v1 = avgYear2v1SummStat.get_mean()
     PI_2v1 = avgYear2v1SummStat.get_interval(interval_type='p',
                                              alpha=0.05)
-    print('Estimate 2v1:', estimate_2v1)
-    print('PI 2v1:', PI_2v1)
+    # print('Estimate 2v1:', estimate_2v1)
+    # print('PI 2v1:', PI_2v1)
 
-    print('Estimate and PI: BMI diffs year 1 v 0:', estimate_and_PI_1v0)
-    print('Estimate and PI: BMI diffs year 2 v 1:', estimate_and_PI_2v1)
-    print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
-    print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
+    # print('Estimate and PI: BMI diffs year 1 v 0:', estimate_and_PI_1v0)
+    # print('Estimate and PI: BMI diffs year 2 v 1:', estimate_and_PI_2v1)
+    # print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
+    # print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
 
 # NEW FIGURE:
 
@@ -184,9 +185,9 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     # print('Individual Expenditure Differences over 10year: CC - BB -->', list_of_diff_individual_expenditure)
 
     # AVERAGE FOR ALL SIMULATIONS:
-    print('SIM: Average Expenditure Difference: CC - BB -->', (sum(list_of_diff_mean_expenditures)/D.N_COHORTS))
-    print('SIM: Total Expenditure Differences: CC - BB -->', (sum(list_of_diff_total_expenditures)/D.N_COHORTS))
-    print('SIM: Individual Expenditure Differences: CC - BB -->', (sum(list_of_diff_individual_expenditure)/D.N_COHORTS))
+    # print('SIM: Average Expenditure Difference: CC - BB -->', (sum(list_of_diff_mean_expenditures)/D.N_COHORTS))
+    # print('SIM: Total Expenditure Differences: CC - BB -->', (sum(list_of_diff_total_expenditures)/D.N_COHORTS))
+    # print('SIM: Individual Expenditure Differences: CC - BB -->', (sum(list_of_diff_individual_expenditure)/D.N_COHORTS))
 
     # INDIVIDUAL EXPENDITURE DIFFERENCES (Total over 10 years)
     avgIndividualExpenditureDifference = Stat.SummaryStat(
@@ -218,7 +219,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
         alpha=0.05,
         deci=2
     )
-    print('Estiamte/PI: Average Total Expenditure Differences: CC-BB -->',
+    print('Estimate/PI: Average Total Expenditure Differences: CC-BB -->',
           estimate_and_PI_total_exp_diff)
 
     # find average differences overall
@@ -288,7 +289,7 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
         values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
-    print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
+    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # to produce figure
     x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -339,7 +340,7 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
             diff_BMI_2years.append(diff_BMI[2])
 
         list_of_diff_mean_BMIs.append(diff_BMI_2years)
-    print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
+    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # to produce figure
     x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

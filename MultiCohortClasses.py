@@ -109,20 +109,15 @@ class MultiSimOutputs:
 
     # for CEA
 
-        # NEW
         # sum cost per year for all participants to get total cohort cost
         # over sim duration
-        print(simulated_cohort.simOutputs.totalCosts)
         total_cost = sum(simulated_cohort.simOutputs.totalCosts)
-        print('NEW TOTAL COST', total_cost)
 
         average_cost = total_cost/D.POP_SIZE
 
         # store costs for use in CEA
         self.costs.append(average_cost)
 
-        # NEW
-        print(simulated_cohort.simOutputs.pathAveBMIs.get_values())
         # average BMI by year
         effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
 
@@ -139,8 +134,8 @@ class MultiSimOutputs:
         # average_rct_effect = rct_effect/D.YEARS_RCT
         average_effect_ten_years = ten_year_effect/D.SIM_DURATION
 
-        print("AVERAGE 10 year EFFECT:", average_effect_ten_years)
-        print("TOTAL RCT EFFECT (sum of year 1 and 2 avg. bmi)", rct_effect)
+        # print("AVERAGE 10 year EFFECT:", average_effect_ten_years)
+        # print("TOTAL RCT EFFECT (sum of year 1 and 2 avg. bmi)", rct_effect)
 
         # store all cohort effects for use in CEA
         # EFFECT FOR 2 YEARS RCT
@@ -149,7 +144,6 @@ class MultiSimOutputs:
         self.effects.append(average_effect_ten_years)
 
         # EXPENDITURES
-        print('EXP MULTI', simulated_cohort.simOutputs.totalExpenditures)
         # total expenditures over 10 years (for cohort)
         total_expenditures = sum(simulated_cohort.simOutputs.totalExpenditures)
         # average expenditure per year (over 10 years)
@@ -158,7 +152,6 @@ class MultiSimOutputs:
         individual_total_expenditure = total_expenditures/D.N_CHILDREN_BB
         # average expenditure per year PER PERSON (over 10 years)
         individual_annual_expenditure = annual_avg_expenditure/D.N_CHILDREN_BB
-        print('INDIVIDUAL EXPEN OVER 10 YR', individual_total_expenditure)
         # store average expenditures
         self.expenditures.append(individual_annual_expenditure)
         # store total expenditures
