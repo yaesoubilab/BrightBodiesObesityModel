@@ -15,7 +15,8 @@ if __name__ == '__main__':
         maintenance_scenario=D.MAINTENANCE_OF_EFFECT.NONE
     )
     # Simulate cohorts
-    multiCohort.simulate(sim_duration=D.SIM_DURATION, if_run_in_parallel=False)
+    multiCohort.simulate(sim_duration=D.SIM_DURATION,
+                         if_run_in_parallel=False)
 
     # sample paths for population size
     Path.plot_sample_paths(

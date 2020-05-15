@@ -91,9 +91,9 @@ class Cohort:
             event=E.BMISurvey(time=self.params.simInitialDuration,
                               individual=self,
                               cohort=self))
-        for t in range(1, sim_duration + 1, 1):
+        for t in range(sim_duration):
             self.simCal.add_event(
-                event=E.BMISurvey(time=t,
+                event=E.BMISurvey(time=t + 1,
                                   individual=self,
                                   cohort=self))
 

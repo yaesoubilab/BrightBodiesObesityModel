@@ -18,6 +18,9 @@ class SetOfTrajectories:
 
 
 def get_trajectories():
+    """
+    :return: the list of BMI trajectories (by sex and age) from the csv files
+    """
 
     # creating a data frame of trajectories
     trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
@@ -95,8 +98,11 @@ class Parameters:
 
 class ParamGenerator:
     def __init__(self, intervention, maintenance_scenario):
+
         self.intervention = intervention
         self.maintenance_scenario = maintenance_scenario
+
+        # get BMI trajectories
         self.trajectories = get_trajectories()
 
     # create variable for each cost item
