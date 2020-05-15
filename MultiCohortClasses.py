@@ -10,13 +10,9 @@ class MultiCohort:
     def __init__(self, ids, intervention, maintenance_scenario):
         """
         :param ids: (list) of ids for cohorts to simulate
-        :param parameters: cohort parameters
         """
 
         self.ids = ids
-        self.rng = RVGs.RNG(seed=ids)
-
-        self.cohorts = []       # list of cohorts
         self.param_sets = []  # list of parameter sets (for each cohort)
 
         # for cohort outcomes

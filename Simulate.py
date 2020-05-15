@@ -6,15 +6,11 @@ from SimPy.Plots import PopulationPyramids as Pyr
 
 # SIMULATE ONE INTERVENTION AND INDIVIDUAL OUTCOMES
 
-# Interventions
-bright_bodies = D.Interventions.BRIGHT_BODIES
-clinical_control = D.Interventions.CONTROL
-
 # for MultiCohort for specified intervention
 multiCohort = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
-    intervention=bright_bodies
-    # parameters=P.Parameters(intervention=bright_bodies)
+    intervention=D.Interventions.BRIGHT_BODIES,
+    maintenance_scenario=D.MAINTENANCE_OF_EFFECT.NONE
 )
 # Simulate cohorts
 multiCohort.simulate()

@@ -7,7 +7,7 @@ import InputData as D
 
 
 class SetOfTrajectories:
-    # class to select random row from rows (specific to age/sex)
+    # class to select randomly a row from a set of rows
     def __init__(self, rows):
         self.rows = rows
         self.discreteUniform = RVGs.UniformDiscrete(0, len(rows) - 1)
@@ -17,9 +17,36 @@ class SetOfTrajectories:
         return self.rows[i]
 
 
+def get_trajectories():
+
+    # creating a data frame of trajectories
+    trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
+                                         list_x_max=[16, 1],
+                                         list_x_delta=[1, 'int'])
+
+    # populate the data frame
+    for sex in ['male', 'female']:
+        for age in range(8, 17, 1):
+            file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
+            rows = InOutSupport.read_csv_rows(file_name=file_name,
+                                              delimiter=',',
+                                              if_ignore_first_row=True,
+                                              if_convert_float=True)
+            s = 0 if sex == 'male' else 1
+            trajectories.set_obj(x_value=[age, s],
+                                 obj=SetOfTrajectories(rows=rows))
+
+    return trajectories
+
+
 class Parameters:
     # class to contain the parameters of the model
-    def __init__(self, intervention, maintenance_scenario):
+    def __init__(self, trajectories, intervention, maintenance_scenario):
+
+        self.trajectories = trajectories
+        self.intervention = intervention
+        self.popSize = D.POP_SIZE
+        self.simInitialDuration = D.SIM_INIT
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
         self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,        # life table
@@ -27,24 +54,6 @@ class Parameters:
                                                         list_x_max=[16, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
 
-        # Creating DataFrame of Trajectories for Bright Bodies Age Cohort
-        self.df_trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
-                                                     list_x_max=[16, 1],
-                                                     list_x_delta=[1, 'int'])
-
-        for sex in ['male', 'female']:
-            for age in range(8, 17, 1):
-                file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
-                rows = InOutSupport.read_csv_rows(file_name=file_name,
-                                                  delimiter=',',
-                                                  if_ignore_first_row=True,
-                                                  if_convert_float=True)
-                traj = SetOfTrajectories(rows=rows)
-                s = 0 if sex == 'male' else 1
-                self.df_trajectories.set_obj(x_value=[age, s],
-                                             obj=traj)
-
-        self.intervention = intervention
         self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
 
         # EFFECT MULTIPLIERS
@@ -88,6 +97,7 @@ class ParamGenerator:
     def __init__(self, intervention, maintenance_scenario):
         self.intervention = intervention
         self.maintenance_scenario = maintenance_scenario
+        self.trajectories = get_trajectories()
 
     # create variable for each cost item
 
@@ -255,7 +265,9 @@ class ParamGenerator:
 
     def get_new_parameters(self, rng):
 
-        param = Parameters(intervention=self.intervention, maintenance_scenario=self.maintenance_scenario)
+        param = Parameters(trajectories=self.trajectories,
+                           intervention=self.intervention,
+                           maintenance_scenario=self.maintenance_scenario)
 
     # sample from distributions
 

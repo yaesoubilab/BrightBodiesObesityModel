@@ -53,20 +53,22 @@ class Cohort:
                                                if_should_trace=D.TRACE_ON,
                                                deci=D.DECI)
 
-    def __initialize(self):
-        """ initialize the cohort """
+    def __initialize(self, sim_duration):
+        """ initialize the cohort
+        :param sim_duration: simulation duration
+        """
 
         # baseline population of given population size
-        for i in range(D.POP_SIZE):
+        for i in range(self.params.popSize):
 
             # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
             # time of "birth" (initialization)
-            t_birth = D.SIM_INIT * i / D.POP_SIZE
+            t_birth = self.params.simInitialDuration * i / self.params.popSize
 
             # assign randomly the BMI trajectory of this individual based on age and sex
-            set_of_trajs = self.params.df_trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
+            set_of_trajs = self.params.trajectories.get_obj(x_value=[age_sex[0], age_sex[1]])
             bmi_trajectory = set_of_trajs.sample_traj(rng=self.rng)
 
             # schedule the first "birth" at approximately time 0
@@ -80,16 +82,16 @@ class Cohort:
 
         # schedule population distribution survey event right after initialization period
         self.simCal.add_event(
-            event=E.PopSurvey(time=D.SIM_INIT,
+            event=E.PopSurvey(time=self.params.simInitialDuration,
                               individual=self,
                               cohort=self))
 
         # schedule BMI survey at times 0, 1, 2, ..., 10
         self.simCal.add_event(
-            event=E.BMISurvey(time=D.SIM_INIT,
+            event=E.BMISurvey(time=self.params.simInitialDuration,
                               individual=self,
                               cohort=self))
-        for t in range(1, D.SIM_DURATION + 1, 1):
+        for t in range(1, sim_duration + 1, 1):
             self.simCal.add_event(
                 event=E.BMISurvey(time=t,
                                   individual=self,
@@ -101,7 +103,7 @@ class Cohort:
         """
 
         # initialize the simulation
-        self.__initialize()
+        self.__initialize(sim_duration)
 
         # while there is an event scheduled in the simulation calendar
         # and the simulation time is less than the simulation duration
@@ -137,7 +139,7 @@ class Cohort:
 
         # individual_costs: list to collect intervention costs (per individual)
         individual_costs = []
-        # health_care_expenditures: list to collect hc expenditures (per individual)
+        # health_care_expenditures: list to collect health care expenditures (per individual)
         health_care_expenditures = []
 
         for individual in self.individuals:
