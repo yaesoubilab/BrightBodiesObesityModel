@@ -28,6 +28,7 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
+        # TODO: could you please distinguish these two variable better?
         # totalCosts: list that holds the cost of all of the cohorts during the simulation
         self.totalCosts = []
         # totalExpenditures: list that holds the expenditures of the cohorts during the simulation

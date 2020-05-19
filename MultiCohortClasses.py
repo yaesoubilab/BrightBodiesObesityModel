@@ -73,10 +73,9 @@ class MultiSimOutputs:
 
     def __init__(self):
 
-        self.pathPopSizes = []  # empty list to be populated with population sizes
-        self.pyramidStart = []
-
-        self.pathOfBMIs = []
+        self.pathsOfPopSize = []
+        self.pathsOfBMIs = []
+        self.popPyramidAtStart = []
 
         # for CEA
         # costs = list of total cost for all participants over entire sim duration, per cohort
@@ -99,13 +98,13 @@ class MultiSimOutputs:
         """ extracts outcomes of a simulated cohort """
 
         # store all cohort population size paths
-        self.pathPopSizes.append(simulated_cohort.simOutputs.pathPopSize)
+        self.pathsOfPopSize.append(simulated_cohort.simOutputs.pathPopSize)
 
         # store all cohort pyramid percentages
-        self.pyramidStart.append(simulated_cohort.simOutputs.pyramids[0])
+        self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
 
         # store all cohort average BMI paths
-        self.pathOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
+        self.pathsOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
 
     # for CEA
 

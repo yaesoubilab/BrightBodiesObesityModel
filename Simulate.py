@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # sample paths for population size
     Path.plot_sample_paths(
-        sample_paths=multiCohort.multiSimOutputs.pathPopSizes,
+        sample_paths=multiCohort.multiSimOutputs.pathsOfPopSize,
         title='Population Size',
         y_range=[0, 1.1*D.POP_SIZE],
         x_label='Years'
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     # PYRAMID (cohort with characteristics (age/sex) to match Bright Bodies) - at Initialization
     Pyr.plot_pyramids(observed_data=D.age_sex_dist,
-                      simulated_data=multiCohort.multiSimOutputs.pyramidStart,
+                      simulated_data=multiCohort.multiSimOutputs.popPyramidAtStart,
                       fig_size=(6, 4),
                       x_lim=10,
                       title="Cohort Pyramids at Initialization",
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # sample paths for average BMIs at each time step
     Path.plot_sample_paths(
-        sample_paths=multiCohort.multiSimOutputs.pathOfBMIs,
+        sample_paths=multiCohort.multiSimOutputs.pathsOfBMIs,
         title='Average BMIs for Bright Bodies',
         x_label='Simulation Year',
         y_range=[0, 40],
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     year_two_vs_one = []
 
     for cohortID in range(D.N_COHORTS):
-        bmi_values = multiCohort.multiSimOutputs.pathOfBMIs[cohortID].get_values()
+        bmi_values = multiCohort.multiSimOutputs.pathsOfBMIs[cohortID].get_values()
 
         # year 1 minus year 0
         year_1_v_0 = bmi_values[1] - bmi_values[0]

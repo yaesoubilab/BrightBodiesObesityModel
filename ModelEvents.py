@@ -28,7 +28,7 @@ class Birth(Event):
         self.cohort.trace.add_message(
             str(individual) + ' will be born at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
 
-    def process(self):
+    def process(self, rng=None):
         """ processes birth of a new individual """
 
         self.cohort.process_birth(individual=self.individual)
@@ -49,7 +49,7 @@ class BMISurvey(Event):
         self.cohort.trace.add_message(
             'Average BMI of ' + str(cohort) + ' was assessed at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
 
-    def process(self):
+    def process(self, rng=None):
         """ processes the population distribution test """
 
         self.cohort.process_obesity_outcomes()
@@ -66,7 +66,7 @@ class PopSurvey(Event):
         self.individual = individual
         self.cohort = cohort
 
-    def process(self):
+    def process(self, rng=None):
         """ processes the population distribution test at initialization """
 
         self.cohort.process_pop_survey()

@@ -29,7 +29,7 @@ multiCohortCC.simulate(D.SIM_DURATION)
 
 # COMPARATIVE: average BMIs over 10 years
 MyPath.plot_sets_of_sample_paths(
-    sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathOfBMIs, multiCohortBB.multiSimOutputs.pathOfBMIs],
+    sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfBMIs, multiCohortBB.multiSimOutputs.pathsOfBMIs],
     title='Cohort Average BMIs over 10 Years',
     y_range=[0, 40],
     x_label='Simulation Year',

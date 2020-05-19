@@ -17,7 +17,7 @@ def print_outcomes(sim_outcomes, intervention):
 
     # CONTROL VALIDATION
     for cohortID in range(D.N_COHORTS):
-        values = sim_outcomes.pathOfBMIs[cohortID].get_values()
+        values = sim_outcomes.pathsOfBMIs[cohortID].get_values()
         # FOR YEAR SPECIFIC COMPARISONS
         # year 1 minus year 0
         year_1_v_0 = values[1] - values[0]
@@ -38,7 +38,7 @@ def plot_rct_validation(sim_outcomes, intervention):
     year_two_vs_one = []
 
     for cohortID in range(D.N_COHORTS):
-        bmi_values = sim_outcomes.pathOfBMIs[cohortID].get_values()
+        bmi_values = sim_outcomes.pathsOfBMIs[cohortID].get_values()
 
         # year 1 minus year 0
         year_1_v_0 = bmi_values[1] - bmi_values[0]
@@ -128,8 +128,8 @@ def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
 
     # get bmi paths for both alternatives
     bmi_paths = [
-        sim_outcomes_BB.pathOfBMIs,
-        sim_outcomes_CC.pathOfBMIs
+        sim_outcomes_BB.pathsOfBMIs,
+        sim_outcomes_CC.pathsOfBMIs
     ]
 
     # graph bmi paths for both alternatives (overlay)
@@ -157,8 +157,8 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     list_of_diff_individual_expenditure = []
 
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
 
@@ -285,8 +285,8 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     # find difference in BMI between interventions
     list_of_diff_mean_BMIs = []
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_diff_mean_BMIs.append(diff_BMI)
     # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
@@ -329,8 +329,8 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
     # find difference in BMI between interventions
     list_of_diff_mean_BMIs = []
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         diff_BMI_2years = []
         diff_BMI_2years.append(diff_BMI[0])
@@ -380,8 +380,8 @@ def plot_bmi_figure_depreciation(sim_outcomes_BB, sim_outcomes_CC):
     # find difference in BMI between interventions
     list_of_diff_mean_BMIs = []
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathOfBMIs[cohortID].get_values()
+        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         diff_BMI_2years = []
         diff_BMI_2years.append(diff_BMI[0])
