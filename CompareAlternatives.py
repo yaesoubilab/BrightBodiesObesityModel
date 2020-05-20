@@ -34,7 +34,7 @@ MyPath.plot_sets_of_sample_paths(
     y_range=[0, 40],
     x_label='Simulation Year',
     y_label='Average BMI (kg/m^2)',
-    legends=['Clinical Control Cohorts', 'Bright Bodies Cohorts'],
+    legends=['Model: Clinical Control', 'Model: Bright Bodies'],
     connect='line',
     color_codes=['orange', 'blue'],
     transparency=0.5,
@@ -52,6 +52,8 @@ Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs
                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 # plot RCT validation: BMI differences (year 0/1 and 1/2)
+# TODO: for the manuscript, we probably need to put these two figures in
+#   a single figure with 2 panels. It's quite easy to do.
 Support.plot_validation(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)
 Support.plot_validation(sim_outcomes=multiCohortCC.multiSimOutputs, intervention=D.Interventions.CONTROL)
 

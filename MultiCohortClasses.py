@@ -90,6 +90,7 @@ class MultiSimOutputs:
         # individualTotalExpenditure = list of individual expenditures over 10 years
         self.individualTotalExpenditure = []
 
+        # TODO: I am not sure if you are using these two variables
         # NEW: for bmi diff figures
         self.meanBMIDiffs = []
         self.statMeanBMIDiff = None
@@ -107,7 +108,6 @@ class MultiSimOutputs:
         self.pathsOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
 
     # for CEA
-
         # sum cost per year for all participants to get total cohort cost
         # over sim duration
         total_cost = sum(simulated_cohort.simOutputs.totalCosts)

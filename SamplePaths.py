@@ -148,14 +148,17 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
         ax.set_xlim(x_range)
     if y_range is not None:
         ax.set_ylim(y_range)
-    # bb: green
-    ax.scatter(x_points, y_points_bb, color='blue', marker="o", label='RCT: Bright Bodies')
-    ax.scatter(x_points, ci_lower_values_bb, color='blue', marker="_")
-    ax.scatter(x_points, ci_upper_values_bb, color='blue', marker="_")
+
     # cc: blue
     ax.scatter(x_points, y_points_cc, color='orange', marker="o", label='RCT: Clinical Control')
     ax.scatter(x_points, ci_lower_values_cc, color='orange', marker="_")
     ax.scatter(x_points, ci_upper_values_cc, color='orange', marker="_")
+
+    # bb: green
+    ax.scatter(x_points, y_points_bb, color='blue', marker="o", label='RCT: Bright Bodies')
+    ax.scatter(x_points, ci_lower_values_bb, color='blue', marker="_")
+    ax.scatter(x_points, ci_upper_values_bb, color='blue', marker="_")
+
     # generate lines
     ax.add_collection(linecoll_bb)
     ax.add_collection(linecoll_cc)

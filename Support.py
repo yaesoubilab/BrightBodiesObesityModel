@@ -265,7 +265,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         health_measure='d'
     )
     CBA.plot_acceptability_curves(
-        x_label='Willingness-to-pay threshold\n($ per BMI averted)',
+        x_label='Willingness-to-pay threshold\n($ per average BMI unit reduction)',
         y_range=[-0.01, 1.01],
         fig_size=(4.2, 4)
     )
