@@ -11,6 +11,10 @@ printed_materials = 25.00
 gym_room_utilities = 0.00  # note: provided at no charge for BB
 first_aid_kit = 150.00
 
+# TODO: I am not sure if you are using the calculations in this script
+#   anywhere else. If that is correct, then I'd suggest removing these
+#   to avoid any misunderstanding.
+
 # Category Total
 exercise_sessions_total = exercise_physiologist + \
     games_equipment + \

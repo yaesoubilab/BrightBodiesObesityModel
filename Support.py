@@ -48,12 +48,12 @@ def plot_validation(sim_outcomes, intervention):
 
     # find average change between year 0 and 1
     year1v0SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
-                                          data=year_one_vs_zero)
+                                       data=year_one_vs_zero)
     aveYear1vs0 = year1v0SummStat.get_mean()
 
     # find average change between year 1 and 2
     tear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
-                                          data=year_two_vs_one)
+                                       data=year_two_vs_one)
     aveYear2vs1 = tear2v1SummStat.get_mean()
 
     # estimates from Bright Bodies RCT for the control
@@ -80,9 +80,9 @@ def plot_validation(sim_outcomes, intervention):
         ax.set_title('Differences in Average BMI by Year\nunder Control')
 
     # adding RCT data
-    ax.scatter([1, 2], ys, color='black', label="RCT Average Difference in BMI")
+    ax.scatter([1, 2], ys, color='orange', label="RCT Average Difference in BMI")
     # adding error bars
-    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='black')
+    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='orange')
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
@@ -274,7 +274,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
 
-def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
+def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
@@ -298,9 +298,9 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
         ax.plot(range(D.SIM_DURATION+1), ys, color='blue', alpha=0.2, label='Model')
 
     # bright bodies data
-    ax.scatter([.5, 1, 2], bb_ys, color='black', label='Bright Bodies RCT')
+    ax.scatter([.5, 1, 2], bb_ys, color='orange', label='Bright Bodies RCT')
     ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds],
-                fmt='none', capsize=4, ecolor='black', elinewidth=2)
+                fmt='none', capsize=4, ecolor='orange', elinewidth=2)
 
     ax.set_title('Difference in Average BMI')
     ax.set_xlim((0.0, 10.5))

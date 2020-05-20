@@ -61,8 +61,8 @@ Support.plot_validation(sim_outcomes=multiCohortCC.multiSimOutputs, intervention
 Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-Support.plot_bmi_figure(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                        sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+Support.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                              sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 # TODO: these two figures are a little confusing.
 #  I imagine that to get these figures, I need to MAINTENANCE_EFFECT above

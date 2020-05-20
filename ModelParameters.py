@@ -269,12 +269,20 @@ class ParamGenerator:
                            intervention=self.intervention,
                            maintenance_scenario=self.maintenance_scenario)
 
-    # sample from distributions
+        # sample from distributions
+
+        # TODO: if there are parameters that are common between the two
+        #   interventions and are sampled from the same distribution,
+        #   would you please move them here before the if statement.
+        #   That is less error prone than having them twice under the
+        #   if statement.
 
         # BRIGHT BODIES
 
         # exercise sessions
         if self.intervention is D.Interventions.BRIGHT_BODIES:
+            # TODO: I'd suggest removing 'param_' from the beginning of these
+            #   variables to simplify the variable names.
             param_exercise_physiologist = self.exPhysRVG.sample(rng)
             param_games_equipment = self.gamesRVG.sample(rng)
             param_motivational_tools = self.motivToolsRVG.sample(rng)
@@ -378,5 +386,3 @@ class ParamGenerator:
 
         # return the parameter set
         return param
-
-
