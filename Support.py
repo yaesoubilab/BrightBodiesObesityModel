@@ -90,14 +90,14 @@ def plot_validation(sim_outcomes, intervention):
     for this_y in year_two_vs_one:
         ax.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
 
-    plt.xlim((0.5, 2.5))
-    ticks = [1, 2]
-    plt.xticks(ticks, labels=['Year 0 to 1', 'Year 1 to 2'])
-    plt.yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
-    plt.xlabel('Sim Years')
-    plt.ylabel('Difference in BMI (kg/m^2)')
+    ax.set_xlim((0.5, 2.5))
+    ax.set_xticks([1, 2])
+    ax.set_xlabel(['Year 0 to 1', 'Year 1 to 2'])
+    ax.set_yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    ax.set_xlabel('Sim Years')
+    ax.set_ylabel('Difference in BMI (kg/m^2)')
 
-    plt.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
+    ax.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
     # to save plotted figures
     # bbox_inches set to tight: cleans up figures
     plt.savefig("Figures/RCT_validation.png", dpi=300)
@@ -278,42 +278,40 @@ def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
-    # find difference in BMI between interventions
-    list_of_diff_mean_BMIs = []
+    # find difference in yearly average BMI between interventions
+    diff_yearly_ave_bmis = []
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
-        diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
-        list_of_diff_mean_BMIs.append(diff_BMI)
-    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
+        bmis_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+        bmis_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
+        diff_yearly_ave_bmis.append(numpy.array(bmis_cc) - numpy.array(bmis_bb))
 
     # to produce figure
-    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    sim_ys = list_of_diff_mean_BMIs
     # rct data: treatment effect at 6 mo, year 1, and 2
     bb_ys = [3.0, 3.7, 2.8]
     lower_bounds = [1, 1.1, 1.2]
     upper_bounds = [1, 1.1, 1.2]
 
-    f, ax = plt.subplots()
+    f, ax = plt.subplots(figsize=(5, 5))
 
-    for sim_y in sim_ys:
-        ax.plot(x, sim_y, color='blue')
+    # simulates trajectories
+    for ys in diff_yearly_ave_bmis:
+        ax.plot(range(D.SIM_DURATION+1), ys, color='blue', alpha=0.2, label='Model')
 
-    # adding bright bodies data
-    ax.scatter([.5, 1, 2], bb_ys, color='black')
-    ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds], fmt='none', capsize=4, ecolor='black', elinewidth=2)
+    # bright bodies data
+    ax.scatter([.5, 1, 2], bb_ys, color='black', label='Bright Bodies RCT')
+    ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds],
+                fmt='none', capsize=4, ecolor='black', elinewidth=2)
 
-    ax.set_title('Difference in Average BMI by Intervention: No Effect Maintenance')
-    plt.xlim((0.0, 10.5))
-    plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
-    plt.xlabel('Simulation Time (Years)')
-    plt.ylabel('Difference in BMI (kg/m^2)')
-    # Show legend
-    model_data_color = patch.Patch(color='blue', label='Simulation BMI Differences')
-    rct_data_color = patch.Patch(color='black', label='RCT: BMI Differences')
-    plt.legend(loc='upper right', handles=[model_data_color, rct_data_color])
+    ax.set_title('Difference in Average BMI')
+    ax.set_xlim((0.0, 10.5))
+    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    ax.set_yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
+    ax.set_xlabel('Simulation Time (Years)')
+    ax.set_ylabel('Difference in BMI (kg/m^2)')
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
+
     plt.savefig("Figures/Avg_BMI_No_Maintenance.png", dpi=300)
     plt.show()
 

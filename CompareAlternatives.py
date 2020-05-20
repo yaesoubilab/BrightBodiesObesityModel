@@ -6,14 +6,14 @@ import SamplePaths as MyPath
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_OF_EFFECT.
-MAINTEN_EFFECT = D.EFFECT_MAINTENANCE.NONE
+MAINTENANCE_EFFECT = D.EFFECT_MAINTENANCE.NONE
 
 
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
     intervention=D.Interventions.BRIGHT_BODIES,
-    maintenance_scenario=MAINTEN_EFFECT
+    maintenance_scenario=MAINTENANCE_EFFECT
 )
 # simulate these cohorts (BB)
 multiCohortBB.simulate(D.SIM_DURATION)
@@ -22,7 +22,7 @@ multiCohortBB.simulate(D.SIM_DURATION)
 multiCohortCC = MultiCls.MultiCohort(
     ids=range(D.N_COHORTS),
     intervention=D.Interventions.CONTROL,
-    maintenance_scenario=MAINTEN_EFFECT
+    maintenance_scenario=MAINTENANCE_EFFECT
 )
 # simulate these cohorts (CC)
 multiCohortCC.simulate(D.SIM_DURATION)
@@ -64,6 +64,11 @@ Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
 Support.plot_bmi_figure(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                         sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
+# TODO: these two figures are a little confusing.
+#  I imagine that to get these figures, I need to MAINTENANCE_EFFECT above
+#  to the scenario I'd like to simulate and then Support.plot_bmi_figure
+#  would give me the figure of BMI trajectories under the specified
+#  scenario. So I am not sure why we need these two methods below.
 Support.plot_bmi_figure_maintenance(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                     sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
