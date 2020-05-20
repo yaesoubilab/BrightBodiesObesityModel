@@ -127,6 +127,9 @@ def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
 def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     """ prints comparative outcomes """
 
+    # TODO: might need a little bit of clean up to make sure variable names are appropriate
+    #  and there is no redundancy.
+    
     # find difference in BMI between interventions
     list_of_diff_mean_BMIs = []
     # find differences in expenditures between interventions

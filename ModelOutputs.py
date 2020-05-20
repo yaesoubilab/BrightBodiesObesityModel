@@ -29,10 +29,12 @@ class SimOutputs:
                                                      collect_stat=False)
 
         # TODO: could you please distinguish these two variable better?
-        # totalCosts: list that holds the cost of all of the cohorts during the simulation
-        self.totalCosts = []
-        # totalExpenditures: list that holds the expenditures of the cohorts during the simulation
-        self.totalExpenditures = []
+        #  Does cost only include the intervention costs? One would imagine that cost also include expenditure.
+        #  Does it make sense to use intervention_cost and hc_expenditure?
+        # list that holds the cost of all of the cohorts during the simulation
+        self.annualTotalCosts = []
+        # list that holds the expenditures of the cohorts during the simulation
+        self.annualTotalHCExpenditures = []
 
     def collect_end_of_sim_stat(self):
         """
@@ -62,22 +64,16 @@ class SimOutputs:
 
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
-    def collect_cost(self, costs, expenditures):
+    def collect_costs_of_this_period(self, costs, hc_expenditures):
         """
-        :param costs: (list) of costs of each individual per year of sim time
-        :param expenditures: (list) of annual health care expenditures for each individual
+        :param costs: (list) of costs for each individual per year
+        :param hc_expenditures: (list) of annual health care expenditures for each individual per year
         """
 
-        # cohort_cost_total: sum of each person's cost in a given cohort (by year)
-        cohort_cost_total = sum(costs)
-
-        # totalCosts: list of cohort cost per year (to get total cost)
-        self.totalCosts.append(cohort_cost_total)
-
-        # EXPENDITURES
-        cohort_expenditure_total = sum(expenditures)
+        # list of cohort cost per year (to get total cost)
+        self.annualTotalCosts.append(sum(costs))
 
         # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
-        self.totalExpenditures.append(cohort_expenditure_total)
+        self.annualTotalHCExpenditures.append(sum(hc_expenditures))
 
 

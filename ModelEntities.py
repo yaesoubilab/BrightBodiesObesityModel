@@ -135,12 +135,9 @@ class Cohort:
         collect BMIs to calculate average
         """
 
-        bmis_at_this_time = []  # list of BMI values of all individuals at the current time
-
-        # individual_costs: list to collect intervention costs (per individual)
-        individual_costs = []
-        # health_care_expenditures: list to collect health care expenditures (per individual)
-        health_care_expenditures = []
+        individual_bmis = []  # list of BMI values of all individuals at the current time
+        individual_costs = [] # list to collect intervention costs (per individual)
+        individual_hc_expenditure = [] # list to collect health care expenditures (per individual)
 
         for individual in self.individuals:
             if individual.ifAlive is True:
@@ -148,7 +145,7 @@ class Cohort:
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 year_index = floor(self.simCal.time)
                 bmi_individual = individual.trajectory[year_index+1]*self.params.interventionMultipliers[year_index]
-                bmis_at_this_time.append(bmi_individual)
+                individual_bmis.append(bmi_individual)
 
                 # CHECK FOR BMI STATUS (< or >= 95th %ile by age sex)
                 age = floor(individual.get_age(current_time=self.simCal.time))
@@ -287,13 +284,13 @@ class Cohort:
                 # if year_index is 0:
                 if year_index in (0, 1):
                     if self.params.intervention == D.Interventions.BRIGHT_BODIES:
-                        cost_individual = self.params.annualInterventionCost
+                        individual_cost = self.params.annualInterventionCost
                     else:
-                        cost_individual = self.params.annualInterventionCost
+                        individual_cost = self.params.annualInterventionCost
                 else:
-                    cost_individual = 0
-                # individual_costs = list of individual cost at each time step
-                individual_costs.append(cost_individual)
+                    individual_cost = 0
+                # update the list of individual cost at each time step
+                individual_costs.append(individual_cost)
 
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
@@ -318,13 +315,13 @@ class Cohort:
                             # annual_hc_exp = bmi_unit_above_30*(197*((1+inflation_constant)**(2020-2017)))
                             annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP * ((1 + D.INFLATION) ** (2020 - 2017)))
 
-                health_care_expenditures.append(annual_hc_exp)
+                individual_hc_expenditure.append(annual_hc_exp)
 
         # store list of individual costs and health
-        self.simOutputs.collect_cost(individual_costs, health_care_expenditures)
+        self.simOutputs.collect_costs_of_this_period(individual_costs, individual_hc_expenditure)
 
         # calculate and store average BMI for this year
-        self.simOutputs.collect_bmi(bmis_at_this_time)
+        self.simOutputs.collect_bmi(individual_bmis)
 
     def process_pop_survey(self):
         """ processes the population distribution pyramid (age/sex) """

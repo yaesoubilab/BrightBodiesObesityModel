@@ -70,6 +70,15 @@ class MultiCohort:
 
 
 class MultiSimOutputs:
+    # TODO: this class was confusing for me just because
+    #  we are collecting many  cost-related outcomes and it was difficult
+    #  to keep track of all.
+    #  - Would you please review all variables to make sure their names
+    #  accurately describe what they store?
+    #  - Also, see my comment in "ModelOutput.py". We should better distinguish
+    #  between intervention cost, health care expenditure, and cost (which includes both).
+    #  - And if there are variables that we are not using later,
+    #  it helps to remove them.
 
     def __init__(self):
 
@@ -78,16 +87,16 @@ class MultiSimOutputs:
         self.popPyramidAtStart = []
 
         # for CEA
-        # costs = list of total cost for all participants over entire sim duration, per cohort
+        # list of total cost for all participants over entire sim duration, per cohort
         self.costs = []
-        # effects = list of the average effect over entire sim duration, per cohort
+        # list of the average effect over entire sim duration, per cohort
         self.effects = []
 
-        # expenditures = list of average expenditures per year per person over entire sim duration, per cohort
+        # list of average expenditures per year per person over entire sim duration, per cohort
         self.expenditures = []
-        # totalExpenditures = list of total expenditures for all people over 10 years, per cohort
+        # list of total expenditures for all people over 10 years, per cohort
         self.totalExpenditures = []
-        # individualTotalExpenditure = list of individual expenditures over 10 years
+        # list of individual expenditures over 10 years
         self.individualTotalExpenditure = []
 
         # TODO: I am not sure if you are using these two variables
@@ -98,19 +107,17 @@ class MultiSimOutputs:
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
 
-        # store all cohort population size paths
+        # store sample path of cohort population size
         self.pathsOfPopSize.append(simulated_cohort.simOutputs.pathPopSize)
-
-        # store all cohort pyramid percentages
-        self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
-
-        # store all cohort average BMI paths
+        # store sample path of cohort average BMI
         self.pathsOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
+        # store sample path of cohort population pyramid at time 0
+        self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
 
     # for CEA
         # sum cost per year for all participants to get total cohort cost
         # over sim duration
-        total_cost = sum(simulated_cohort.simOutputs.totalCosts)
+        total_cost = sum(simulated_cohort.simOutputs.annualTotalCosts)
 
         average_cost = total_cost/D.POP_SIZE
 
@@ -144,7 +151,7 @@ class MultiSimOutputs:
 
         # EXPENDITURES
         # total expenditures over 10 years (for cohort)
-        total_expenditures = sum(simulated_cohort.simOutputs.totalExpenditures)
+        total_expenditures = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
         # average expenditure per year (over 10 years)
         annual_avg_expenditure = total_expenditures/D.SIM_DURATION
         # total expenditure per person over 10 years

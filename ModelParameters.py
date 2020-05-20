@@ -45,6 +45,11 @@ def get_trajectories():
 class Parameters:
     # class to contain the parameters of the model
     def __init__(self, trajectories, intervention, maintenance_scenario):
+        """
+        :param trajectories: (DataFrameOfObjects) of BMI trajectories (by sex and age)
+        :param intervention: which intervention to model
+        :param maintenance_scenario: effect maintenance scenario
+        """
 
         self.trajectories = trajectories
         self.intervention = intervention
@@ -57,43 +62,32 @@ class Parameters:
                                                         list_x_max=[16, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
 
-        self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
+        # intervention multipliers to reduce BMI over time
+        self.interventionMultipliers = []
+        if intervention == D.Interventions.BRIGHT_BODIES:
 
-        # EFFECT MULTIPLIERS
-        if maintenance_scenario == D.EFFECT_MAINTENANCE.FULL:
-            if intervention == D.Interventions.BRIGHT_BODIES:
-                self.interventionMultipliers \
-                    = [1.0, D.multBB1, D.multBB2]
+            if maintenance_scenario == D.EFFECT_MAINTENANCE.FULL:
+                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
                 for i in range(10):
-                    self.interventionMultipliers.append(D.multBB2)
-            else:
-                self.interventionMultipliers = [1]
+                    self.interventionMultipliers.append(D.multBBYear2)
+
+            elif maintenance_scenario == D.EFFECT_MAINTENANCE.NONE:
+                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
                 for i in range(10):
                     self.interventionMultipliers.append(D.multCC)
-        else:
-            if maintenance_scenario == D.EFFECT_MAINTENANCE.NONE:
-                if intervention == D.Interventions.BRIGHT_BODIES:
-                    self.interventionMultipliers \
-                        = [1.0, D.multBB1, D.multBB2]
-                    for i in range(10):
-                        self.interventionMultipliers.append(D.multCC)
-                else:
-                    self.interventionMultipliers = [1]
-                    for i in range(10):
-                        self.interventionMultipliers.append(D.multCC)
+
             elif maintenance_scenario == D.EFFECT_MAINTENANCE.DEPREC:
-                if intervention == D.Interventions.BRIGHT_BODIES:
-                    self.interventionMultipliers \
-                        = [1.0, D.multBB1, D.multBB2]
-                    for i in range(10):
-                        deprec_difference = D.multCC - D.multBB2
-                        deprec_value = deprec_difference/8
-                        deprec_multiplier = D.multBB2+(deprec_value*i)
-                        self.interventionMultipliers.append(deprec_multiplier)
-                else:
-                    self.interventionMultipliers = [1]
-                    for i in range(10):
-                        self.interventionMultipliers.append(D.multCC)
+                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
+                for i in range(10):
+                    deprec_difference = D.multCC - D.multBBYear2
+                    deprec_value = deprec_difference / 8
+                    deprec_multiplier = D.multBBYear2 + (deprec_value * i)
+                    self.interventionMultipliers.append(deprec_multiplier)
+
+        else: # under control
+            self.interventionMultipliers = [1]
+            for i in range(10):
+                self.interventionMultipliers.append(D.multCC)
 
 
 class ParamGenerator:
@@ -318,7 +312,7 @@ class ParamGenerator:
                 total_parent_sessions + total_administration + total_weigh_ins + \
                 total_medical_director
             # adjusting for inflation (2007 dollar --> 2020 dollar)
-            param.total_cost_bb = param.total_cost_bb*((1+0.02)**(2020-2007))
+            param.total_cost_bb = param.total_cost_bb*((1+D.INFLATION)**(2020-2007))
 
             # INDIVIDUAL cost: BB
             param.annualInterventionCost = param.total_cost_bb / D.N_CHILDREN_BB
@@ -368,7 +362,7 @@ class ParamGenerator:
                 total_administration_control + total_weigh_ins_control + total_medical_director_control + \
                 total_rent_utilities
             # adjusting for inflation (2007 dollar --> 2020 dollar)
-            param.total_cost_cc = param.total_cost_cc*((1+0.02)**(2020-2007))
+            param.total_cost_cc = param.total_cost_cc*((1+D.INFLATION)**(2020-2007))
 
             # INDIVIDUAL cost: CC
             param.annualInterventionCost = param.total_cost_cc/D.N_CHILDREN_BB

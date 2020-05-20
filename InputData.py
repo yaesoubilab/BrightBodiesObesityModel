@@ -20,9 +20,9 @@ INFLATION = 0.02
 
 # Multipliers:
 # BB Year 1 reduction
-multBB1 = 0.925
+multBBYear1 = 0.925
 # BB Year 2 reduction
-multBB2 = 0.951
+multBBYear2 = 0.951
 # CC Multiplier
 multCC = (1.05 + 1.048) / 2
 

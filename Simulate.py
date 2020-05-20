@@ -3,7 +3,7 @@ import InputData as D
 import SimPy.Plots.SamplePaths as Path
 from SimPy.Plots import PopulationPyramids as Pyr
 
-# SIMULATE ONE INTERVENTION AND MAINTENANCE EFFECT
+# SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
 
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
 if __name__ == '__main__':
