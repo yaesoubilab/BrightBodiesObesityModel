@@ -7,16 +7,16 @@ DECI = 5               # the decimal point to round the numbers to in the trace 
 # simulation settings
 SIM_INIT = 0.00001  # (years) initialization period to create the cohort
 SIM_DURATION = 10   # (years) - changed from 10 for manuscript
-POP_SIZE = 90     # population size (cohort at initialization)
+POP_SIZE = 90     # population size of each cohort
 
-# for MultiCohorts
-N_COHORTS = 100
+# for simulation multiple cohorts
+N_COHORTS = 50
 
 # for Costs
 N_CHILDREN_BB = 90
 YEARS_RCT = 2
 
-inflation_constant = 0.02
+INFLATION = 0.02
 
 # Multipliers:
 # BB Year 1 reduction
@@ -28,7 +28,7 @@ multCC = (1.05 + 1.048) / 2
 
 
 # Maintenance of Effect Levels:
-class MAINTENANCE_OF_EFFECT(Enum):
+class EFFECT_MAINTENANCE(Enum):
     NONE = 0
     DEPREC = 1
     FULL = 2

@@ -7,6 +7,7 @@ import matplotlib.patches as patch
 import SimPy.StatisticalClasses as Stat
 
 
+# TODO: it seems you are not using this method. If so, please delete.
 def print_outcomes(sim_outcomes, intervention):
     """ prints the outcomes of a simulated cohort """
 
@@ -30,10 +31,10 @@ def print_outcomes(sim_outcomes, intervention):
     # print(intervention, 'BMI change y2 - y1 -->', year_two_v_one)
 
 
-def plot_rct_validation(sim_outcomes, intervention):
+def plot_validation(sim_outcomes, intervention):
     """ generates validation graphs: BMI differences by year """
 
-    # TO DETERMINE BMI DIFFERENCES BY YEAR
+    # BMI difference by year
     year_one_vs_zero = []
     year_two_vs_one = []
 
@@ -41,83 +42,62 @@ def plot_rct_validation(sim_outcomes, intervention):
         bmi_values = sim_outcomes.pathsOfBMIs[cohortID].get_values()
 
         # year 1 minus year 0
-        year_1_v_0 = bmi_values[1] - bmi_values[0]
-        year_one_vs_zero.append(year_1_v_0)
-
+        year_one_vs_zero.append(bmi_values[1] - bmi_values[0])
         # year 2 minus year 1
-        year_2_v_1 = bmi_values[2] - bmi_values[1]
-        year_two_vs_one.append(year_2_v_1)
-
-    # print('BMI change y1 - y0 -->', year_one_vs_zero)
-    # print('BMI change y2 - y1 -->', year_two_vs_one)
+        year_two_vs_one.append(bmi_values[2] - bmi_values[1])
 
     # find average change between year 0 and 1
-    avg_year_1_v_0 = sum(year_one_vs_zero)/len(year_one_vs_zero)
-    avgYear1v0SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
+    year1v0SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
                                           data=year_one_vs_zero)
-    estimate_and_PI_1v0 = avgYear1v0SummStat.get_formatted_mean_and_interval(interval_type='p',
-                                                                             alpha=0.05,
-                                                                             deci=2)
-    estimate_1v0 = avgYear1v0SummStat.get_mean()
-    PI_1v0 = avgYear1v0SummStat.get_interval(interval_type='p',
-                                             alpha=0.05)
-    # print('Estimate 1v0:', estimate_1v0)
-    # print('PI 1v0:', PI_1v0)
+    aveYear1vs0 = year1v0SummStat.get_mean()
 
     # find average change between year 1 and 2
-    avg_year_2_v_1 = sum(year_two_vs_one)/len(year_two_vs_one)
-    avgYear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
+    tear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
                                           data=year_two_vs_one)
-    estimate_and_PI_2v1 = avgYear2v1SummStat.get_formatted_mean_and_interval(interval_type='p',
-                                                                             alpha=0.05,
-                                                                             deci=2)
-    estimate_2v1 = avgYear2v1SummStat.get_mean()
-    PI_2v1 = avgYear2v1SummStat.get_interval(interval_type='p',
-                                             alpha=0.05)
-    # print('Estimate 2v1:', estimate_2v1)
-    # print('PI 2v1:', PI_2v1)
+    aveYear2vs1 = tear2v1SummStat.get_mean()
 
-    # print('Estimate and PI: BMI diffs year 1 v 0:', estimate_and_PI_1v0)
-    # print('Estimate and PI: BMI diffs year 2 v 1:', estimate_and_PI_2v1)
-    # print('Average change in BMI between Y1 and Y0:', avg_year_1_v_0)
-    # print('Average change in BMI between Y2 and Y1:', avg_year_2_v_1)
-
-# NEW FIGURE:
-
+    # estimates from Bright Bodies RCT for the control
     rct_control_year_diffs = [1.9, 0.0]
+    rct_control_year_diffs_lb = [.7, .8]
+    rct_control_year_diffs_ub = [.6, .8]
+    # estimates from Bright Bodies RCT for Bright Bodies
     rct_bb_year_diffs = [-1.8, 0.9]
+    rct_bb_year_diffs_lb = [.8, 1.0]
+    rct_bb_year_diffs_ub = [.9, 1.0]
 
-    f, ax = plt.subplots()
+    # plot
+    f, ax = plt.subplots(figsize=(5, 5))
 
     if intervention == D.Interventions.BRIGHT_BODIES:
-        bb_ys = rct_bb_year_diffs
-        lower_bounds = [.7, .8]
-        upper_bounds = [.6, .8]
-        ax.set_title('RCT Validation: BB Differences in Average BMI by Year')
+        ys = rct_bb_year_diffs
+        lbs = rct_bb_year_diffs_lb
+        ubs = rct_bb_year_diffs_ub
+        ax.set_title('Differences in Average BMI by Year\nunder Bright Bodies')
     else:
-        bb_ys = rct_control_year_diffs
-        lower_bounds = [.8, 1.0]
-        upper_bounds = [.9, 1.0]
-        ax.set_title('RCT Validation: Control Differences in Average BMI by Year')
+        ys = rct_control_year_diffs
+        lbs = rct_control_year_diffs_lb
+        ubs = rct_control_year_diffs_ub
+        ax.set_title('Differences in Average BMI by Year\nunder Control')
 
-    for this_y in year_one_vs_zero:
-        ax.scatter(1, this_y, color='blue', marker='_', s=200)
-    for this_y in year_two_vs_one:
-        ax.scatter(2, this_y, color='blue', marker='_', s=200)
-
-    # adding bright bodies data
-    ax.scatter([1, 2], bb_ys, color='black', label="RCT Average Difference in BMI")
+    # adding RCT data
+    ax.scatter([1, 2], ys, color='black', label="RCT Average Difference in BMI")
     # adding error bars
-    ax.errorbar([1, 2], bb_ys, yerr=(lower_bounds, upper_bounds), fmt='none', capsize=4, ecolor='black')
+    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='black')
 
-    plt.xlim((0.0, 2.5))
+    # adding simulation outcomes
+    for this_y in year_one_vs_zero:
+        ax.scatter(1, this_y, color='blue', marker='_', s=200, alpha=0.25)
+    for this_y in year_two_vs_one:
+        ax.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
+
+    plt.xlim((0.5, 2.5))
     ticks = [1, 2]
     plt.xticks(ticks, labels=['Year 0 to 1', 'Year 1 to 2'])
     plt.yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
     plt.xlabel('Sim Years')
     plt.ylabel('Difference in BMI (kg/m^2)')
 
-    plt.legend(loc='upper right')
+    plt.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
     # to save plotted figures
     # bbox_inches set to tight: cleans up figures
     plt.savefig("Figures/RCT_validation.png", dpi=300)
@@ -276,6 +256,19 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         cost_digits=2,
         effect_digits=2,
         icer_digits=2)
+
+    # do CBA
+    CBA = Econ.CBA(
+        strategies=[clinical_control_strategy, bright_bodies_strategy],
+        wtp_range=[0, 1000],
+        if_paired=True,
+        health_measure='d'
+    )
+    CBA.plot_acceptability_curves(
+        x_label='Willingness-to-pay threshold\n($ per BMI averted)',
+        y_range=[-0.01, 1.01],
+        fig_size=(4.2, 4)
+    )
 
 
 def plot_bmi_figure(sim_outcomes_BB, sim_outcomes_CC):

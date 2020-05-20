@@ -6,7 +6,7 @@ import SamplePaths as MyPath
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_OF_EFFECT.
-MAINTEN_EFFECT = D.MAINTENANCE_OF_EFFECT.NONE
+MAINTEN_EFFECT = D.EFFECT_MAINTENANCE.NONE
 
 
 # for MultiCohort BRIGHT BODIES
@@ -52,8 +52,8 @@ Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs
                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 # plot RCT validation: BMI differences (year 0/1 and 1/2)
-Support.plot_rct_validation(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)
-Support.plot_rct_validation(sim_outcomes=multiCohortCC.multiSimOutputs, intervention=D.Interventions.CONTROL)
+Support.plot_validation(sim_outcomes=multiCohortBB.multiSimOutputs, intervention=D.Interventions.BRIGHT_BODIES)
+Support.plot_validation(sim_outcomes=multiCohortCC.multiSimOutputs, intervention=D.Interventions.CONTROL)
 
 # report cost-effectiveness analysis
 Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,

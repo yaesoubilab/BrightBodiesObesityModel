@@ -60,7 +60,7 @@ class Parameters:
         self.interventionMultipliers = []  # intervention multipliers to reduce BMI over time
 
         # EFFECT MULTIPLIERS
-        if maintenance_scenario == D.MAINTENANCE_OF_EFFECT.FULL:
+        if maintenance_scenario == D.EFFECT_MAINTENANCE.FULL:
             if intervention == D.Interventions.BRIGHT_BODIES:
                 self.interventionMultipliers \
                     = [1.0, D.multBB1, D.multBB2]
@@ -71,7 +71,7 @@ class Parameters:
                 for i in range(10):
                     self.interventionMultipliers.append(D.multCC)
         else:
-            if maintenance_scenario == D.MAINTENANCE_OF_EFFECT.NONE:
+            if maintenance_scenario == D.EFFECT_MAINTENANCE.NONE:
                 if intervention == D.Interventions.BRIGHT_BODIES:
                     self.interventionMultipliers \
                         = [1.0, D.multBB1, D.multBB2]
@@ -81,7 +81,7 @@ class Parameters:
                     self.interventionMultipliers = [1]
                     for i in range(10):
                         self.interventionMultipliers.append(D.multCC)
-            elif maintenance_scenario == D.MAINTENANCE_OF_EFFECT.DEPREC:
+            elif maintenance_scenario == D.EFFECT_MAINTENANCE.DEPREC:
                 if intervention == D.Interventions.BRIGHT_BODIES:
                     self.interventionMultipliers \
                         = [1.0, D.multBB1, D.multBB2]

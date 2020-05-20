@@ -12,7 +12,7 @@ if __name__ == '__main__':
     multiCohort = MultiCls.MultiCohort(
         ids=range(D.N_COHORTS),
         intervention=D.Interventions.BRIGHT_BODIES,
-        maintenance_scenario=D.MAINTENANCE_OF_EFFECT.NONE
+        maintenance_scenario=D.EFFECT_MAINTENANCE.NONE
     )
     # Simulate cohorts
     multiCohort.simulate(sim_duration=D.SIM_DURATION,

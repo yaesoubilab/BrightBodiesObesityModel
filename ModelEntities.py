@@ -302,10 +302,10 @@ class Cohort:
                     if individual.ifLessThan95th is False:
                         # annual HC expenditure for >95th (per individual)
                         # annual_hc_exp = 220*((1+inflation_constant)**(2020-2008 + year_index))
-                        annual_hc_exp = self.params.costAbove95thP*((1+D.inflation_constant)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costAbove95thP*((1 + D.INFLATION) ** (2020 - 2008 + year_index))
                     else:
                         # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = self.params.costBelow95thP*((1+D.inflation_constant)**(2020-2008 + year_index))
+                        annual_hc_exp = self.params.costBelow95thP*((1 + D.INFLATION) ** (2020 - 2008 + year_index))
                 else:
                     # if less than 95th (which is 30)
                     if individual.ifLessThan95th is True:
@@ -316,7 +316,7 @@ class Cohort:
                             annual_hc_exp = 0
                         else:
                             # annual_hc_exp = bmi_unit_above_30*(197*((1+inflation_constant)**(2020-2017)))
-                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP*((1+D.inflation_constant)**(2020-2017)))
+                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP * ((1 + D.INFLATION) ** (2020 - 2017)))
 
                 health_care_expenditures.append(annual_hc_exp)
 
