@@ -1,6 +1,6 @@
 import SimPy.DiscreteEventSim as SimCls
 import SimPy.SimulationSupport as Sim
-import SimPy.RandomVariantGenerators as RVGs
+import SimPy.RandomVariateGenerators as RVGs
 import ModelEvents as E
 import InputData as D
 import ModelOutputs as O

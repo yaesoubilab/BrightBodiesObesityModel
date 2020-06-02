@@ -1,5 +1,5 @@
 from ModelEntities import Cohort
-import SimPy.RandomVariantGenerators as RVGs
+import SimPy.RandomVariateGenerators as RVGs
 import InputData as D
 from ModelParameters import ParamGenerator
 import multiprocessing as mp
