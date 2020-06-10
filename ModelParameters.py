@@ -269,50 +269,41 @@ class ParamGenerator:
                            maintenance_scenario=self.maintenance_scenario)
 
         # sample from distributions
-
-        # TODO: if there are parameters that are common between the two
-        #   interventions and are sampled from the same distribution,
-        #   would you please move them here before the if statement.
-        #   That is less error prone than having them twice under the
-        #   if statement.
-
         # BRIGHT BODIES
 
         # exercise sessions
         if self.intervention is D.Interventions.BRIGHT_BODIES:
-            # TODO: I'd suggest removing 'param_' from the beginning of these
-            #   variables to simplify the variable names.
-            param_exercise_physiologist = self.exPhysRVG.sample(rng)
-            param_games_equipment = self.gamesRVG.sample(rng)
-            param_motivational_tools = self.motivToolsRVG.sample(rng)
-            param_printed_materials = self.printedMaterialRVG.sample(rng)
-            param_first_aid_kit = self.firstAidRVG.sample(rng)
+            exercise_physiologist = self.exPhysRVG.sample(rng)
+            games_equipment = self.gamesRVG.sample(rng)
+            motivational_tools = self.motivToolsRVG.sample(rng)
+            printed_materials = self.printedMaterialRVG.sample(rng)
+            first_aid_kit = self.firstAidRVG.sample(rng)
             # nutrition behavior modification
-            param_registered_dietitian = self.regDietRVG.sample(rng)
-            param_social_worker = self.socialWorkerRVG.sample(rng)
-            param_educational_tools = self.eduToolsRVG.sample(rng)
+            registered_dietitian = self.regDietRVG.sample(rng)
+            social_worker = self.socialWorkerRVG.sample(rng)
+            educational_tools = self.eduToolsRVG.sample(rng)
             # parent sessions
-            param_social_worker_2 = self.socialWorkerRVG.sample(rng)
-            param_printed_materials_2 = self.printedMaterialRVG.sample(rng)
+            social_worker_2 = self.socialWorkerRVG.sample(rng)
+            printed_materials_2 = self.printedMaterialRVG.sample(rng)
             # administration
-            param_exercise_physiologist_admin = self.exPhysCoordRVG.sample(rng)
-            param_registered_dietitian_admin = self.regDietCoordRVG.sample(rng)
+            exercise_physiologist_admin = self.exPhysCoordRVG.sample(rng)
+            registered_dietitian_admin = self.regDietCoordRVG.sample(rng)
             # weigh ins
-            param_technician = self.technicianRVG.sample(rng)
-            param_body_fat_analyzer_scale = self.bfAnalyserRVG.sample(rng)
-            param_stadiometer = self.stadiometerRVG.sample(rng)
+            technician = self.technicianRVG.sample(rng)
+            body_fat_analyzer_scale = self.bfAnalyserRVG.sample(rng)
+            stadiometer = self.stadiometerRVG.sample(rng)
             # medical director
-            param_medical_consultation = self.medConsultRVG.sample(rng)
+            medical_consultation = self.medConsultRVG.sample(rng)
 
             # calculate category totals: BRIGHT BODIES
             total_exercise_sessions = (
-                param_exercise_physiologist + param_games_equipment + param_motivational_tools
-                + param_printed_materials + param_first_aid_kit)
-            total_nutrition_behavior_sessions = (param_registered_dietitian + param_social_worker + param_educational_tools)
-            total_parent_sessions = (param_social_worker_2 + param_printed_materials_2)
-            total_administration = (param_exercise_physiologist_admin + param_registered_dietitian_admin)
-            total_weigh_ins = (param_technician + param_body_fat_analyzer_scale + param_stadiometer)
-            total_medical_director = param_medical_consultation
+                exercise_physiologist + games_equipment + motivational_tools
+                + printed_materials + first_aid_kit)
+            total_nutrition_behavior_sessions = (registered_dietitian + social_worker + educational_tools)
+            total_parent_sessions = (social_worker_2 + printed_materials_2)
+            total_administration = (exercise_physiologist_admin + registered_dietitian_admin)
+            total_weigh_ins = (technician + body_fat_analyzer_scale + stadiometer)
+            total_medical_director = medical_consultation
 
             # OVERALL cost: BB
             param.total_cost_bb = total_exercise_sessions + total_nutrition_behavior_sessions + \
@@ -323,7 +314,6 @@ class ParamGenerator:
 
             # INDIVIDUAL cost: BB
             param.annualInterventionCost = param.total_cost_bb / D.N_CHILDREN_BB
-            # param.annualInterventionCostBB = param.total_cost_bb / D.N_CHILDREN_BB
 
             # HC EXPENDITURE (constants)
             cost_above_95 = self.costAbove95th.sample(rng)
@@ -336,33 +326,33 @@ class ParamGenerator:
         # CONTROL
         if self.intervention is D.Interventions.CONTROL:
             # nurse visit and follow up
-            param_nurse_practitioner = self.nursePractitionerRVG.sample(rng)
+            nurse_practitioner = self.nursePractitionerRVG.sample(rng)
             # nutrition visit and follow up
-            param_registered_dietitian_cc = self.regDietControlRVG.sample(rng)
+            registered_dietitian_cc = self.regDietControlRVG.sample(rng)
             # behavioral counseling visit and follow up
-            param_social_worker_cc = self.socialWorkerControlRVG.sample(rng)
+            social_worker_cc = self.socialWorkerControlRVG.sample(rng)
             # administration
-            param_dept_clinical_secretary = self.deptClinicSecretaryRVG.sample(rng)
-            param_clinical_secretary = self.clinicSecretaryRVG.sample(rng)
-            param_typing = self.typingRVG.sample(rng)
+            dept_clinical_secretary = self.deptClinicSecretaryRVG.sample(rng)
+            clinical_secretary = self.clinicSecretaryRVG.sample(rng)
+            typing = self.typingRVG.sample(rng)
             # weigh ins and labs
-            param_lab_technician = self.labTechRVG.sample(rng)
+            lab_technician = self.labTechRVG.sample(rng)
             # medical director visit and follow up
-            param_medical_consultation_cc = self.medConsultControlRVG.sample(rng)
+            medical_consultation_cc = self.medConsultControlRVG.sample(rng)
             # rent space/utilities and cleaning service
-            param_rent_space_utilities = self.rentSpaceRVG.sample(rng)
-            param_cleaning_service = self.cleaningRVG.sample(rng)
-            param_clinic_equipment_supplies = self.clinicEquipRVG.sample(rng)
+            rent_space_utilities = self.rentSpaceRVG.sample(rng)
+            cleaning_service = self.cleaningRVG.sample(rng)
+            clinic_equipment_supplies = self.clinicEquipRVG.sample(rng)
 
             # calculate category totals: CONTROL
-            total_nurse_visit = param_nurse_practitioner
-            total_nutrition_visit = param_registered_dietitian_cc
-            total_behavior_counseling = param_social_worker_cc
-            total_administration_control = (param_dept_clinical_secretary + param_clinical_secretary + param_typing)
-            total_weigh_ins_control = param_lab_technician
-            total_medical_director_control = param_medical_consultation_cc
-            total_rent_utilities = (param_rent_space_utilities + param_cleaning_service +
-                                    param_clinic_equipment_supplies)
+            total_nurse_visit = nurse_practitioner
+            total_nutrition_visit = registered_dietitian_cc
+            total_behavior_counseling = social_worker_cc
+            total_administration_control = (dept_clinical_secretary + clinical_secretary + typing)
+            total_weigh_ins_control = lab_technician
+            total_medical_director_control = medical_consultation_cc
+            total_rent_utilities = (rent_space_utilities + cleaning_service +
+                                    clinic_equipment_supplies)
 
             # OVERALL cost: CC
             param.total_cost_cc = total_nurse_visit + total_nutrition_visit + total_behavior_counseling + \

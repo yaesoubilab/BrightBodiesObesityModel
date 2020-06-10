@@ -70,15 +70,6 @@ class MultiCohort:
 
 
 class MultiSimOutputs:
-    # TODO: this class was confusing for me just because
-    #  we are collecting many  cost-related outcomes and it was difficult
-    #  to keep track of all.
-    #  - Would you please review all variables to make sure their names
-    #  accurately describe what they store?
-    #  - Also, see my comment in "ModelOutput.py". We should better distinguish
-    #  between intervention cost, health care expenditure, and cost (which includes both).
-    #  - And if there are variables that we are not using later,
-    #  it helps to remove them.
 
     def __init__(self):
 
@@ -87,22 +78,22 @@ class MultiSimOutputs:
         self.popPyramidAtStart = []
 
         # for CEA
-        # list of total cost for all participants over entire sim duration, per cohort
+        # list of total intervention costs for all participants over entire sim duration, per cohort
         self.costs = []
-        # list of the average effect over entire sim duration, per cohort
+        # list of the average effect (BMI) over entire sim duration, per cohort
         self.effects = []
 
-        # list of average expenditures per year per person over entire sim duration, per cohort
+        # list of average HC expenditures per year per person over entire sim duration, per cohort
+        # Annual Average Individual Expenditure
         self.expenditures = []
-        # list of total expenditures for all people over 10 years, per cohort
-        self.totalExpenditures = []
-        # list of individual expenditures over 10 years
-        self.individualTotalExpenditure = []
 
-        # TODO: I am not sure if you are using these two variables
-        # NEW: for bmi diff figures
-        self.meanBMIDiffs = []
-        self.statMeanBMIDiff = None
+        # list of total expenditures for all people over 10 years, per cohort
+        # Average Total Expenditure
+        self.totalExpenditures = []
+
+        # list of individual expenditures over 10 years
+        # Average Individual Expenditure
+        self.individualTotalExpenditure = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -115,54 +106,50 @@ class MultiSimOutputs:
         self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
 
     # for CEA
-        # sum cost per year for all participants to get total cohort cost
-        # over sim duration
-        total_cost = sum(simulated_cohort.simOutputs.annualTotalCosts)
 
+        # COST (Intervention Costs)
+
+        # sum cost per year for all participants to get total cohort cost over sim duration
+        total_cost = sum(simulated_cohort.simOutputs.annualTotalInterventionCosts)
+        # average cost per person (of intervention/control)
         average_cost = total_cost/D.POP_SIZE
 
         # store costs for use in CEA
         self.costs.append(average_cost)
 
-        # average BMI by year
+        # EFFECT (BMI unit change)
+
+        # average BMI by year (list of 10 BMI values)
         effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
 
-        # represent RCT effect (skip index 0 because that's baseline)
-        rct_effect = effect_values[1] + effect_values[2]
-        # represent 10 year effect
-        ten_year_effect = (effect_values[1] + effect_values[2] +
+        # represent 10 year effect (sum of 10 avg BMI values)
+        ten_year_effect_total = (effect_values[1] + effect_values[2] +
                            effect_values[3] + effect_values[4] +
                            effect_values[5] + effect_values[6] +
                            effect_values[7] + effect_values[8] +
                            effect_values[9] + effect_values[10])
 
-        # do NOT need to divide by pop size because values are already an average over the cohort
-        # average_rct_effect = rct_effect/D.YEARS_RCT
-        average_effect_ten_years = ten_year_effect/D.SIM_DURATION
+        # average effect of the cohort over 10 years (average BMI)
+        average_effect_ten_years = ten_year_effect_total/D.SIM_DURATION
 
-        # print("AVERAGE 10 year EFFECT:", average_effect_ten_years)
-        # print("TOTAL RCT EFFECT (sum of year 1 and 2 avg. bmi)", rct_effect)
-
-        # store all cohort effects for use in CEA
-        # EFFECT FOR 2 YEARS RCT
-        # self.effects.append(average_rct_effect)
-        # EFFECT FOR 10 YEARS SIM
+        # Store cohort effect: average BMI for 10 YEAR SIM
         self.effects.append(average_effect_ten_years)
 
-        # EXPENDITURES
-        # total expenditures over 10 years (for cohort)
+        # EXPENDITURE
+
+        # total expenditures over 10 years (for cohort) ~700,000
         total_expenditures = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
-        # average expenditure per year (over 10 years)
+        # average expenditure per year (over 10 years) ~70,000
         annual_avg_expenditure = total_expenditures/D.SIM_DURATION
-        # total expenditure per person over 10 years
+        # total expenditure per person over 10 years ~7700
         individual_total_expenditure = total_expenditures/D.N_CHILDREN_BB
-        # average expenditure per year PER PERSON (over 10 years)
+        # average expenditure per year PER PERSON (over 10 years) ~770
         individual_annual_expenditure = annual_avg_expenditure/D.N_CHILDREN_BB
-        # store average expenditures
+        # store annual average individual expenditure
         self.expenditures.append(individual_annual_expenditure)
-        # store total expenditures
+        # store total expenditure
         self.totalExpenditures.append(total_expenditures)
-        # store individual expenditure over 10 years
+        # store individual total expenditure over 10 years
         self.individualTotalExpenditure.append(individual_total_expenditure)
 
 

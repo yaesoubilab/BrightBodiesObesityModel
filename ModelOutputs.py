@@ -28,12 +28,11 @@ class SimOutputs:
                                                      sim_rep=sim_rep,
                                                      collect_stat=False)
 
-        # TODO: could you please distinguish these two variable better?
-        #  Does cost only include the intervention costs? One would imagine that cost also include expenditure.
-        #  Does it make sense to use intervention_cost and hc_expenditure?
         # list that holds the cost of all of the cohorts during the simulation
-        self.annualTotalCosts = []
-        # list that holds the expenditures of the cohorts during the simulation
+        # Costs: intervention costs, acquired during the first 2 years
+        self.annualTotalInterventionCosts = []
+        # list that holds the cohort total expenditure during the simulation
+        # Expenditure: direct/indirect HC costs acquired each year
         self.annualTotalHCExpenditures = []
 
     def collect_end_of_sim_stat(self):
@@ -71,7 +70,7 @@ class SimOutputs:
         """
 
         # list of cohort cost per year (to get total cost)
-        self.annualTotalCosts.append(sum(costs))
+        self.annualTotalInterventionCosts.append(sum(costs))
 
         # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
         self.annualTotalHCExpenditures.append(sum(hc_expenditures))

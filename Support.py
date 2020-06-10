@@ -7,30 +7,6 @@ import matplotlib.patches as patch
 import SimPy.StatisticalClasses as Stat
 
 
-# TODO: it seems you are not using this method. If so, please delete.
-def print_outcomes(sim_outcomes, intervention):
-    """ prints the outcomes of a simulated cohort """
-
-    # year 1 vs 0
-    year_one_v_zero = []
-    # year 2 vs 1
-    year_two_v_one = []
-
-    # CONTROL VALIDATION
-    for cohortID in range(D.N_COHORTS):
-        values = sim_outcomes.pathsOfBMIs[cohortID].get_values()
-        # FOR YEAR SPECIFIC COMPARISONS
-        # year 1 minus year 0
-        year_1_v_0 = values[1] - values[0]
-        year_one_v_zero.append(year_1_v_0)
-        # year 2 minus year 1
-        year_2_v_1 = values[2] - values[1]
-        year_two_v_one.append(year_2_v_1)
-
-    # print(intervention, 'BMI change y1 - y0 -->', year_one_v_zero)
-    # print(intervention, 'BMI change y2 - y1 -->', year_two_v_one)
-
-
 def plot_validation(sim_outcomes, intervention):
     """ generates validation graphs: BMI differences by year """
 
@@ -127,55 +103,42 @@ def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
 def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     """ prints comparative outcomes """
 
-    # TODO: might need a little bit of clean up to make sure variable names are appropriate
-    #  and there is no redundancy.
-    
-    # find difference in BMI between interventions
-    list_of_diff_mean_BMIs = []
-    # find differences in expenditures between interventions
-    list_of_diff_mean_expenditures = []
+    # find difference in average BMI between interventions
+    list_of_avg_BMI_diffs = []
+    # find differences in average expenditure between interventions
+    list_of_avg_expenditure_diffs = []
     # find differences in total expenditure between interventions
-    list_of_diff_total_expenditures = []
+    list_of_total_expenditure_diffs = []
     # SAVINGS: find differences in individual expenditure (over 10 years) between interventions
-    list_of_diff_individual_expenditure = []
+    list_of_individual_expenditure_diffs = []
 
     for cohortID in range(D.N_COHORTS):
         values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
         values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
-        list_of_diff_mean_BMIs.append(diff_BMI)
+        list_of_avg_BMI_diffs.append(diff_BMI)
 
         # EXPENDITURES
         # Find Difference in Spending Per Person Per Year on Average
         expenditures_cc = sim_outcomes_CC.expenditures[cohortID]
         expenditures_bb = sim_outcomes_BB.expenditures[cohortID]
         diff_expenditures = numpy.array(expenditures_cc) - numpy.array(expenditures_bb)
-        list_of_diff_mean_expenditures.append(diff_expenditures)
+        list_of_avg_expenditure_diffs.append(diff_expenditures)
         # Find Difference in Total Spending Over 10 Years
         total_exp_cc = sim_outcomes_CC.totalExpenditures[cohortID]
         total_exp_bb = sim_outcomes_BB.totalExpenditures[cohortID]
         diff_total_exp = numpy.array(total_exp_cc) - numpy.array(total_exp_bb)
-        list_of_diff_total_expenditures.append(diff_total_exp)
+        list_of_total_expenditure_diffs.append(diff_total_exp)
         # Find Differences in Spending Per Person Over 10 Years
         individual_exp_cc = sim_outcomes_CC.individualTotalExpenditure[cohortID]
         individual_exp_bb = sim_outcomes_BB.individualTotalExpenditure[cohortID]
         diff_individual_exp = numpy.array(individual_exp_cc) - numpy.array(individual_exp_bb)
-        list_of_diff_individual_expenditure.append(diff_individual_exp)
-
-    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
-    # print('Average Expenditure Differences: Clinical Control - Bright Bodies -->', list_of_diff_mean_expenditures)
-    # print('Total Expenditure Differences: CC - BB -->', list_of_diff_total_expenditures)
-    # print('Individual Expenditure Differences over 10year: CC - BB -->', list_of_diff_individual_expenditure)
-
-    # AVERAGE FOR ALL SIMULATIONS:
-    # print('SIM: Average Expenditure Difference: CC - BB -->', (sum(list_of_diff_mean_expenditures)/D.N_COHORTS))
-    # print('SIM: Total Expenditure Differences: CC - BB -->', (sum(list_of_diff_total_expenditures)/D.N_COHORTS))
-    # print('SIM: Individual Expenditure Differences: CC - BB -->', (sum(list_of_diff_individual_expenditure)/D.N_COHORTS))
+        list_of_individual_expenditure_diffs.append(diff_individual_exp)
 
     # INDIVIDUAL EXPENDITURE DIFFERENCES (Total over 10 years)
     avgIndividualExpenditureDifference = Stat.SummaryStat(
         name="Average Individual Expenditure Difference over 10 Years",
-        data=list_of_diff_individual_expenditure)
+        data=list_of_individual_expenditure_diffs)
     estimate_and_PI_ind_exp_diff = avgIndividualExpenditureDifference.get_formatted_mean_and_interval(interval_type='p',
                                                                                                       alpha=0.05,
                                                                                                       deci=2)
@@ -184,7 +147,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     # INDIVIDUAL EXPENDITURE DIFFERENCES (Average over 10 years)
     avgIndividualExpenditureDifferenceAnnual = Stat.SummaryStat(
         name="Average Annual Individual Expenditure Difference over 10 Years",
-        data=list_of_diff_mean_expenditures)
+        data=list_of_avg_expenditure_diffs)
     estimate_and_PI_ind_exp_diff_annual = avgIndividualExpenditureDifferenceAnnual.get_formatted_mean_and_interval(
         interval_type='p',
         alpha=0.05,
@@ -195,7 +158,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     # TOTAL EXPENDITURE DIFFERENCES
     avgTotalExpenditureDifference = Stat.SummaryStat(
         name="Average Total Expenditure Difference over 10 Years",
-        data=list_of_diff_total_expenditures
+        data=list_of_total_expenditure_diffs
     )
     estimate_and_PI_total_exp_diff = avgTotalExpenditureDifference.get_formatted_mean_and_interval(
         interval_type='p',
@@ -209,7 +172,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     diff_mean_BMI_y1 = []
     diff_mean_BMI_y2 = []
     # at time 1 and time 2
-    for diff_mean_BMIs in list_of_diff_mean_BMIs:
+    for diff_mean_BMIs in list_of_avg_BMI_diffs:
         diff_mean_BMI_y1.append(diff_mean_BMIs[1])
         diff_mean_BMI_y2.append(diff_mean_BMIs[2])
     # print("BB v. Control: Average BMI difference at Time 1:", sum(diff_mean_BMI_y1) / len(diff_mean_BMI_y1))
@@ -334,7 +297,6 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
             diff_BMI_2years.append(diff_BMI[2])
 
         list_of_diff_mean_BMIs.append(diff_BMI_2years)
-    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # to produce figure
     x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -387,7 +349,6 @@ def plot_bmi_figure_depreciation(sim_outcomes_BB, sim_outcomes_CC):
             diff_BMI_2years.append(deprec_next_value)
 
         list_of_diff_mean_BMIs.append(diff_BMI_2years)
-    # print('BMI Differences: Clinical Control v Bright Bodies -->', list_of_diff_mean_BMIs)
 
     # to produce figure
     x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
