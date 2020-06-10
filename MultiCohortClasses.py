@@ -79,6 +79,8 @@ class MultiSimOutputs:
 
         # for CEA
         # list of total intervention costs for all participants over entire sim duration, per cohort
+        # TODO: I think this is the variable you are using in CEA so
+        #  it should include both intervention cost and obesity-related HC costs. Is that right?
         self.costs = []
         # list of the average effect (BMI) over entire sim duration, per cohort
         self.effects = []
@@ -136,6 +138,13 @@ class MultiSimOutputs:
         self.effects.append(average_effect_ten_years)
 
         # EXPENDITURE
+        # TODO: There is still something confusing about the name of these variables
+        #   Maybe we should use 'cohort' instead of 'total' whenever we are referring to
+        #   the cost or expenditure of the cohort.
+        #   for example, 'annualCohortHCExpenditures' instead of 'annualTotalHCExpenditures'
+        #   And reserve 'total' for when we sum over the entire simulation horizon        #
+        #   And maybe whenever we average over individuals, we add 'ave' to the variable name
+        #   for example, 'aveIndividualTotalExpenditure' instead of 'individualTotalExpenditure'
 
         # total expenditures over 10 years (for cohort) ~700,000
         total_expenditures = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
