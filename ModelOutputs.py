@@ -30,10 +30,10 @@ class SimOutputs:
 
         # list that holds the cost of all of the cohorts during the simulation
         # Costs: intervention costs, acquired during the first 2 years
-        self.annualTotalInterventionCosts = []
+        self.annualCohortInterventionCosts = []
         # list that holds the cohort total expenditure during the simulation
         # Expenditure: direct/indirect HC costs acquired each year
-        self.annualTotalHCExpenditures = []
+        self.annualCohortHCExpenditures = []
 
     def collect_end_of_sim_stat(self):
         """
@@ -70,9 +70,9 @@ class SimOutputs:
         """
 
         # list of cohort cost per year (to get total cost)
-        self.annualTotalInterventionCosts.append(sum(costs))
+        self.annualCohortInterventionCosts.append(sum(costs))
 
         # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
-        self.annualTotalHCExpenditures.append(sum(hc_expenditures))
+        self.annualCohortHCExpenditures.append(sum(hc_expenditures))
 
 

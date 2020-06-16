@@ -224,7 +224,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         fig_size=(4.2, 4)
     )
 
-
+# TREATMENT EFFECT FIGURE
 def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC):
     """ plot differences in BMI by intervention
     and compare to RCT data """

@@ -78,12 +78,16 @@ class MultiSimOutputs:
         self.popPyramidAtStart = []
 
         # for CEA
-        # list of total intervention costs for all participants over entire sim duration, per cohort
-        # TODO: I think this is the variable you are using in CEA so
-        #  it should include both intervention cost and obesity-related HC costs. Is that right?
+        # list of intervention costs for all participants over entire sim duration, per cohort
+        # plus HC expenditure for all participants over entire sim duration, per cohort
         self.costs = []
+
         # list of the average effect (BMI) over entire sim duration, per cohort
         self.effects = []
+
+        # intervention costs:
+        # list of intervention costs for all participants over entire sim duration, per cohort
+        self.interventionCosts = []
 
         # list of average HC expenditures per year per person over entire sim duration, per cohort
         # Annual Average Individual Expenditure
@@ -109,15 +113,22 @@ class MultiSimOutputs:
 
     # for CEA
 
-        # COST (Intervention Costs)
+        # COSTS: Intervention Costs + HC Expenditure
+        # store costs for use in CEA
 
         # sum cost per year for all participants to get total cohort cost over sim duration
-        total_cost = sum(simulated_cohort.simOutputs.annualTotalInterventionCosts)
+        cohort_intervention_cost = sum(simulated_cohort.simOutputs.annualCohortInterventionCosts)
+        cohort_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
         # average cost per person (of intervention/control)
-        average_cost = total_cost/D.POP_SIZE
+        average_intervention_cost_per_person = cohort_intervention_cost/D.POP_SIZE
+        average_expenditure_per_person = cohort_expenditure/D.POP_SIZE
+        print("IC", average_intervention_cost_per_person)
+        print("HCC", average_expenditure_per_person)
 
-        # store costs for use in CEA
-        self.costs.append(average_cost)
+        # sum average IC per person and average HC per person
+        total_cost = average_intervention_cost_per_person + average_expenditure_per_person
+        # self.costs.append(average_intervention_cost_per_person)
+        self.costs.append(total_cost)
 
         # EFFECT (BMI unit change)
 
@@ -126,10 +137,10 @@ class MultiSimOutputs:
 
         # represent 10 year effect (sum of 10 avg BMI values)
         ten_year_effect_total = (effect_values[1] + effect_values[2] +
-                           effect_values[3] + effect_values[4] +
-                           effect_values[5] + effect_values[6] +
-                           effect_values[7] + effect_values[8] +
-                           effect_values[9] + effect_values[10])
+                                 effect_values[3] + effect_values[4] +
+                                 effect_values[5] + effect_values[6] +
+                                 effect_values[7] + effect_values[8] +
+                                 effect_values[9] + effect_values[10])
 
         # average effect of the cohort over 10 years (average BMI)
         average_effect_ten_years = ten_year_effect_total/D.SIM_DURATION
@@ -137,10 +148,13 @@ class MultiSimOutputs:
         # Store cohort effect: average BMI for 10 YEAR SIM
         self.effects.append(average_effect_ten_years)
 
+        # INTERVENTION COSTS:
+        self.interventionCosts.append(average_intervention_cost_per_person)
+
         # EXPENDITURE
 
         # total expenditure over 10 years (for cohort) ~700,000
-        cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
+        cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
         # average expenditure per year (over 10 years) ~70,000
         cohort_avg_expenditure = cohort_10yr_expenditure/D.SIM_DURATION
         # total expenditure per person over 10 years ~7700
