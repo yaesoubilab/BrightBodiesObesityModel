@@ -6,7 +6,7 @@ import SamplePaths as MyPath
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-MAINTENANCE_EFFECT = D.EFFECT_MAINTENANCE.DEPREC
+MAINTENANCE_EFFECT = D.EFFECT_MAINTENANCE.NONE
 
 
 # for MultiCohort BRIGHT BODIES
@@ -64,14 +64,8 @@ Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
 Support.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                               sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-# TODO: these two figures are a little confusing.
-#  I imagine that to get these figures, I need to MAINTENANCE_EFFECT above
-#  to the scenario I'd like to simulate and then Support.plot_bmi_figure
-#  would give me the figure of BMI trajectories under the specified
-#  scenario. So I am not sure why we need these two methods below.
 Support.plot_bmi_figure_maintenance(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                    maintenance_effect=MAINTENANCE_EFFECT)
 
-Support.plot_bmi_figure_depreciation(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                     sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 

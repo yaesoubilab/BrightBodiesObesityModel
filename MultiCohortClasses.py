@@ -87,15 +87,15 @@ class MultiSimOutputs:
 
         # list of average HC expenditures per year per person over entire sim duration, per cohort
         # Annual Average Individual Expenditure
-        self.expenditures = []
+        self.individualAvgExpenditure = []
 
         # list of total expenditures for all people over 10 years, per cohort
-        # Average Total Expenditure
-        self.totalExpenditures = []
+        # Total Expenditure
+        self.cohortTenYearExpenditure = []
 
         # list of individual expenditures over 10 years
         # Average Individual Expenditure
-        self.individualTotalExpenditure = []
+        self.individualTenYearExpenditure = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -138,28 +138,21 @@ class MultiSimOutputs:
         self.effects.append(average_effect_ten_years)
 
         # EXPENDITURE
-        # TODO: There is still something confusing about the name of these variables
-        #   Maybe we should use 'cohort' instead of 'total' whenever we are referring to
-        #   the cost or expenditure of the cohort.
-        #   for example, 'annualCohortHCExpenditures' instead of 'annualTotalHCExpenditures'
-        #   And reserve 'total' for when we sum over the entire simulation horizon        #
-        #   And maybe whenever we average over individuals, we add 'ave' to the variable name
-        #   for example, 'aveIndividualTotalExpenditure' instead of 'individualTotalExpenditure'
 
-        # total expenditures over 10 years (for cohort) ~700,000
-        total_expenditures = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
+        # total expenditure over 10 years (for cohort) ~700,000
+        cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualTotalHCExpenditures)
         # average expenditure per year (over 10 years) ~70,000
-        annual_avg_expenditure = total_expenditures/D.SIM_DURATION
+        cohort_avg_expenditure = cohort_10yr_expenditure/D.SIM_DURATION
         # total expenditure per person over 10 years ~7700
-        individual_total_expenditure = total_expenditures/D.N_CHILDREN_BB
+        individual_10yr_expenditure = cohort_10yr_expenditure/D.N_CHILDREN_BB
         # average expenditure per year PER PERSON (over 10 years) ~770
-        individual_annual_expenditure = annual_avg_expenditure/D.N_CHILDREN_BB
+        individual_avg_expenditure = cohort_avg_expenditure/D.N_CHILDREN_BB
         # store annual average individual expenditure
-        self.expenditures.append(individual_annual_expenditure)
-        # store total expenditure
-        self.totalExpenditures.append(total_expenditures)
-        # store individual total expenditure over 10 years
-        self.individualTotalExpenditure.append(individual_total_expenditure)
+        self.individualAvgExpenditure.append(individual_avg_expenditure)
+        # store total expenditure of cohort for 10 years
+        self.cohortTenYearExpenditure.append(cohort_10yr_expenditure)
+        # store individual expenditure over 10 years
+        self.individualTenYearExpenditure.append(individual_10yr_expenditure)
 
 
 def simulate_this_cohort(cohort, sim_duration):

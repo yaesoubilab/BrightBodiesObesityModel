@@ -22,16 +22,6 @@ def plot_validation(sim_outcomes, intervention):
         # year 2 minus year 1
         year_two_vs_one.append(bmi_values[2] - bmi_values[1])
 
-    # find average change between year 0 and 1
-    year1v0SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
-                                       data=year_one_vs_zero)
-    aveYear1vs0 = year1v0SummStat.get_mean()
-
-    # find average change between year 1 and 2
-    tear2v1SummStat = Stat.SummaryStat(name="Average change in BMI between year 0 and 1",
-                                       data=year_two_vs_one)
-    aveYear2vs1 = tear2v1SummStat.get_mean()
-
     # estimates from Bright Bodies RCT for the control
     rct_control_year_diffs = [1.9, 0.0]
     rct_control_year_diffs_lb = [.7, .8]
@@ -120,18 +110,18 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
 
         # EXPENDITURES
         # Find Difference in Spending Per Person Per Year on Average
-        expenditures_cc = sim_outcomes_CC.expenditures[cohortID]
-        expenditures_bb = sim_outcomes_BB.expenditures[cohortID]
+        expenditures_cc = sim_outcomes_CC.individualAvgExpenditure[cohortID]
+        expenditures_bb = sim_outcomes_BB.individualAvgExpenditure[cohortID]
         diff_expenditures = numpy.array(expenditures_cc) - numpy.array(expenditures_bb)
         list_of_avg_expenditure_diffs.append(diff_expenditures)
-        # Find Difference in Total Spending Over 10 Years
-        total_exp_cc = sim_outcomes_CC.totalExpenditures[cohortID]
-        total_exp_bb = sim_outcomes_BB.totalExpenditures[cohortID]
+        # Find Difference in Cohort Spending Over 10 Years
+        total_exp_cc = sim_outcomes_CC.cohortTenYearExpenditure[cohortID]
+        total_exp_bb = sim_outcomes_BB.cohortTenYearExpenditure[cohortID]
         diff_total_exp = numpy.array(total_exp_cc) - numpy.array(total_exp_bb)
         list_of_total_expenditure_diffs.append(diff_total_exp)
         # Find Differences in Spending Per Person Over 10 Years
-        individual_exp_cc = sim_outcomes_CC.individualTotalExpenditure[cohortID]
-        individual_exp_bb = sim_outcomes_BB.individualTotalExpenditure[cohortID]
+        individual_exp_cc = sim_outcomes_CC.individualTenYearExpenditure[cohortID]
+        individual_exp_bb = sim_outcomes_BB.individualTenYearExpenditure[cohortID]
         diff_individual_exp = numpy.array(individual_exp_cc) - numpy.array(individual_exp_bb)
         list_of_individual_expenditure_diffs.append(diff_individual_exp)
 
@@ -175,8 +165,6 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     for diff_mean_BMIs in list_of_avg_BMI_diffs:
         diff_mean_BMI_y1.append(diff_mean_BMIs[1])
         diff_mean_BMI_y2.append(diff_mean_BMIs[2])
-    # print("BB v. Control: Average BMI difference at Time 1:", sum(diff_mean_BMI_y1) / len(diff_mean_BMI_y1))
-    # print("BB v. Control: Average BMI difference at Time 2:", sum(diff_mean_BMI_y2) / len(diff_mean_BMI_y2))
 
 
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
@@ -279,7 +267,7 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC):
     plt.show()
 
 
-def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
+def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
@@ -293,8 +281,25 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
         diff_BMI_2years.append(diff_BMI[0])
         diff_BMI_2years.append(diff_BMI[1])
         diff_BMI_2years.append(diff_BMI[2])
-        for i in range(8):
-            diff_BMI_2years.append(diff_BMI[2])
+
+        if maintenance_effect == D.EFFECT_MAINTENANCE.FULL:
+
+            for i in range(8):
+                diff_BMI_2years.append(diff_BMI[2])
+
+            # list_of_diff_mean_BMIs.append(diff_BMI_2years)
+
+        elif maintenance_effect == D.EFFECT_MAINTENANCE.DEPREC:
+            for i in range(8):
+                deprec_value = diff_BMI[2] / (10 - 2)
+                deprec_next_value = diff_BMI[2] - (deprec_value * (i + 1))
+                diff_BMI_2years.append(deprec_next_value)
+
+            # list_of_diff_mean_BMIs.append(diff_BMI_2years)
+
+        elif maintenance_effect == D.EFFECT_MAINTENANCE.NONE:
+            for i in range(8):
+                diff_BMI_2years.append(0)
 
         list_of_diff_mean_BMIs.append(diff_BMI_2years)
 
@@ -315,7 +320,16 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
     ax.scatter([0.5, 1, 2], bb_ys, color='black', s=80)
     ax.errorbar([0.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds], fmt='none', capsize=4, ecolor='black', elinewidth=2)
 
-    ax.set_title('Difference in Average BMI by Intervention: Full Maintenance of Effect ')
+    if maintenance_effect == D.EFFECT_MAINTENANCE.FULL:
+        ax.set_title('Treatment Effect: Difference in Average BMI by Intervention:\n '
+                     'Full Maintenance of Effect ')
+    elif maintenance_effect == D.EFFECT_MAINTENANCE.DEPREC:
+        ax.set_title('Treatment Effect: Difference in Average BMI by Intervention:\n '
+                     'Depreciating Maintenance of Effect ')
+    elif maintenance_effect == D.EFFECT_MAINTENANCE.NONE:
+        ax.set_title('Treatment Effect: Difference in Average BMI by Intervention:\n '
+                     'No Maintenance of Effect ')
+
     plt.xlim((0.0, 10.5))
     plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
@@ -325,59 +339,11 @@ def plot_bmi_figure_maintenance(sim_outcomes_BB, sim_outcomes_CC):
     model_data_color = patch.Patch(color='blue', label='Simulation BMI Differences')
     rct_data_color = patch.Patch(color='black', label='RCT: BMI Differences')
     plt.legend(loc='upper right', handles=[model_data_color, rct_data_color])
-    plt.savefig("Figures/Avg_BMI_Full_Maintenance.png", dpi=300)
+    if maintenance_effect == D.EFFECT_MAINTENANCE.FULL:
+        plt.savefig("Figures/Avg_BMI_Full_Maintenance.png", dpi=300)
+    elif maintenance_effect == D.EFFECT_MAINTENANCE.DEPREC:
+        plt.savefig("Figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
+    elif maintenance_effect == D.EFFECT_MAINTENANCE.NONE:
+        plt.savefig("Figures/Avg_BMI_No_Maintenance.png", dpi=300)
     plt.show()
-
-
-def plot_bmi_figure_depreciation(sim_outcomes_BB, sim_outcomes_CC):
-    """ plot differences in BMI by intervention
-    and compare to RCT data """
-
-    # find difference in BMI between interventions
-    list_of_diff_mean_BMIs = []
-    for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
-        diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
-        diff_BMI_2years = []
-        diff_BMI_2years.append(diff_BMI[0])
-        diff_BMI_2years.append(diff_BMI[1])
-        diff_BMI_2years.append(diff_BMI[2])
-        for i in range(8):
-            deprec_value = diff_BMI[2]/(10-2)
-            deprec_next_value = diff_BMI[2]-(deprec_value*(i+1))
-            diff_BMI_2years.append(deprec_next_value)
-
-        list_of_diff_mean_BMIs.append(diff_BMI_2years)
-
-    # to produce figure
-    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    sim_ys = list_of_diff_mean_BMIs
-    # rct data: treatment effect at year 1 and 2
-    bb_ys = [3.0, 3.7, 2.8]
-    lower_bounds = [1, 1.1, 1.2]
-    upper_bounds = [1, 1.1, 1.2]
-
-    f, ax = plt.subplots()
-
-    for sim_y in sim_ys:
-        ax.plot(x, sim_y, color='blue')
-
-    # adding bright bodies data
-    ax.scatter([0.5, 1, 2], bb_ys, color='black', s=80)
-    ax.errorbar([0.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds], fmt='none', capsize=4, ecolor='black', elinewidth=2)
-
-    ax.set_title('Difference in Average BMI by Intervention: Depreciation of Effect ')
-    plt.xlim((0.0, 10.5))
-    plt.xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    plt.yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
-    plt.xlabel('Simulation Time (Years)')
-    plt.ylabel('Difference in BMI (kg/m^2)')
-    # Show legend
-    model_data_color = patch.Patch(color='blue', label='Simulation BMI Differences')
-    rct_data_color = patch.Patch(color='black', label='RCT: BMI Differences')
-    plt.legend(loc='upper right', handles=[model_data_color, rct_data_color])
-    plt.savefig("Figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
-    plt.show()
-
 
