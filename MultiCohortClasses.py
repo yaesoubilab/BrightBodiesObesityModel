@@ -122,8 +122,6 @@ class MultiSimOutputs:
         # average cost per person (of intervention/control)
         average_intervention_cost_per_person = cohort_intervention_cost/D.POP_SIZE
         average_expenditure_per_person = cohort_expenditure/D.POP_SIZE
-        print("IC", average_intervention_cost_per_person)
-        print("HCC", average_expenditure_per_person)
 
         # sum average IC per person and average HC per person
         total_cost = average_intervention_cost_per_person + average_expenditure_per_person

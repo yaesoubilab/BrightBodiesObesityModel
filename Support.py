@@ -7,6 +7,73 @@ import matplotlib.patches as patch
 import SimPy.StatisticalClasses as Stat
 
 
+def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
+    """ generates validation graphs: BMI differences by year """
+
+    # BMI difference by year
+    year_one_vs_zero = []
+    year_two_vs_one = []
+
+    # estimates from Bright Bodies RCT for the control
+    rct_control_year_diffs = [1.9, 0.0]
+    rct_control_year_diffs_lb = [.7, .8]
+    rct_control_year_diffs_ub = [.6, .8]
+    # estimates from Bright Bodies RCT for Bright Bodies
+    rct_bb_year_diffs = [-1.8, 0.9]
+    rct_bb_year_diffs_lb = [.8, 1.0]
+    rct_bb_year_diffs_ub = [.9, 1.0]
+
+    for cohortID in range(D.N_COHORTS):
+        if D.Interventions.BRIGHT_BODIES is True:
+            bmi_values = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
+
+        else:
+            bmi_values = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+
+        # year 1 minus year 0
+        year_one_vs_zero.append(bmi_values[1] - bmi_values[0])
+        # year 2 minus year 1
+        year_two_vs_one.append(bmi_values[2] - bmi_values[1])
+
+    if D.Interventions.BRIGHT_BODIES is True:
+        ys = rct_bb_year_diffs
+        lbs = rct_bb_year_diffs_lb
+        ubs = rct_bb_year_diffs_ub
+        title = 'Differences in Average BMI by Year\nunder Bright Bodies'
+    else:
+        ys = rct_control_year_diffs
+        lbs = rct_control_year_diffs_lb
+        ubs = rct_control_year_diffs_ub
+        title = 'Differences in Average BMI by Year\nunder Control'
+
+    # plot
+    f, ax = plt.subplots(figsize=(5, 5))
+
+    # adding RCT data
+    ax.scatter([1, 2], ys, color='orange', label="RCT Average Difference in BMI")
+    # adding error bars
+    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='orange')
+
+    # adding simulation outcomes
+    for this_y in year_one_vs_zero:
+        ax.scatter(1, this_y, color='blue', marker='_', s=200, alpha=0.25)
+    for this_y in year_two_vs_one:
+        ax.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
+
+    ax.set_xlim((0.5, 2.5))
+    ax.set_xticks([1, 2])
+    ax.set_xlabel(['Year 0 to 1', 'Year 1 to 2'])
+    ax.set_yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    ax.set_xlabel('Sim Years')
+    ax.set_ylabel('Difference in BMI (kg/m^2)')
+    ax.set_title(title)
+
+    ax.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
+    # to save plotted figures
+    # bbox_inches set to tight: cleans up figures
+    plt.savefig("Figures/RCT_validation.png", dpi=300)
+
+
 def plot_validation(sim_outcomes, intervention):
     """ generates validation graphs: BMI differences by year """
 
@@ -32,38 +99,38 @@ def plot_validation(sim_outcomes, intervention):
     rct_bb_year_diffs_ub = [.9, 1.0]
 
     # plot
-    f, ax = plt.subplots(figsize=(5, 5))
+    f, axs = plt.subplots(2, 2, figsize=(5, 5))
 
     if intervention == D.Interventions.BRIGHT_BODIES:
         ys = rct_bb_year_diffs
         lbs = rct_bb_year_diffs_lb
         ubs = rct_bb_year_diffs_ub
-        ax.set_title('Differences in Average BMI by Year\nunder Bright Bodies')
+        axs.set_title('Differences in Average BMI by Year\nunder Bright Bodies')
     else:
         ys = rct_control_year_diffs
         lbs = rct_control_year_diffs_lb
         ubs = rct_control_year_diffs_ub
-        ax.set_title('Differences in Average BMI by Year\nunder Control')
+        axs.set_title('Differences in Average BMI by Year\nunder Control')
 
     # adding RCT data
-    ax.scatter([1, 2], ys, color='orange', label="RCT Average Difference in BMI")
+    axs.scatter([1, 2], ys, color='orange', label="RCT Average Difference in BMI")
     # adding error bars
-    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='orange')
+    axs.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='orange')
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
-        ax.scatter(1, this_y, color='blue', marker='_', s=200, alpha=0.25)
+        axs.scatter(1, this_y, color='blue', marker='_', s=200, alpha=0.25)
     for this_y in year_two_vs_one:
-        ax.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
+        axs.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
 
-    ax.set_xlim((0.5, 2.5))
-    ax.set_xticks([1, 2])
-    ax.set_xlabel(['Year 0 to 1', 'Year 1 to 2'])
-    ax.set_yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
-    ax.set_xlabel('Sim Years')
-    ax.set_ylabel('Difference in BMI (kg/m^2)')
+    axs.set_xlim((0.5, 2.5))
+    axs.set_xticks([1, 2])
+    axs.set_xlabel(['Year 0 to 1', 'Year 1 to 2'])
+    axs.set_yticks([-3.5, -3.0, -2.5, -2.0, -1.5, -1.0, -0.5, 0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0])
+    axs.set_xlabel('Sim Years')
+    axs.set_ylabel('Difference in BMI (kg/m^2)')
 
-    ax.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
+    axs.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
     # to save plotted figures
     # bbox_inches set to tight: cleans up figures
     plt.savefig("Figures/RCT_validation.png", dpi=300)
@@ -242,7 +309,7 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC):
     lower_bounds = [1, 1.1, 1.2]
     upper_bounds = [1, 1.1, 1.2]
 
-    f, ax = plt.subplots(figsize=(5, 5))
+    f, ax = plt.subplots(figsize=(6, 5))
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
