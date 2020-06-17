@@ -64,10 +64,6 @@ Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 Support.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                              sim_outcomes_CC=multiCohortCC.multiSimOutputs)
-
-Support.plot_bmi_figure_maintenance(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                                    maintenance_effect=MAINTENANCE_EFFECT)
-
+                              sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                              maintenance_effect=MAINTENANCE_EFFECT)
 
