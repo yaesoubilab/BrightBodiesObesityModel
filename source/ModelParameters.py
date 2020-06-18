@@ -1,7 +1,7 @@
 import SimPy.DataFrames as df
 from SimPy import InOutFunctions as InOutSupport
 from SimPy import RandomVariateGenerators as RVGs
-from ParamSupport import *
+from source.ParamSupport import *
 import InputData as D
 
 
@@ -65,17 +65,17 @@ class Parameters:
         self.interventionMultipliers = []
         if intervention == D.Interventions.BRIGHT_BODIES:
 
-            if maintenance_scenario == D.EFFECT_MAINTENANCE.FULL:
+            if maintenance_scenario == D.EffectMaintenance.FULL:
                 self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
                 for i in range(10):
                     self.interventionMultipliers.append(D.multBBYear2)
 
-            elif maintenance_scenario == D.EFFECT_MAINTENANCE.NONE:
+            elif maintenance_scenario == D.EffectMaintenance.NONE:
                 self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
                 for i in range(10):
                     self.interventionMultipliers.append(D.multCC)
 
-            elif maintenance_scenario == D.EFFECT_MAINTENANCE.DEPREC:
+            elif maintenance_scenario == D.EffectMaintenance.DEPREC:
                 self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
                 for i in range(10):
                     deprec_difference = D.multCC - D.multBBYear2

@@ -5,6 +5,8 @@ import numpy
 import matplotlib.pyplot as plt
 import matplotlib.patches as patch
 import SimPy.StatisticalClasses as Stat
+import SimPy.Plots.SamplePaths as Path
+from SimPy.Plots import PopulationPyramids as Pyr
 
 
 def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
@@ -25,10 +27,10 @@ def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
 
     for cohortID in range(D.N_COHORTS):
         if D.Interventions.BRIGHT_BODIES is True:
-            bmi_values = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
+            bmi_values = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
 
         else:
-            bmi_values = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
+            bmi_values = sim_outcomes_CC.pathsOfCohortAveBMI[cohortID].get_values()
 
         # year 1 minus year 0
         year_one_vs_zero.append(bmi_values[1] - bmi_values[0])
@@ -82,7 +84,7 @@ def plot_validation(sim_outcomes, intervention):
     year_two_vs_one = []
 
     for cohortID in range(D.N_COHORTS):
-        bmi_values = sim_outcomes.pathsOfBMIs[cohortID].get_values()
+        bmi_values = sim_outcomes.pathsOfCohortAveBMI[cohortID].get_values()
 
         # year 1 minus year 0
         year_one_vs_zero.append(bmi_values[1] - bmi_values[0])
@@ -141,8 +143,8 @@ def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
 
     # get bmi paths for both alternatives
     bmi_paths = [
-        sim_outcomes_BB.pathsOfBMIs,
-        sim_outcomes_CC.pathsOfBMIs
+        sim_outcomes_BB.pathsOfCohortAveBMI,
+        sim_outcomes_CC.pathsOfCohortAveBMI
     ]
 
     # graph bmi paths for both alternatives (overlay)
@@ -170,8 +172,8 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     list_of_individual_expenditure_diffs = []
 
     for cohortID in range(D.N_COHORTS):
-        values_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
-        values_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
+        values_cc = sim_outcomes_CC.pathsOfCohortAveBMI[cohortID].get_values()
+        values_bb = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
         list_of_avg_BMI_diffs.append(diff_BMI)
 
@@ -299,8 +301,8 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     # find difference in yearly average BMI between interventions
     diff_yearly_ave_bmis = []
     for cohortID in range(D.N_COHORTS):
-        bmis_cc = sim_outcomes_CC.pathsOfBMIs[cohortID].get_values()
-        bmis_bb = sim_outcomes_BB.pathsOfBMIs[cohortID].get_values()
+        bmis_cc = sim_outcomes_CC.pathsOfCohortAveBMI[cohortID].get_values()
+        bmis_bb = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
         diff_yearly_ave_bmis.append(numpy.array(bmis_cc) - numpy.array(bmis_bb))
 
     # to produce figure
@@ -330,10 +332,50 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
 
-    if maintenance_effect == D.EFFECT_MAINTENANCE.FULL:
+    if maintenance_effect == D.EffectMaintenance.FULL:
         plt.savefig("figures/Avg_BMI_Full_Maintenance.png", dpi=300)
-    elif maintenance_effect == D.EFFECT_MAINTENANCE.DEPREC:
+    elif maintenance_effect == D.EffectMaintenance.DEPREC:
         plt.savefig("figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
-    elif maintenance_effect == D.EFFECT_MAINTENANCE.NONE:
+    elif maintenance_effect == D.EffectMaintenance.NONE:
         plt.savefig("figures/Avg_BMI_No_Maintenance.png", dpi=300)
     plt.show()
+
+
+def generate_simulation_outputs(simulated_multi_cohort):
+
+    # sample paths for population size
+    Path.plot_sample_paths(
+        sample_paths=simulated_multi_cohort.multiSimOutputs.pathsOfCohortPopSize,
+        title='Population Size',
+        y_range=[0, 1.1 * D.POP_SIZE],
+        x_label='Years'
+    )
+
+    # population pyramid at initialization
+    Pyr.plot_pyramids(observed_data=D.age_sex_dist,
+                      simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
+                      fig_size=(6, 4),
+                      x_lim=10,
+                      title="Cohort Pyramids at Initialization",
+                      colors=('blue', 'red', 'black'),
+                      y_labels=['8', '9', '10', '11', '12', '13', '14', '15', '16'],
+                      age_group_width=1,
+                      length_of_sim_bars=250,
+                      scale_of_sim_legend=0.75,
+                      transparency=0.5)
+    # colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
+
+    # sample paths for average BMIs at each time step
+    Path.plot_sample_paths(
+        sample_paths=simulated_multi_cohort.multiSimOutputs.pathsOfCohortAveBMI,
+        title='Average BMIs for Bright Bodies',
+        x_label='Simulation Year',
+        y_range=[0, 40],
+        connect='line'  # line graph (vs. step wise)
+    )
+
+    # average chance in BMI with respect to the baseline (time 0)
+    print('Average change in BMI at year 1 with respect to the baseline (and 95% uncertainty interval)',
+          simulated_multi_cohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=1, deci=1))
+    print('Average change in BMI at year 2 with respect to the baseline (and 95% uncertainty interval)',
+          simulated_multi_cohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=2, deci=1))

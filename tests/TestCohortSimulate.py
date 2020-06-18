@@ -1,6 +1,5 @@
-import ModelEntities as Cls
 import InputData as D
-import ModelParameters as P
+from source import ModelParameters as P, ModelEntities as Cls
 
 # Cohort
 cohortBrightBodies = Cls.Cohort(id=1,

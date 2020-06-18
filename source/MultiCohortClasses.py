@@ -1,7 +1,7 @@
-from ModelEntities import Cohort
+from source.ModelEntities import Cohort
 import SimPy.RandomVariateGenerators as RVGs
 import InputData as D
-from ModelParameters import ParamGenerator
+from source.ModelParameters import ParamGenerator
 import multiprocessing as mp
 import SimPy.StatisticalClasses as Stat
 
@@ -12,12 +12,14 @@ class MultiCohort:
     def __init__(self, ids, intervention, maintenance_scenario):
         """
         :param ids: (list) of ids for cohorts to simulate
+        :param intervention: intervention to simulate
+        :param maintenance_scenario: maintenance scenario to simulate
         """
 
         self.ids = ids
         self.param_sets = []  # list of parameter sets (for each cohort)
 
-        # for cohort outcomes
+        # cohort outcomes
         self.multiSimOutputs = MultiSimOutputs()
 
         # create parameter sets
@@ -25,7 +27,10 @@ class MultiCohort:
                                        maintenance_scenario=maintenance_scenario)
 
     def simulate(self, sim_duration, if_run_in_parallel=False):
-        """ simulates all cohorts """
+        """ simulates all cohorts
+        :param sim_duration: simulation duration
+        :param if_run_in_parallel: set to True to run the cohorts in parallel
+        """
 
         if not if_run_in_parallel:
             for i in range(len(self.ids)):
@@ -38,7 +43,8 @@ class MultiCohort:
 
                 # outcomes from simulating all cohorts
                 self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
-        else:
+
+        else:  # if run cohorts in parallel
             # create cohorts
             cohorts = []
             for i in range(len(self.ids)):
@@ -59,6 +65,7 @@ class MultiCohort:
 
     def __populate_parameter_sets(self, intervention, maintenance_scenario):
 
+        # create a parameter generator
         param_generator = ParamGenerator(intervention=intervention,
                                          maintenance_scenario=maintenance_scenario)
 
@@ -74,22 +81,21 @@ class MultiSimOutputs:
 
     def __init__(self):
 
-        self.pathsOfPopSize = []
-        self.pathsOfBMIs = []
-        self.popPyramidAtStart = []
-        self.changeInBMIByYear = []
+        self.pathsOfCohortPopSize = []  # (list of list) sample paths of cohort population size
+        self.pathsOfCohortAveBMI = []   # (list of list) sample paths of cohort BMI
+        self.popPyramidAtStart = []     # (list of pyramids) population pyramid of cohorts at initialization
+        self.changeInBMIByYear = []     # (list of list) change in cohort BMI by year with respect to the baseline
 
         # for CEA
-        # list of intervention costs for all participants over entire sim duration, per cohort
-        # plus HC expenditure for all participants over entire sim duration, per cohort
-        self.costs = []
+        # effect: average cohort BMI over the entire sim duration
+        self.effects = []   # (list) of effect from each simulated cohort
 
-        # list of the average effect (BMI) over entire sim duration, per cohort
-        self.effects = []
+        # cost: total cost (including the intervention costs and HC expenditures) for all participants
+        #       over the entire simulation duration.
+        self.costs = []     # (list) of costs from each simulated cohort
 
-        # intervention costs:
         # list of intervention costs for all participants over entire sim duration, per cohort
-        self.interventionCosts = []
+        self.cohortInterventionCosts = []
 
         # list of average HC expenditures per year per person over entire sim duration, per cohort
         # Annual Average Individual Expenditure
@@ -107,9 +113,9 @@ class MultiSimOutputs:
         """ extracts outcomes of a simulated cohort """
 
         # store sample path of cohort population size
-        self.pathsOfPopSize.append(simulated_cohort.simOutputs.pathPopSize)
+        self.pathsOfCohortPopSize.append(simulated_cohort.simOutputs.pathPopSize)
         # store sample path of cohort average BMI
-        self.pathsOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
+        self.pathsOfCohortAveBMI.append(simulated_cohort.simOutputs.pathAveBMIs)
         # store sample path of cohort population pyramid at time 0
         self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
         # store the change in BMI by year
@@ -155,7 +161,7 @@ class MultiSimOutputs:
         self.effects.append(average_effect_ten_years)
 
         # INTERVENTION COSTS:
-        self.interventionCosts.append(average_intervention_cost_per_person)
+        self.cohortInterventionCosts.append(average_intervention_cost_per_person)
 
         # EXPENDITURE
 

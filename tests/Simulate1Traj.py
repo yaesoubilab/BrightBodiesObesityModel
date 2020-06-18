@@ -1,12 +1,6 @@
-import ModelEntities as Cls
-import MultiCohortClasses as MultiCls
 import InputData as D
-import ModelParameters as P
+from source import ModelParameters as P, ModelEntities as Cls
 import SimPy.Plots.SamplePaths as Path
-import SimPy.Plots.FigSupport as Fig
-from SimPy.Plots import PopulationPyramids as Pyr
-import Support as Support
-
 
 # create a cohort with parameters
 myCohort = Cls.Cohort(id=1, parameters=P.Parameters())

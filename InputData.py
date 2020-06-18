@@ -28,13 +28,13 @@ multCC = (1.05 + 1.048) / 2
 
 
 # Maintenance of Effect Levels:
-class EFFECT_MAINTENANCE(Enum):
+class EffectMaintenance(Enum):
     NONE = 0
     DEPREC = 1
     FULL = 2
 
 
-class SEX(Enum):
+class Sex(Enum):
     MALE = 0
     FEMALE = 1
 
