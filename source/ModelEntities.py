@@ -43,7 +43,7 @@ class Cohort:
         self.rng = RVGs.RNG(seed=id)
         self.params = parameters
 
-        self.individuals = []       # list of individuals
+        self.individuals = []  # list of individuals
         self.simCal = SimCls.SimulationCalendar()  # simulation calendar
         # simulation outputs
         self.simOutputs = O.SimOutputs(sim_cal=self.simCal, sim_rep=id, trace_on=D.TRACE_ON)
@@ -59,7 +59,6 @@ class Cohort:
 
         # baseline population of given population size
         for i in range(self.params.popSize):
-
             # find the age and sex of this individual
             age_sex = self.params.ageSexDist.sample_values(rng=self.rng)
 
@@ -131,69 +130,81 @@ class Cohort:
 
     def process_obesity_outcomes(self):
         """
-        collect BMIs to calculate average
+        collect BMIs, intervention cost, and health care expenditures of the cohort at this simulation time
         """
 
         individual_bmis = []  # list of BMI values of all individuals at the current time
-        individual_intervention_costs = [] # list to collect intervention costs (per individual)
-        individual_hc_expenditure = [] # list to collect health care expenditures (per individual)
+        cohort_intervention_cost = 0  # cohort intervention costs at the current time
+        cohort_hc_expenditure = 0  # cohort health care expenditures at the current time
 
         for individual in self.individuals:
-            if individual.ifAlive is True:
+            if individual.ifAlive:
+
+                # year index
+                year_index = floor(self.simCal.time)
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
-                year_index = floor(self.simCal.time)
-                bmi_individual = individual.trajectory[year_index+1]*self.params.interventionMultipliers[year_index]
-                individual_bmis.append(bmi_individual)
+                # note that the first element of a BMI trajectory is the id of the trajectory so we skip it
+                individual_bmi = individual.trajectory[year_index + 1] \
+                                 * self.params.interventionMultipliers[year_index]
+                individual_bmis.append(individual_bmi)
 
-                # update costs of cohort
-                # if year_index is 0:
+                # collect the cost of the intervention
+                # for the first and the second years we add the intervention cost
                 if year_index in (0, 1):
-                    individual_cost = self.params.annualInterventionCost
-                else:
-                    individual_cost = 0
-                # update the list of individual cost at each time step
-                individual_intervention_costs.append(individual_cost)
+                    cohort_intervention_cost += self.params.annualInterventionCost
 
-                # find BMI status (< or >= 95th %ile by age sex)
-                age = floor(individual.get_age(current_time=self.simCal.time))
-
-                # find the bmi 95th for this individual
-                bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
-                if bmi_individual < bmi_cut_off:
-                    individual.ifLessThan95th = True
-                else:
-                    individual.ifLessThan95th = False
-
-                # ATTRIBUTABLE HEALTH CARE EXPENDITURES
-                bmi_unit_above_30 = bmi_individual - 30
-                if age < 18:
-                    if individual.ifLessThan95th is False:
-                        # annual HC expenditure for >95th (per individual)
-                        # annual_hc_exp = 220*((1+inflation_constant)**(2020-2008 + year_index))
-                        annual_hc_exp = self.params.costAbove95thP*((1 + D.INFLATION) ** (2020 - 2008 + year_index))
-                    else:
-                        # annual HC expenditure for <95th (per individual)
-                        annual_hc_exp = self.params.costBelow95thP*((1 + D.INFLATION) ** (2020 - 2008 + year_index))
-                else:
-                    # if less than 95th (which is 30)
-                    if individual.ifLessThan95th is True:
-                        # no additional attributable expenditure
-                        annual_hc_exp = 0
-                    else:
-                        if bmi_unit_above_30 < 0:
-                            annual_hc_exp = 0
-                        else:
-                            # annual_hc_exp = bmi_unit_above_30*(197*((1+inflation_constant)**(2020-2017)))
-                            annual_hc_exp = bmi_unit_above_30*(self.params.costPerUnitBMIAdultP * ((1 + D.INFLATION) ** (2020 - 2017)))
-
-                individual_hc_expenditure.append(annual_hc_exp)
+                # collect the health care expenditure cost
+                cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual,
+                                                                       bmi=individual_bmi,
+                                                                       year_index=year_index)
 
         # store list of individual costs and health
-        self.simOutputs.collect_costs_of_this_period(individual_intervention_costs, individual_hc_expenditure)
+        self.simOutputs.collect_costs_of_this_period(cohort_intervention_cost, cohort_hc_expenditure)
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)
+
+    def calculate_hc_expenditure(self, individual, bmi, year_index):
+        """
+        :param individual: an individual
+        :param bmi: bmi of the individual
+        :return: the health care expenditure of an individual
+        """
+
+        # age of the individual at this simulation time
+        age = floor(individual.get_age(current_time=self.simCal.time))
+
+        # find the bmi 95th for this individual
+        bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
+        # if the individual is above or below the BMI 95th percentile
+        if bmi < bmi_cut_off:
+            individual.ifLessThan95th = True
+        else:
+            individual.ifLessThan95th = False
+
+        # ATTRIBUTABLE HEALTH CARE EXPENDITURES
+        bmi_unit_above_30 = bmi - 30
+        if age < 18:
+            if individual.ifLessThan95th is False:
+                # annual HC expenditure for >95th (per individual)
+                hc_exp = self.params.costAbove95thP * ((1 + D.INFLATION) ** (2020 - 2008 + year_index))
+            else:
+                # annual HC expenditure for <95th (per individual)
+                hc_exp = self.params.costBelow95thP * ((1 + D.INFLATION) ** (2020 - 2008 + year_index))
+        else:
+            # if less than 95th (which is 30)
+            if individual.ifLessThan95th is True:
+                # no additional attributable expenditure
+                hc_exp = 0
+            else:
+                if bmi_unit_above_30 < 0:
+                    hc_exp = 0
+                else:
+                    hc_exp = bmi_unit_above_30 * (
+                            self.params.costPerUnitBMIAdultP * ((1 + D.INFLATION) ** (2020 - 2017)))
+
+        return hc_exp
 
     def process_pop_survey(self):
         """ processes the population distribution pyramid (age/sex) """

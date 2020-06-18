@@ -66,19 +66,17 @@ class SimOutputs:
 
         self.pathAveBMIs.record_value(time=int(self.simCal.time), value=average_bmi)
 
-    def collect_costs_of_this_period(self, costs, hc_expenditures):
+    def collect_costs_of_this_period(self, intervention_cost, hc_expenditure):
         """
-        :param costs: (list) of costs for each individual in this year
-        :param hc_expenditures: (list) of health care expenditures for each individual this year
+        :param intervention_cost: cohort intervention cost in this year
+        :param hc_expenditure: cohort health care expenditures at this year
         """
 
         # list of cohort cost per year (to get total cost)
-        sum_period_intervention_costs = sum(costs)
-        self.annualCohortInterventionCosts.append(sum_period_intervention_costs)
+        self.annualCohortInterventionCosts.append(intervention_cost)
 
-        # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
-        sum_period_expenditures = sum(hc_expenditures)
-        self.annualCohortHCExpenditures.append(sum_period_expenditures)
+        # list of cohort expenditure totals per year (to get total expenditure)
+        self.annualCohortHCExpenditures.append(hc_expenditure)
 
         # update total cohort cost
-        self.totalCost += sum_period_intervention_costs + sum_period_expenditures
+        self.totalCost += intervention_cost + hc_expenditure
