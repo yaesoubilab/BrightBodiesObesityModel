@@ -3,6 +3,7 @@ import SimPy.RandomVariateGenerators as RVGs
 import InputData as D
 from ModelParameters import ParamGenerator
 import multiprocessing as mp
+import SimPy.StatisticalClasses as Stat
 
 
 class MultiCohort:
@@ -76,6 +77,7 @@ class MultiSimOutputs:
         self.pathsOfPopSize = []
         self.pathsOfBMIs = []
         self.popPyramidAtStart = []
+        self.changeInBMIByYear = []
 
         # for CEA
         # list of intervention costs for all participants over entire sim duration, per cohort
@@ -110,6 +112,12 @@ class MultiSimOutputs:
         self.pathsOfBMIs.append(simulated_cohort.simOutputs.pathAveBMIs)
         # store sample path of cohort population pyramid at time 0
         self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
+        # store the change in BMI by year
+        d_bmi = []
+        bmi0 = simulated_cohort.simOutputs.pathAveBMIs.get_values()[0]
+        for bmi in simulated_cohort.simOutputs.pathAveBMIs.get_values():
+            d_bmi.append(bmi - bmi0)
+        self.changeInBMIByYear.append(d_bmi)
 
     # for CEA
 
@@ -165,6 +173,22 @@ class MultiSimOutputs:
         self.cohortTenYearExpenditure.append(cohort_10yr_expenditure)
         # store individual expenditure over 10 years
         self.individualTenYearExpenditure.append(individual_10yr_expenditure)
+
+    def get_mean_interval_change_in_bmi(self, year, deci=None):
+
+        data = []
+        for bmi_change_by_year in self.changeInBMIByYear:
+            data.append(bmi_change_by_year[year])
+
+        stat = Stat.SummaryStat(
+            name='Change in BMI with respect to the baseline',
+            data=data
+        )
+
+        if deci is None:
+            return stat.get_mean(), stat.get_PI(alpha=0.05)
+        else:
+            return stat.get_formatted_mean_and_interval(interval_type='p', deci=deci)
 
 
 def simulate_this_cohort(cohort, sim_duration):

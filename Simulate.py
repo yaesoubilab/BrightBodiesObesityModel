@@ -49,6 +49,10 @@ if __name__ == '__main__':
         connect='line'  # line graph (vs. step wise)
     )
 
+    print(multiCohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=1, deci=1))
+    print(multiCohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=2, deci=1))
+
+
     # TO DETERMINE BMI DIFFERENCES BY YEAR
     year_one_vs_zero = []
     year_two_vs_one = []

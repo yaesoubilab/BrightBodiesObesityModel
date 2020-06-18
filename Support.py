@@ -71,7 +71,7 @@ def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
     ax.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
     # to save plotted figures
     # bbox_inches set to tight: cleans up figures
-    plt.savefig("Figures/RCT_validation.png", dpi=300)
+    plt.savefig("figures/RCT_validation.png", dpi=300)
 
 
 def plot_validation(sim_outcomes, intervention):
@@ -133,7 +133,7 @@ def plot_validation(sim_outcomes, intervention):
     axs.legend(['Bright Bodies RCT', 'Model'], loc='upper right')
     # to save plotted figures
     # bbox_inches set to tight: cleans up figures
-    plt.savefig("Figures/RCT_validation.png", dpi=300)
+    plt.savefig("figures/RCT_validation.png", dpi=300)
 
 
 def plot_graphs(sim_outcomes_BB, sim_outcomes_CC):
@@ -331,9 +331,9 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
 
     if maintenance_effect == D.EFFECT_MAINTENANCE.FULL:
-        plt.savefig("Figures/Avg_BMI_Full_Maintenance.png", dpi=300)
+        plt.savefig("figures/Avg_BMI_Full_Maintenance.png", dpi=300)
     elif maintenance_effect == D.EFFECT_MAINTENANCE.DEPREC:
-        plt.savefig("Figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
+        plt.savefig("figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
     elif maintenance_effect == D.EFFECT_MAINTENANCE.NONE:
-        plt.savefig("Figures/Avg_BMI_No_Maintenance.png", dpi=300)
+        plt.savefig("figures/Avg_BMI_No_Maintenance.png", dpi=300)
     plt.show()

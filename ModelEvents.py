@@ -37,7 +37,7 @@ class Birth(Event):
 class BMISurvey(Event):
     def __init__(self, time, individual, cohort):
         """
-        Tests the age/sex characteristics of simulated population (pyramid)
+        tests the age/sex characteristics of simulated population (pyramid)
         """
         # initialize master class
         Event.__init__(self, time=time, priority=Priority.BMI_SURVEY.value)
@@ -58,7 +58,7 @@ class BMISurvey(Event):
 class PopSurvey(Event):
     def __init__(self, time, individual, cohort):
         """
-        Tests the age/sex characteristics of simulated population (pyramid)
+        tests the age/sex characteristics of simulated population (pyramid)
         """
         # initialize master class
         Event.__init__(self, time=time, priority=Priority.POP_SURVEY.value)
