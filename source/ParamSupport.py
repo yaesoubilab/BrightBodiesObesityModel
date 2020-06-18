@@ -1,5 +1,22 @@
 # COSTING OF BB/CONTROL: Original Data
 
+# TODO: Sydney would you please complete these two dictionaries?
+
+# dictionary of cost items for Bright Bodies
+# each element is a list of [mean, stDev]
+DICT_COST_BB = {
+    'Exercise physiologist': [9592.00, 0.1*9592.00],
+    'Games equipment': []
+}
+
+# dictionary of cost items for the Control
+# each element is a list of [mean, stDev]
+DICT_COST_CONTROL = {
+    'Exercise physiologist': [9592.00, 0.1*9592.00],
+    'Games equipment': []
+}
+
+
 # INTERVENTION COSTS of BRIGHT BODIES (detailed)
 
 # Exercise Sessions
