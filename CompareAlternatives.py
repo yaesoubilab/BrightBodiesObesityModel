@@ -46,8 +46,8 @@ MyPath.plot_sets_of_sample_paths(
 )
 
 
-Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+# Support.print_comparative_outcomes(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+#                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 # plot RCT validation: BMI differences (year 0/1 and 1/2)
 # TODO: for the manuscript, we probably need to put these two figures in

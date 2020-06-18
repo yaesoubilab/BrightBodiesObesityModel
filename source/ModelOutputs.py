@@ -26,7 +26,8 @@ class SimOutputs:
         self.pathAveBMIs = Path.PrevalenceSamplePath(name='BMIs',
                                                      initial_size=0,
                                                      sim_rep=sim_rep,
-                                                     collect_stat=False)
+                                                     collect_stat=True,
+                                                     ave_method='linear')
 
         # list that holds the cost of all of the cohorts during the simulation
         # Costs: intervention costs, acquired during the first 2 years
@@ -34,6 +35,8 @@ class SimOutputs:
         # list that holds the cohort total expenditure during the simulation
         # Expenditure: direct/indirect HC costs acquired each year
         self.annualCohortHCExpenditures = []
+        # cohort total cost
+        self.totalCost = 0
 
     def collect_end_of_sim_stat(self):
         """
@@ -65,14 +68,17 @@ class SimOutputs:
 
     def collect_costs_of_this_period(self, costs, hc_expenditures):
         """
-        :param costs: (list) of costs for each individual per year
-        :param hc_expenditures: (list) of annual health care expenditures for each individual per year
+        :param costs: (list) of costs for each individual in this year
+        :param hc_expenditures: (list) of health care expenditures for each individual this year
         """
 
         # list of cohort cost per year (to get total cost)
-        self.annualCohortInterventionCosts.append(sum(costs))
+        sum_period_intervention_costs = sum(costs)
+        self.annualCohortInterventionCosts.append(sum_period_intervention_costs)
 
         # totalExpenditures: list of cohort expenditure totals per year (to get total expenditure)
-        self.annualCohortHCExpenditures.append(sum(hc_expenditures))
+        sum_period_expenditures = sum(hc_expenditures)
+        self.annualCohortHCExpenditures.append(sum_period_expenditures)
 
-
+        # update total cohort cost
+        self.totalCost += sum_period_intervention_costs + sum_period_expenditures

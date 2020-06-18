@@ -135,7 +135,7 @@ class Cohort:
         """
 
         individual_bmis = []  # list of BMI values of all individuals at the current time
-        individual_costs = [] # list to collect intervention costs (per individual)
+        individual_intervention_costs = [] # list to collect intervention costs (per individual)
         individual_hc_expenditure = [] # list to collect health care expenditures (per individual)
 
         for individual in self.individuals:
@@ -150,7 +150,7 @@ class Cohort:
                 age = floor(individual.get_age(current_time=self.simCal.time))
 
                 # TODO: if you put these thresholds in the same format as
-                #   age_sex_dist (in the InputData.py file), we can simply this.
+                #   age_sex_dist (in the InputData.py file), we can simplify this.
                 #   I can help.
                 # if Female
                 if individual.sex == 1:
@@ -282,14 +282,11 @@ class Cohort:
                 # update costs of cohort
                 # if year_index is 0:
                 if year_index in (0, 1):
-                    if self.params.intervention == D.Interventions.BRIGHT_BODIES:
-                        individual_cost = self.params.annualInterventionCost
-                    else:
-                        individual_cost = self.params.annualInterventionCost
+                    individual_cost = self.params.annualInterventionCost
                 else:
                     individual_cost = 0
                 # update the list of individual cost at each time step
-                individual_costs.append(individual_cost)
+                individual_intervention_costs.append(individual_cost)
 
                 # NEW
                 # ATTRIBUTABLE HEALTH CARE EXPENDITURES
@@ -317,7 +314,7 @@ class Cohort:
                 individual_hc_expenditure.append(annual_hc_exp)
 
         # store list of individual costs and health
-        self.simOutputs.collect_costs_of_this_period(individual_costs, individual_hc_expenditure)
+        self.simOutputs.collect_costs_of_this_period(individual_intervention_costs, individual_hc_expenditure)
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)

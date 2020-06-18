@@ -63,6 +63,9 @@ class MultiCohort:
             for cohort in simulated_cohorts:
                 self.multiSimOutputs.extract_outcomes(simulated_cohort=cohort)
 
+        # calculate summary statistics
+        self.multiSimOutputs.calculate_summary_stats()
+
     def __populate_parameter_sets(self, intervention, maintenance_scenario):
 
         # create a parameter generator
@@ -81,10 +84,16 @@ class MultiSimOutputs:
 
     def __init__(self):
 
+        self.statEffect = None          # cohort average BMI over the simulation period
+        self.statCohortCost = None      # cohort total cost over the simulation period
+        self.statCohortInterventionCost = None  # cohort intervention cost over the simulation period
+        self.statCohortHCExpenditure = None     # cohort health care expenditure over the simulation period
+
         self.pathsOfCohortPopSize = []  # (list of list) sample paths of cohort population size
         self.pathsOfCohortAveBMI = []   # (list of list) sample paths of cohort BMI
         self.popPyramidAtStart = []     # (list of pyramids) population pyramid of cohorts at initialization
-        self.changeInBMIByYear = []     # (list of list) change in cohort BMI by year with respect to the baseline
+        # (list of list) change in cohort average BMI by year with respect to the baseline
+        self.changeInCohortAveBMIByYear = []
 
         # for CEA
         # effect: average cohort BMI over the entire sim duration
@@ -92,22 +101,16 @@ class MultiSimOutputs:
 
         # cost: total cost (including the intervention costs and HC expenditures) for all participants
         #       over the entire simulation duration.
-        self.costs = []     # (list) of costs from each simulated cohort
+        self.cohortCosts = []     # (list) of costs from each simulated cohort
 
-        # list of intervention costs for all participants over entire sim duration, per cohort
+        # intervention costs for all participants over entire simulation duration
         self.cohortInterventionCosts = []
 
-        # list of average HC expenditures per year per person over entire sim duration, per cohort
-        # Annual Average Individual Expenditure
-        self.individualAvgExpenditure = []
+        # list of total health care expenditures for all people over the simulation
+        self.cohortHealthCareExpenditure = []
 
-        # list of total expenditures for all people over 10 years, per cohort
-        # Total Expenditure
-        self.cohortTenYearExpenditure = []
-
-        # list of individual expenditures over 10 years
-        # Average Individual Expenditure
-        self.individualTenYearExpenditure = []
+        # average health care expenditures per year per person
+        self.aveAnnualIndividualHCExpenditure = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -118,72 +121,69 @@ class MultiSimOutputs:
         self.pathsOfCohortAveBMI.append(simulated_cohort.simOutputs.pathAveBMIs)
         # store sample path of cohort population pyramid at time 0
         self.popPyramidAtStart.append(simulated_cohort.simOutputs.pyramids[0])
-        # store the change in BMI by year
-        d_bmi = []
-        bmi0 = simulated_cohort.simOutputs.pathAveBMIs.get_values()[0]
+
+        # store the change in cohort average BMI by year
+        d_bmi = []  # changes in average BMI of this cohort (year 0 to 0, year 1 to 0, year 2 to 0, etc.)
+        bmi0 = simulated_cohort.simOutputs.pathAveBMIs.get_values()[0]  # average BMI at time 0
         for bmi in simulated_cohort.simOutputs.pathAveBMIs.get_values():
             d_bmi.append(bmi - bmi0)
-        self.changeInBMIByYear.append(d_bmi)
+        self.changeInCohortAveBMIByYear.append(d_bmi)
 
-    # for CEA
+        # for CEA
+        # EFFECT (BMI unit change)
+        # average cohort BMI over the simulation period
+        self.effects.append(simulated_cohort.simOutputs.pathAveBMIs.stat.get_mean())
 
         # COSTS: Intervention Costs + HC Expenditure
-        # store costs for use in CEA
+        self.cohortCosts.append(simulated_cohort.simOutputs.totalCost)
 
-        # sum cost per year for all participants to get total cohort cost over sim duration
-        cohort_intervention_cost = sum(simulated_cohort.simOutputs.annualCohortInterventionCosts)
-        cohort_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
-        # average cost per person (of intervention/control)
-        average_intervention_cost_per_person = cohort_intervention_cost/D.POP_SIZE
-        average_expenditure_per_person = cohort_expenditure/D.POP_SIZE
+        # cohort intervention costs
+        self.cohortInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts))
 
-        # sum average IC per person and average HC per person
-        total_cost = average_intervention_cost_per_person + average_expenditure_per_person
-        # self.costs.append(average_intervention_cost_per_person)
-        self.costs.append(total_cost)
+        # cohort health care expenditure
+        cohort_hc_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
+        self.cohortHealthCareExpenditure.append(cohort_hc_expenditure)
+        self.aveAnnualIndividualHCExpenditure.append(cohort_hc_expenditure/D.POP_SIZE/D.SIM_DURATION)
 
-        # EFFECT (BMI unit change)
+        # cohort_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
+        # # average cost per person (of intervention/control)
+        # average_intervention_cost_per_person = cohort_intervention_cost/D.POP_SIZE
+        # average_expenditure_per_person = cohort_expenditure/D.POP_SIZE
+        #
+        #
+        # # EXPENDITURE
+        #
+        # # total expenditure over 10 years (for cohort) ~700,000
+        # cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
+        # # average expenditure per year (over 10 years) ~70,000
+        # cohort_avg_expenditure = cohort_10yr_expenditure/D.SIM_DURATION
+        # # total expenditure per person over 10 years ~7700
+        # individual_10yr_expenditure = cohort_10yr_expenditure/D.N_CHILDREN_BB
+        # # average expenditure per year PER PERSON (over 10 years) ~770
+        # individual_avg_expenditure = cohort_avg_expenditure/D.N_CHILDREN_BB
+        # # store annual average individual expenditure
+        # self.aveAnnualIndividualHCExpenditure.append(individual_avg_expenditure)
+        # # store total expenditure of cohort for 10 years
+        # self.cohortHealthCareExpenditure.append(cohort_10yr_expenditure)
+        # # store individual expenditure over 10 years
+        # self.individualTenYearExpenditure.append(individual_10yr_expenditure)
 
-        # average BMI by year (list of 10 BMI values)
-        effect_values = simulated_cohort.simOutputs.pathAveBMIs.get_values()
+    def calculate_summary_stats(self):
 
-        # represent 10 year effect (sum of 10 avg BMI values)
-        ten_year_effect_total = (effect_values[1] + effect_values[2] +
-                                 effect_values[3] + effect_values[4] +
-                                 effect_values[5] + effect_values[6] +
-                                 effect_values[7] + effect_values[8] +
-                                 effect_values[9] + effect_values[10])
-
-        # average effect of the cohort over 10 years (average BMI)
-        average_effect_ten_years = ten_year_effect_total/D.SIM_DURATION
-
-        # Store cohort effect: average BMI for 10 YEAR SIM
-        self.effects.append(average_effect_ten_years)
-
-        # INTERVENTION COSTS:
-        self.cohortInterventionCosts.append(average_intervention_cost_per_person)
-
-        # EXPENDITURE
-
-        # total expenditure over 10 years (for cohort) ~700,000
-        cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
-        # average expenditure per year (over 10 years) ~70,000
-        cohort_avg_expenditure = cohort_10yr_expenditure/D.SIM_DURATION
-        # total expenditure per person over 10 years ~7700
-        individual_10yr_expenditure = cohort_10yr_expenditure/D.N_CHILDREN_BB
-        # average expenditure per year PER PERSON (over 10 years) ~770
-        individual_avg_expenditure = cohort_avg_expenditure/D.N_CHILDREN_BB
-        # store annual average individual expenditure
-        self.individualAvgExpenditure.append(individual_avg_expenditure)
-        # store total expenditure of cohort for 10 years
-        self.cohortTenYearExpenditure.append(cohort_10yr_expenditure)
-        # store individual expenditure over 10 years
-        self.individualTenYearExpenditure.append(individual_10yr_expenditure)
+        self.statEffect = Stat.SummaryStat(name='', data=self.effects)
+        self.statCohortCost = Stat.SummaryStat(name='', data=self.cohortCosts)
+        self.statCohortInterventionCost = Stat.SummaryStat(name='', data=self.cohortInterventionCosts)
+        self.statCohortHCExpenditure = Stat.SummaryStat(name='', data=self.cohortHealthCareExpenditure)
 
     def get_mean_interval_change_in_bmi(self, year, deci=None):
+        """
+        :param year: (int) year at which the changes should be calculated with respect to the baseline
+        :param deci: (float) the decimal number to round the numbers to
+        :return: (mean, 95% uncertainty interval) of change in BMI with respect to the baseline
+        """
 
         data = []
-        for bmi_change_by_year in self.changeInBMIByYear:
+        for bmi_change_by_year in self.changeInCohortAveBMIByYear:
             data.append(bmi_change_by_year[year])
 
         stat = Stat.SummaryStat(

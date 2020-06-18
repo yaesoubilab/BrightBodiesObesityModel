@@ -179,13 +179,13 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
 
         # EXPENDITURES
         # Find Difference in Spending Per Person Per Year on Average
-        expenditures_cc = sim_outcomes_CC.individualAvgExpenditure[cohortID]
-        expenditures_bb = sim_outcomes_BB.individualAvgExpenditure[cohortID]
+        expenditures_cc = sim_outcomes_CC.aveAnnualIndividualHCExpenditure[cohortID]
+        expenditures_bb = sim_outcomes_BB.aveAnnualIndividualHCExpenditure[cohortID]
         diff_expenditures = numpy.array(expenditures_cc) - numpy.array(expenditures_bb)
         list_of_avg_expenditure_diffs.append(diff_expenditures)
         # Find Difference in Cohort Spending Over 10 Years
-        total_exp_cc = sim_outcomes_CC.cohortTenYearExpenditure[cohortID]
-        total_exp_bb = sim_outcomes_BB.cohortTenYearExpenditure[cohortID]
+        total_exp_cc = sim_outcomes_CC.cohortHealthCareExpenditure[cohortID]
+        total_exp_bb = sim_outcomes_BB.cohortHealthCareExpenditure[cohortID]
         diff_total_exp = numpy.array(total_exp_cc) - numpy.array(total_exp_bb)
         list_of_total_expenditure_diffs.append(diff_total_exp)
         # Find Differences in Spending Per Person Over 10 Years
@@ -246,14 +246,14 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     # Clinical Control
     clinical_control_strategy = Econ.Strategy(
         name='Clinical Control',
-        cost_obs=sim_outcomes_CC.costs,
+        cost_obs=sim_outcomes_CC.cohortCosts,
         effect_obs=sim_outcomes_CC.effects,
         color='orange'
     )
     # Bright Bodies
     bright_bodies_strategy = Econ.Strategy(
         name='Bright Bodies',
-        cost_obs=sim_outcomes_BB.costs,
+        cost_obs=sim_outcomes_BB.cohortCosts,
         effect_obs=sim_outcomes_BB.effects,
         color='blue'
     )
@@ -374,7 +374,19 @@ def generate_simulation_outputs(simulated_multi_cohort):
         connect='line'  # line graph (vs. step wise)
     )
 
+    output = simulated_multi_cohort.multiSimOutputs
+    print('Average BMI over the simulation period:',
+          output.statEffect.get_formatted_mean_and_interval(interval_type='p', deci=2))
+    print()
+    print('Total cohort cost:',
+          output.statCohortCost.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
+    print('Total cohort intervention cost:',
+          output.statCohortInterventionCost.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
+    print('Total cohort health care expenditure:',
+          output.statCohortHCExpenditure.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
+
     # average chance in BMI with respect to the baseline (time 0)
+    print()
     print('Average change in BMI at year 1 with respect to the baseline (and 95% uncertainty interval)',
           simulated_multi_cohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=1, deci=1))
     print('Average change in BMI at year 2 with respect to the baseline (and 95% uncertainty interval)',
