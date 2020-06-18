@@ -3,6 +3,7 @@ from SimPy import InOutFunctions as InOutSupport
 from SimPy import RandomVariateGenerators as RVGs
 from source.ParamSupport import *
 import InputData as D
+import source.SupportData as Data
 
 
 class SetOfTrajectories:
@@ -56,10 +57,16 @@ class Parameters:
         self.simInitialDuration = D.SIM_INIT
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
-        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=D.age_sex_dist,        # life table
+        self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=Data.age_sex_dist,        # life table
                                                         list_x_min=[8, 0],          # minimum values for age/sex groups
                                                         list_x_max=[16, 1],         # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
+
+        # BMI 95th cut offs
+        self.bmi95thCutOffs = df.DataFrame(rows=Data.bmi_95th_cut_offs,
+                                           list_x_min=[8, 0],  # minimum values for age/sex groups
+                                           list_x_max=[18, 1],  # maximum values for age/sex groups
+                                           list_x_delta=[1, 'int'])  # [age interval, sex categorical]
 
         # intervention multipliers to reduce BMI over time
         self.interventionMultipliers = []

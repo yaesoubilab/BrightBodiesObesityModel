@@ -3,10 +3,9 @@ import SimPy.EconEval as Econ
 import InputData as D
 import numpy
 import matplotlib.pyplot as plt
-import matplotlib.patches as patch
 import SimPy.StatisticalClasses as Stat
-import SimPy.Plots.SamplePaths as Path
 from SimPy.Plots import PopulationPyramids as Pyr
+import source.SupportData as Data
 
 
 def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
@@ -352,7 +351,7 @@ def generate_simulation_outputs(simulated_multi_cohort):
     )
 
     # population pyramid at initialization
-    Pyr.plot_pyramids(observed_data=D.age_sex_dist,
+    Pyr.plot_pyramids(observed_data=Data.age_sex_dist,
                       simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
                       fig_size=(6, 4),
                       x_lim=10,
