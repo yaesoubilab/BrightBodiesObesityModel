@@ -4,7 +4,7 @@ from source import Support, MultiCohortClasses as MultiCls, SamplePaths as MyPat
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-MAINTENANCE_EFFECT = D.EffectMaintenance.FULL
+MAINTENANCE_EFFECT = D.EffectMaintenance.NONE
 
 
 # for MultiCohort BRIGHT BODIES

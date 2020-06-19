@@ -6,14 +6,37 @@
 # each element is a list of [mean, stDev]
 DICT_COST_BB = {
     'Exercise physiologist': [9592.00, 0.1*9592.00],
-    'Games equipment': []
+    'Games and equipment': [1900.00, 0.1*1900.00],
+    'Motivational tools': [240.00, 0.1 * 240.00],
+    'Printed material': [25.00, 0.1 * 25.00],
+    'Gym room and utilities': [0.00, 0.1 * 0.00],
+    'First aid kit': [150.00, 0.1 * 150.00],
+    'Registered dietitian': [6805.00, 0.1 * 6805.00],
+    'Social worker': [1200.00, 0.1 * 1200.00],
+    'Educational tools': [1350.00, 0.1 * 1350.00],
+    'Classroom and utilities': [0.00, 0.1 * 0.00],
+    'Exercise physiologist (admin)': [6990.00, 0.1 * 6990.00],
+    'Registered dietitian (admin)': [16376.00, 0.1 * 16376.00],
+    'Technician': [1200.00, 0.1 * 1200.00],
+    'Body fat analyzer and scale': [700.00, 0.1 * 700.00],
+    'Stadiometer': [100.00, 0.1 * 100.00],
+    'Medical consultation': [5100.00, 0.1 * 5100.00]
 }
 
 # dictionary of cost items for the Control
 # each element is a list of [mean, stDev]
 DICT_COST_CONTROL = {
-    'Exercise physiologist': [9592.00, 0.1*9592.00],
-    'Games equipment': []
+    'Nurse practitioner': [11686.00, 0.1*11686.00],
+    'Registered dietitian (CC)': [6329.00, 0.1*6329.00],
+    'Social worker (CC)': [6460.00, 0.1*6460.00],
+    'Dept clinical secretary': [834.00, 0.1*834.00],
+    'Clinic secretary': [1669.00, 0.1*1669.00],
+    'Typing': [2504.00, 0.1*2504.00],
+    'Lab technician': [1408.00, 0.1*1408.00],
+    'Medical consultation (CC)': [10256.00, 0.1*10256.00],
+    'Rent space, utilities': [3000.00, 0.1*3000.00],
+    'Cleaning service': [885.00, 0.1*885.00],
+    'Clinic equipment and supplies': [2900.00, 0.1*2900.00]
 }
 
 
@@ -59,7 +82,7 @@ social_worker_cc = 6460.00
 
 # Administration
 dept_clinical_secretary = 834.00
-clinical_secretary = 1669.00
+clinic_secretary = 1669.00
 typing = 2504.00
 
 # Weigh Ins + Labs

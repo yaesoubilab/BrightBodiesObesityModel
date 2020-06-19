@@ -189,10 +189,10 @@ class ParamGenerator:
                                        st_dev=0.1*dept_clinical_secretary)
         self.deptClinicSecretaryRVG = RVGs.Gamma(a=fit_output["a"],
                                                  loc=0,
-                                               scale=fit_output["scale"])
+                                                 scale=fit_output["scale"])
         # create gamma dist for clinical_secretary
-        fit_output = RVGs.Gamma.fit_mm(mean=clinical_secretary,
-                                       st_dev=0.1*clinical_secretary)
+        fit_output = RVGs.Gamma.fit_mm(mean=clinic_secretary,
+                                       st_dev=0.1*clinic_secretary)
         self.clinicSecretaryRVG = RVGs.Gamma(a=fit_output["a"],
                                              loc=0,
                                              scale=fit_output["scale"])
