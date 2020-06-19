@@ -1,7 +1,5 @@
 # COSTING OF BB/CONTROL: Original Data
 
-# TODO: Sydney would you please complete these two dictionaries?
-
 # dictionary of cost items for Bright Bodies
 # each element is a list of [mean, stDev]
 DICT_COST_BB = {
