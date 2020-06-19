@@ -37,6 +37,11 @@ DICT_COST_CONTROL = {
     'Clinic equipment and supplies': [2900.00, 0.1*2900.00]
 }
 
+DICT_HC_EXP = {
+    '<18 years, >95th %ile': [220, 0.1*220],
+    '<18 years, <95th %ile': [180, 0.1*180],
+    '>18 years': [197, 197*0.1]
+}
 
 # INTERVENTION COSTS of BRIGHT BODIES (detailed)
 
