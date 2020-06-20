@@ -15,18 +15,10 @@ CURRENT_YEAR = 2020
 INFLATION = 0.02
 DISCOUNT = 0.03
 
-# Multipliers:
-# BB Year 1 reduction
-multBBYear1 = 0.925
-# BB Year 2 reduction
-multBBYear2 = 0.951
-# CC Multiplier
-multCC = (1.05 + 1.048) / 2
-
-
 # trace
 TRACE_ON = False       # Set to true to trace a simulation replication
 DECI = 5               # the decimal point to round the numbers to in the trace file
+
 
 # Maintenance of Effect Levels:
 class EffectMaintenance(Enum):

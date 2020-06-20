@@ -2,7 +2,7 @@ import InputData as D
 from source import Support as S, MultiCohortClasses as MultiCls
 
 # SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
-INTERVENTION = D.Interventions.BRIGHT_BODIES
+INTERVENTION = D.Interventions.CONTROL
 EFFECT_MAINTENANCE = D.EffectMaintenance.DEPREC
 
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel

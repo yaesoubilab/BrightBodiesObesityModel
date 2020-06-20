@@ -1,6 +1,16 @@
 
+# TODO: Sydney, are these years correct? I used these to inflate cost.
+# to inflate cost estimates
 YEAR_BB_STUDY = 2007
 YEAR_HCEXP_STUDY = 2010
+
+# multipliers to adjust BMI trajectories
+DICT_MULTIPLIERS = {
+    'Control': [1.049, 0.01],
+    'BB Year 1': [0.925, 0.01],
+    'BB Year 2': [0.951, 0.01]
+}
+
 
 # dictionary of cost items for Bright Bodies
 # each element is a list of [mean, stDev]

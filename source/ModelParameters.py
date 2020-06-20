@@ -36,37 +36,16 @@ class Parameters:
         self.costAbove95thP = 0
         self.costBelow95thP = 0
         self.costPerUnitBMIAdultP = 0
-
-        # intervention multipliers to reduce BMI over time
-        self.interventionMultipliers = []
-        if intervention == D.Interventions.BRIGHT_BODIES:
-
-            if maintenance_scenario == D.EffectMaintenance.FULL:
-                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
-                for i in range(10):
-                    self.interventionMultipliers.append(D.multBBYear2)
-
-            elif maintenance_scenario == D.EffectMaintenance.NONE:
-                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
-                for i in range(10):
-                    self.interventionMultipliers.append(D.multCC)
-
-            elif maintenance_scenario == D.EffectMaintenance.DEPREC:
-                self.interventionMultipliers = [1.0, D.multBBYear1, D.multBBYear2]
-                for i in range(10):
-                    deprec_difference = D.multCC - D.multBBYear2
-                    deprec_value = deprec_difference / 8
-                    deprec_multiplier = D.multBBYear2 + (deprec_value * i)
-                    self.interventionMultipliers.append(deprec_multiplier)
-
-        else: # under control
-            self.interventionMultipliers = [1]
-            for i in range(10):
-                self.interventionMultipliers.append(D.multCC)
+        self.interventionMultipliers = [] # multipliers to adjust BMI trajectories
 
 
 class CostParamRVGs:
+    # class to contain the random variate generators of cost parameters
+
     def __init__(self, dict_of_cost_parameters):
+        """
+        :param dict_of_cost_parameters: dictionary of cost parameters
+        """
 
         self.dictOfRVGs = {}
         for key, mean_stdev in dict_of_cost_parameters.items():
@@ -83,16 +62,54 @@ class CostParamRVGs:
                 self.dictOfRVGs[key] = RVGs.Constant(value=0)
 
     def get_sample(self, cost_item_name, rng):
-
+        """
+        :param cost_item_name: name of the cost item to get a sample for
+        :param rng: random number generator
+        :return: a sample from the distribution of the cost item specified
+        """
         return self.dictOfRVGs[cost_item_name].sample(rng)
 
     def get_total(self, rng):
-
+        """
+        :param rng: random number generator
+        :return: sum of samples from all cost items
+        """
         total = 0
         for key, rvg in self.dictOfRVGs.items():
             total += rvg.sample(rng)
 
         return total
+
+
+class MultiplierParamRVGs:
+    # class to contain the random variate generators of multiplier parameters to adjust BMI trajectories
+
+    def __init__(self, dict_of_cost_parameters):
+        """
+        :param dict_of_cost_parameters: dictionary of cost parameters
+        """
+
+        self.dictOfRVGs = {}
+        for key, mean_stdev in dict_of_cost_parameters.items():
+
+            # fit a log-normal distribution (only if mean > 0)
+            if mean_stdev[0] > 0:
+                fit_output = RVGs.LogNormal.fit_mm(mean=mean_stdev[0], st_dev=mean_stdev[1])
+                # store the log-normal RVG
+                self.dictOfRVGs[key] = RVGs.LogNormal(mu=fit_output["mu"],
+                                                      loc=0,
+                                                      sigma=fit_output["sigma"])
+            else:
+                # use a constant
+                self.dictOfRVGs[key] = RVGs.Constant(value=0)
+
+    def get_sample(self, multiplier_name, rng):
+        """
+        :param multiplier_name: name of the multiplier to get a sample for
+        :param rng: random number generator
+        :return: a sample from the distribution of the multiplier specified
+        """
+        return self.dictOfRVGs[multiplier_name].sample(rng)
 
 
 class ParamGenerator:
@@ -104,25 +121,64 @@ class ParamGenerator:
         # get BMI trajectories
         self.trajectories = T.get_trajectories()
 
+        # make dictionaries of RVGs for multipliers to adjust trajectories
+        self.multiplierRVGs = MultiplierParamRVGs(
+            dict_of_cost_parameters=Data.DICT_MULTIPLIERS
+        )
+
         # make dictionaries of RVGs for Bright Bodies cost items
         if intervention == D.Interventions.BRIGHT_BODIES:
             self.interventionCostParamRVGs = CostParamRVGs(
-                dict_of_cost_parameters=Data.DICT_COST_BB)
+                dict_of_cost_parameters=Data.DICT_COST_BB
+            )
 
         # make dictionaries of RVGs for Control cost items
         elif intervention == D.Interventions.CONTROL:
             self.interventionCostParamRVGs = CostParamRVGs(
-                dict_of_cost_parameters=Data.DICT_COST_CONTROL)
+                dict_of_cost_parameters=Data.DICT_COST_CONTROL
+            )
 
         # make dictionaries of RVGs for health care expenditure cost items
         self.hcExpenditureParamRVGs = CostParamRVGs(
-            dict_of_cost_parameters=Data.DICT_HC_EXP)
+            dict_of_cost_parameters=Data.DICT_HC_EXP
+        )
 
     def get_new_parameters(self, rng):
 
         param = Parameters(trajectories=self.trajectories,
                            intervention=self.intervention,
                            maintenance_scenario=self.maintenance_scenario)
+
+        # find multipliers to adjust trajectories
+        m_bb1 = self.multiplierRVGs.get_sample(multiplier_name='BB Year 1', rng=rng)
+        m_bb2 = self.multiplierRVGs.get_sample(multiplier_name='BB Year 2', rng=rng)
+        m_control = self.multiplierRVGs.get_sample(multiplier_name='Control', rng=rng)
+
+        # find multipliers to adjust BMI trajectories under the Bright Bodies intervention
+        if self.intervention == D.Interventions.BRIGHT_BODIES:
+
+            param.interventionMultipliers = [1.0, m_bb1, m_bb2]
+
+            if self.maintenance_scenario == D.EffectMaintenance.FULL:
+                for i in range(int(D.SIM_DURATION)):
+                    param.interventionMultipliers.append(m_bb2)
+
+            elif self.maintenance_scenario == D.EffectMaintenance.NONE:
+                for i in range(int(D.SIM_DURATION)):
+                    param.interventionMultipliers.append(m_control)
+
+            elif self.maintenance_scenario == D.EffectMaintenance.DEPREC:
+                deprec_difference = m_control - m_bb2
+                deprec_value = deprec_difference / 8
+                for i in range(int(D.SIM_DURATION)):
+                    deprec_multiplier = m_bb2 + (deprec_value * i)
+                    param.interventionMultipliers.append(deprec_multiplier)
+
+        # find multipliers to adjust BMI trajectories under the Control
+        else:
+            param.interventionMultipliers = [1.0]
+            for i in range(10):
+                param.interventionMultipliers.append(m_control)
 
         # sample health care expenditure items
         param.costAbove95thP = self.hcExpenditureParamRVGs.get_sample(
