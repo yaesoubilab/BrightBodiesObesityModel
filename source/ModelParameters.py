@@ -39,77 +39,54 @@ class Parameters:
         self.interventionMultipliers = [] # multipliers to adjust BMI trajectories
 
 
-class CostParamRVGs:
-    # class to contain the random variate generators of cost parameters
+class ParamRVGs:
+    # class to contain the random variate generators for parameters
 
-    def __init__(self, dict_of_cost_parameters):
+    def __init__(self, dict_of_parameters, dist):
         """
-        :param dict_of_cost_parameters: dictionary of cost parameters
+        :param dict_of_parameters: dictionary of parameters
+        :param dist: (string) distribution assumed for all parameters ('gamma' or 'lognormal')
         """
 
         self.dictOfRVGs = {}
-        for key, mean_stdev in dict_of_cost_parameters.items():
+        for key, mean_stdev in dict_of_parameters.items():
 
-            # fit a gamma distribution (only if mean > 0)
-            if mean_stdev[0] > 0:
-                fit_output = RVGs.Gamma.fit_mm(mean=mean_stdev[0], st_dev=mean_stdev[1])
-                # store the gamma RVG
-                self.dictOfRVGs[key] = RVGs.Gamma(a=fit_output["a"],
-                                                  loc=0,
-                                                  scale=fit_output["scale"])
+            # fit a distribution (only if st_dev > 0)
+            if mean_stdev[1] > 0:
+                if dist == 'gamma':
+                    fit_output = RVGs.Gamma.fit_mm(mean=mean_stdev[0], st_dev=mean_stdev[1])
+                    # store the gamma RVG
+                    self.dictOfRVGs[key] = RVGs.Gamma(a=fit_output["a"],
+                                                      loc=0,
+                                                      scale=fit_output["scale"])
+                elif dist == 'lognormal':
+                    fit_output = RVGs.LogNormal.fit_mm(mean=mean_stdev[0], st_dev=mean_stdev[1])
+                    # store the log-normal RVG
+                    self.dictOfRVGs[key] = RVGs.LogNormal(mu=fit_output["mu"],
+                                                          loc=0,
+                                                          sigma=fit_output["sigma"])
             else:
-                # use a constant
-                self.dictOfRVGs[key] = RVGs.Constant(value=0)
+                # use a constant distribution
+                self.dictOfRVGs[key] = RVGs.Constant(value=mean_stdev[0])
 
-    def get_sample(self, cost_item_name, rng):
+    def get_sample(self, param_name, rng):
         """
-        :param cost_item_name: name of the cost item to get a sample for
+        :param param_name: name of the parameter to get a sample for
         :param rng: random number generator
-        :return: a sample from the distribution of the cost item specified
+        :return: a sample from the distribution of the assumed distribution
         """
-        return self.dictOfRVGs[cost_item_name].sample(rng)
+        return self.dictOfRVGs[param_name].sample(rng)
 
     def get_total(self, rng):
         """
         :param rng: random number generator
-        :return: sum of samples from all cost items
+        :return: sum of samples from all parameters
         """
         total = 0
         for key, rvg in self.dictOfRVGs.items():
             total += rvg.sample(rng)
 
         return total
-
-
-class MultiplierParamRVGs:
-    # class to contain the random variate generators of multiplier parameters to adjust BMI trajectories
-
-    def __init__(self, dict_of_cost_parameters):
-        """
-        :param dict_of_cost_parameters: dictionary of cost parameters
-        """
-
-        self.dictOfRVGs = {}
-        for key, mean_stdev in dict_of_cost_parameters.items():
-
-            # fit a log-normal distribution (only if mean > 0)
-            if mean_stdev[0] > 0:
-                fit_output = RVGs.LogNormal.fit_mm(mean=mean_stdev[0], st_dev=mean_stdev[1])
-                # store the log-normal RVG
-                self.dictOfRVGs[key] = RVGs.LogNormal(mu=fit_output["mu"],
-                                                      loc=0,
-                                                      sigma=fit_output["sigma"])
-            else:
-                # use a constant
-                self.dictOfRVGs[key] = RVGs.Constant(value=0)
-
-    def get_sample(self, multiplier_name, rng):
-        """
-        :param multiplier_name: name of the multiplier to get a sample for
-        :param rng: random number generator
-        :return: a sample from the distribution of the multiplier specified
-        """
-        return self.dictOfRVGs[multiplier_name].sample(rng)
 
 
 class ParamGenerator:
@@ -122,25 +99,29 @@ class ParamGenerator:
         self.trajectories = T.get_trajectories()
 
         # make dictionaries of RVGs for multipliers to adjust trajectories
-        self.multiplierRVGs = MultiplierParamRVGs(
-            dict_of_cost_parameters=Data.DICT_MULTIPLIERS
+        self.multiplierRVGs = ParamRVGs(
+            dict_of_parameters=Data.DICT_MULTIPLIERS,
+            dist='lognormal'
         )
 
         # make dictionaries of RVGs for Bright Bodies cost items
         if intervention == D.Interventions.BRIGHT_BODIES:
-            self.interventionCostParamRVGs = CostParamRVGs(
-                dict_of_cost_parameters=Data.DICT_COST_BB
+            self.interventionCostParamRVGs = ParamRVGs(
+                dict_of_parameters=Data.DICT_COST_BB,
+                dist='gamma'
             )
 
         # make dictionaries of RVGs for Control cost items
         elif intervention == D.Interventions.CONTROL:
-            self.interventionCostParamRVGs = CostParamRVGs(
-                dict_of_cost_parameters=Data.DICT_COST_CONTROL
+            self.interventionCostParamRVGs = ParamRVGs(
+                dict_of_parameters=Data.DICT_COST_CONTROL,
+                dist='gamma'
             )
 
         # make dictionaries of RVGs for health care expenditure cost items
-        self.hcExpenditureParamRVGs = CostParamRVGs(
-            dict_of_cost_parameters=Data.DICT_HC_EXP
+        self.hcExpenditureParamRVGs = ParamRVGs(
+            dict_of_parameters=Data.DICT_HC_EXP,
+            dist='gamma'
         )
 
     def get_new_parameters(self, rng):
@@ -150,9 +131,9 @@ class ParamGenerator:
                            maintenance_scenario=self.maintenance_scenario)
 
         # find multipliers to adjust trajectories
-        m_bb1 = self.multiplierRVGs.get_sample(multiplier_name='BB Year 1', rng=rng)
-        m_bb2 = self.multiplierRVGs.get_sample(multiplier_name='BB Year 2', rng=rng)
-        m_control = self.multiplierRVGs.get_sample(multiplier_name='Control', rng=rng)
+        m_bb1 = self.multiplierRVGs.get_sample(param_name='BB Year 1', rng=rng)
+        m_bb2 = self.multiplierRVGs.get_sample(param_name='BB Year 2', rng=rng)
+        m_control = self.multiplierRVGs.get_sample(param_name='Control', rng=rng)
 
         # find multipliers to adjust BMI trajectories under the Bright Bodies intervention
         if self.intervention == D.Interventions.BRIGHT_BODIES:
@@ -182,11 +163,11 @@ class ParamGenerator:
 
         # sample health care expenditure items
         param.costAbove95thP = self.hcExpenditureParamRVGs.get_sample(
-            cost_item_name='<18 years, >95th %ile', rng=rng)
+            param_name='<18 years, >95th %ile', rng=rng)
         param.costBelow95thP = self.hcExpenditureParamRVGs.get_sample(
-            cost_item_name='<18 years, <95th %ile', rng=rng)
+            param_name='<18 years, <95th %ile', rng=rng)
         param.costPerUnitBMIAdultP = self.hcExpenditureParamRVGs.get_sample(
-            cost_item_name='>18 years', rng=rng)
+            param_name='>18 years', rng=rng)
         # adjust for inflation
         adj_factor = (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_BB_STUDY)
         param.costAbove95thP *= adj_factor
