@@ -5,7 +5,7 @@ import numpy
 import matplotlib.pyplot as plt
 import SimPy.StatisticalClasses as Stat
 from SimPy.Plots import PopulationPyramids as Pyr
-import source.SupportData as Data
+import source.Data as Data
 
 
 def plot_validation_new(sim_outcomes_BB, sim_outcomes_CC):
@@ -282,7 +282,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     # do CBA
     CBA = Econ.CBA(
         strategies=[clinical_control_strategy, bright_bodies_strategy],
-        wtp_range=[0, 1000],
+        wtp_range=[0, 5000],
         if_paired=True,
         health_measure='d'
     )

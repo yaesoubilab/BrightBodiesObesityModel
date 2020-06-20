@@ -1,9 +1,11 @@
-# COSTING OF BB/CONTROL: Original Data
+
+YEAR_BB_STUDY = 2007
+YEAR_HCEXP_STUDY = 2010
 
 # dictionary of cost items for Bright Bodies
 # each element is a list of [mean, stDev]
 DICT_COST_BB = {
-    'Exercise physiologist': [9592.00, 0.1*9592.00],
+    'Exercise physiologist': [9592.00, 0.1*9592.00, 2007],
     'Games and equipment': [1900.00, 0.1*1900.00],
     'Motivational tools': [240.00, 0.1 * 240.00],
     'Printed material': [25.00, 0.1 * 25.00],
@@ -43,68 +45,53 @@ DICT_HC_EXP = {
     '>18 years': [197, 197*0.1]
 }
 
-# INTERVENTION COSTS of BRIGHT BODIES (detailed)
 
-# Exercise Sessions
-exercise_physiologist = 9592.00
-games_equipment = 1900.00
-motivational_tools = 240.00
-printed_materials = 25.00
-gym_room_utilities = 0.00  # note: provided at no charge for BB
-first_aid_kit = 150.00
+# for Bright Bodies (8-16 y/o)
+# use to initialize cohort
+age_sex_dist = [
+    [8, 0, 0.055519863],   # 8, male
+    [8, 1, 0.053217689],   # 8, female
+    [9, 0, 0.055519863],   # 9, male
+    [9, 1, 0.053217689],   # 9, female
+    [10, 0, 0.056804797],  # 10, male
+    [10, 1, 0.054449084],  # 10, female
+    [11, 0, 0.056804798],  # 11, male
+    [11, 1, 0.054449084],  # 11, female
+    [12, 0, 0.056804797],  # 12, male
+    [12, 1, 0.054449084],  # 12, female
+    [13, 0, 0.056804797],  # 13, male
+    [13, 1, 0.054449084],  # 13, female
+    [14, 0, 0.056804797],  # 14, male
+    [14, 1, 0.054449084],  # 14, female
+    [15, 0, 0.057822037],  # 15, male
+    [15, 1, 0.055305708],  # 15, female
+    [16, 0, 0.057822037],  # 16, male
+    [16, 1, 0.055305708]   # 16, female
+]
 
-# Nutrition/Behavior Modification Sessions
-registered_dietitian = 6805.00
-social_worker = 1200.00
-educational_tools = 1350.00
-classroom_utilities = 0.00  # note: provided at no charge for BB
-
-# Administration
-exercise_physiologist_admin = 6990.00
-registered_dietitian_admin = 16376.00
-
-# Weigh-Ins (before each session)
-technician = 1200.00
-body_fat_analyzer_scale = 700.00
-stadiometer = 100.00
-
-# Medical Director
-medical_consultation = 5100.00
-
-
-# INTERVENTIONS COSTS of CLINICAL CONTROL
-
-# Nurse Visit and Follow Up
-nurse_practitioner = 11686.00
-
-# Nutrition Visit and Follow Up
-registered_dietitian_cc = 6329.00
-
-# Behavioral Counseling Visit and Follow Up
-social_worker_cc = 6460.00
-
-# Administration
-dept_clinical_secretary = 834.00
-clinic_secretary = 1669.00
-typing = 2504.00
-
-# Weigh Ins + Labs
-lab_technician = 1408.00
-
-# Medical Director Visit and Follow Up
-medical_consultation_cc = 10256.00
-
-# Rent Space/Utilities + Cleaning Service + Clinic Equipment/Supplies
-rent_space_utilities = 3000.00
-cleaning_service = 885.00
-clinic_equipment_supplies = 2900.00
-
-
-# ATTRIBUTABLE HC EXPENDITURE: generate distributions
-
-# <18 years, >95th %ile
-cost_above_95th = 220
-# <18 years, <95th %ile
-cost_below_95th = 180
-# >18 years
-cost_per_unit_bmi_above_95th_adult = 197
+# bmi cut offs
+bmi_95th_cut_offs = [
+    # age, sex, bmi_cutoff
+    [8, 0, 20.0],   # 8, male
+    [8, 1, 20.6],   # 8, female
+    [9, 0, 21.1],   # 9, male
+    [9, 1, 21.8],   # 9, female
+    [10, 0, 22.1],  # 10, male
+    [10, 1, 22.9],  # 10, female
+    [11, 0, 23.2],  # 11, male
+    [11, 1, 24.1],  # 11, female
+    [12, 0, 24.2],  # 12, male
+    [12, 1, 25.2],  # 12, female
+    [13, 0, 25.2],  # 13, male
+    [13, 1, 26.2],  # 13, female
+    [14, 0, 26.0],  # 14, male
+    [14, 1, 27.2],  # 14, female
+    [15, 0, 26.8],  # 15, male
+    [15, 1, 28.1],  # 15, female
+    [16, 0, 27.5],  # 16, male
+    [16, 1, 28.9],   # 16, female
+    [17, 0, 28.2],  # 15, male
+    [17, 1, 29.6],  # 15, female
+    [18, 0, 30],  # 15, male
+    [18, 1, 30]  # 15, female
+]
