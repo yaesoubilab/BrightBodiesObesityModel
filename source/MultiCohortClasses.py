@@ -1,9 +1,10 @@
-from source.ModelEntities import Cohort
-import SimPy.RandomVariateGenerators as RVGs
-import InputData as D
-from source.ModelParameters import ParamGenerator
 import multiprocessing as mp
+
+import InputData as D
+import SimPy.RandomVariateGenerators as RVGs
 import SimPy.StatisticalClasses as Stat
+from source.ModelEntities import Cohort
+from source.ModelParameters import ParamGenerator
 
 
 class MultiCohort:
@@ -67,6 +68,9 @@ class MultiCohort:
         self.multiSimOutputs.calculate_summary_stats()
 
     def __populate_parameter_sets(self, intervention, maintenance_scenario):
+        """
+        populates parameters for the specified intervention and effect maintenance assumption
+        """
 
         # create a parameter generator
         param_generator = ParamGenerator(intervention=intervention,
@@ -145,35 +149,14 @@ class MultiSimOutputs:
         self.cohortHealthCareExpenditure.append(cohort_hc_expenditure)
         self.aveAnnualIndividualHCExpenditure.append(cohort_hc_expenditure/D.POP_SIZE/D.SIM_DURATION)
 
-        # cohort_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
-        # # average cost per person (of intervention/control)
-        # average_intervention_cost_per_person = cohort_intervention_cost/D.POP_SIZE
-        # average_expenditure_per_person = cohort_expenditure/D.POP_SIZE
-        #
-        #
-        # # EXPENDITURE
-        #
-        # # total expenditure over 10 years (for cohort) ~700,000
-        # cohort_10yr_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
-        # # average expenditure per year (over 10 years) ~70,000
-        # cohort_avg_expenditure = cohort_10yr_expenditure/D.SIM_DURATION
-        # # total expenditure per person over 10 years ~7700
-        # individual_10yr_expenditure = cohort_10yr_expenditure/D.N_CHILDREN_BB
-        # # average expenditure per year PER PERSON (over 10 years) ~770
-        # individual_avg_expenditure = cohort_avg_expenditure/D.N_CHILDREN_BB
-        # # store annual average individual expenditure
-        # self.aveAnnualIndividualHCExpenditure.append(individual_avg_expenditure)
-        # # store total expenditure of cohort for 10 years
-        # self.cohortHealthCareExpenditure.append(cohort_10yr_expenditure)
-        # # store individual expenditure over 10 years
-        # self.individualTenYearExpenditure.append(individual_10yr_expenditure)
-
     def calculate_summary_stats(self):
 
-        self.statEffect = Stat.SummaryStat(name='', data=self.effects)
-        self.statCohortCost = Stat.SummaryStat(name='', data=self.cohortCosts)
-        self.statCohortInterventionCost = Stat.SummaryStat(name='', data=self.cohortInterventionCosts)
-        self.statCohortHCExpenditure = Stat.SummaryStat(name='', data=self.cohortHealthCareExpenditure)
+        self.statEffect = Stat.SummaryStat(name='Effect', data=self.effects)
+        self.statCohortCost = Stat.SummaryStat(name='Cohort cost', data=self.cohortCosts)
+        self.statCohortInterventionCost = Stat.SummaryStat(
+            name='Cohort intervention cost', data=self.cohortInterventionCosts)
+        self.statCohortHCExpenditure = Stat.SummaryStat(
+            name='Cohort health care expenditure', data=self.cohortHealthCareExpenditure)
 
     def get_mean_interval_change_in_bmi(self, year, deci=None):
         """

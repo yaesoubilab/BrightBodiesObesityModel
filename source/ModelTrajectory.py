@@ -1,6 +1,6 @@
+import SimPy.DataFrames as df
 from SimPy import InOutFunctions as InOutSupport
 from SimPy import RandomVariateGenerators as RVGs
-import SimPy.DataFrames as df
 
 
 class SetOfTrajectories:

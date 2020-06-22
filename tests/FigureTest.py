@@ -2,8 +2,8 @@
 # to create figure showing BMI differences between control/bb in model
 # compare to RCT
 # import plotting library
-import matplotlib.pyplot as plt
 import matplotlib.patches as patch
+import matplotlib.pyplot as plt
 
 # control_diffs = (2.0, 3.5)
 # bb_diffs = (2.5, 4.0)

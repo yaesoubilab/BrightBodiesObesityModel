@@ -1,10 +1,11 @@
-import SimPy.DiscreteEventSim as SimCls
-import SimPy.SimulationSupport as Sim
-import SimPy.RandomVariateGenerators as RVGs
-import InputData as D
-from source import ModelOutputs as O, ModelEvents as E
-from SimPy.DataFrames import Pyramid
 from math import floor
+
+import InputData as D
+import SimPy.DiscreteEventSim as SimCls
+import SimPy.RandomVariateGenerators as RVGs
+import SimPy.SimulationSupport as Sim
+from SimPy.DataFrames import Pyramid
+from source import ModelOutputs as O, ModelEvents as E
 
 
 class Individual:
@@ -84,14 +85,16 @@ class Cohort:
                               individual=self,
                               cohort=self))
 
-        # schedule BMI survey at times 0, 1, 2, ..., 10
+        # schedule BMI survey each year
+        # survey right after initialization
         self.simCal.add_event(
             event=E.BMISurvey(time=self.params.simInitialDuration,
                               individual=self,
                               cohort=self))
-        for t in range(sim_duration):
+        # survey at years 1, 2, ...
+        for t in range(1, sim_duration):
             self.simCal.add_event(
-                event=E.BMISurvey(time=t + 1,
+                event=E.BMISurvey(time=t,
                                   individual=self,
                                   cohort=self))
 

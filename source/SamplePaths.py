@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-import numpy as np
-from SimPy.SamplePathClasses import *
-import SimPy.Plots.FigSupport as Fig
 from matplotlib import collections as matcoll
+
+import SimPy.Plots.FigSupport as Fig
+from SimPy.SamplePathClasses import *
 
 
 def plot_sample_path(sample_path,
