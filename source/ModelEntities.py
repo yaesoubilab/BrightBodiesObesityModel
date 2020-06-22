@@ -92,7 +92,7 @@ class Cohort:
                               individual=self,
                               cohort=self))
         # survey at years 1, 2, ...
-        for t in range(1, sim_duration):
+        for t in range(1, sim_duration+1):
             self.simCal.add_event(
                 event=E.BMISurvey(time=t,
                                   individual=self,
