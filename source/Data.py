@@ -49,6 +49,7 @@ DICT_COST_CONTROL = {
     'Clinic equipment and supplies': [2900.00, 0.1*2900.00]
 }
 
+# TODO: Sydney, do these studies report the confidence interval of the estimated cost?
 DICT_HC_EXP = {
     '<18 years, >95th %ile': [220, 0.1*220],
     '<18 years, <95th %ile': [180, 0.1*180],

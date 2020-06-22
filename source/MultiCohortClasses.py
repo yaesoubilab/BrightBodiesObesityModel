@@ -155,7 +155,7 @@ class MultiSimOutputs:
         self.statCohortInterventionCost = Stat.SummaryStat(
             name='Cohort intervention cost', data=self.cohortInterventionCosts)
         self.statCohortHCExpenditure = Stat.SummaryStat(
-            name='Cohort health care expendtirue', data=self.cohortHealthCareExpenditure)
+            name='Cohort health care expenditure', data=self.cohortHealthCareExpenditure)
 
     def get_mean_interval_change_in_bmi(self, year, deci=None):
         """
