@@ -85,14 +85,16 @@ class Cohort:
                               individual=self,
                               cohort=self))
 
-        # schedule BMI survey at times 0, 1, 2, ..., 10
+        # schedule BMI survey each year
+        # survey right after initialization
         self.simCal.add_event(
             event=E.BMISurvey(time=self.params.simInitialDuration,
                               individual=self,
                               cohort=self))
-        for t in range(sim_duration):
+        # survey at years 1, 2, ...
+        for t in range(1, sim_duration):
             self.simCal.add_event(
-                event=E.BMISurvey(time=t + 1,
+                event=E.BMISurvey(time=t,
                                   individual=self,
                                   cohort=self))
 

@@ -15,7 +15,7 @@ DICT_MULTIPLIERS = {
 # dictionary of cost items for Bright Bodies
 # each element is a list of [mean, stDev]
 DICT_COST_BB = {
-    'Exercise physiologist': [9592.00, 0.1*9592.00, 2007],
+    'Exercise physiologist': [9592.00, 0.1*9592.00],
     'Games and equipment': [1900.00, 0.1*1900.00],
     'Motivational tools': [240.00, 0.1 * 240.00],
     'Printed material': [25.00, 0.1 * 25.00],
