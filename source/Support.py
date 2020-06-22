@@ -222,7 +222,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         alpha=0.05,
         cost_digits=2,
         effect_digits=2,
-        icer_digits=2)
+        icer_digits=2,
+        file_name='analysis/CETable.csv')
 
     # do CBA
     CBA = Econ.CBA(
