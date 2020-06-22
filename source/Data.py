@@ -106,3 +106,13 @@ bmi_95th_cut_offs = [
     [18, 0, 30],  # 15, male
     [18, 1, 30]  # 15, female
 ]
+
+# Yearly difference in BMI under control and bright bodies
+# TODO: Sydney I think LB and UB here are not lower bound and upper bounds but the error size.
+#   would you please double check?
+YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
+YEARLY_DIFF_BMI_CONTROL_LB = [.7, .8]
+YEARLY_DIFF_BMI_CONTROL_UB = [.6, .8]
+YEARLY_DIFF_BMI_BB = [-1.8, 0.9]
+YEARLY_DIFF_BMI_BB_LB = [.8, 1.0]
+YEARLY_DIFF_BMI_BB_UB = [.9, 1.0]

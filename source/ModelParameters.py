@@ -7,11 +7,10 @@ import source.ModelTrajectory as T
 
 class Parameters:
     # class to contain the parameters of the model
-    def __init__(self, trajectories, intervention, maintenance_scenario):
+    def __init__(self, trajectories, intervention):
         """
         :param trajectories: (DataFrameOfObjects) of BMI trajectories (by sex and age)
         :param intervention: which intervention to model
-        :param maintenance_scenario: effect maintenance scenario
         """
 
         self.trajectories = trajectories
@@ -127,8 +126,7 @@ class ParamGenerator:
     def get_new_parameters(self, rng):
 
         param = Parameters(trajectories=self.trajectories,
-                           intervention=self.intervention,
-                           maintenance_scenario=self.maintenance_scenario)
+                           intervention=self.intervention)
 
         # find multipliers to adjust trajectories
         m_bb1 = self.multiplierRVGs.get_sample(param_name='BB Year 1', rng=rng)
