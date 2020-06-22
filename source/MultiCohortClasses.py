@@ -1,9 +1,10 @@
-from source.ModelEntities import Cohort
-import SimPy.RandomVariateGenerators as RVGs
-import InputData as D
-from source.ModelParameters import ParamGenerator
 import multiprocessing as mp
+
+import InputData as D
+import SimPy.RandomVariateGenerators as RVGs
 import SimPy.StatisticalClasses as Stat
+from source.ModelEntities import Cohort
+from source.ModelParameters import ParamGenerator
 
 
 class MultiCohort:

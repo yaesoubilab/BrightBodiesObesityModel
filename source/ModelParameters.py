@@ -1,8 +1,8 @@
-import SimPy.DataFrames as df
-from SimPy import RandomVariateGenerators as RVGs
 import InputData as D
+import SimPy.DataFrames as df
 import source.Data as Data
 import source.ModelTrajectory as T
+from SimPy import RandomVariateGenerators as RVGs
 
 
 class Parameters:
@@ -147,6 +147,9 @@ class ParamGenerator:
                     param.interventionMultipliers.append(m_control)
 
             elif self.maintenance_scenario == D.EffectMaintenance.DEPREC:
+                # TODO: Sydney, I think there is a small bug here.
+                #   if you run 'compare alternative' under the deprc scenario, I would expect to see
+                #   that all blue lines start declining from year 2 and reaches 0 at year 10.
                 deprec_difference = m_control - m_bb2
                 deprec_value = deprec_difference / 8
                 for i in range(int(D.SIM_DURATION)):

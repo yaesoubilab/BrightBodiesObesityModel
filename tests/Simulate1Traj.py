@@ -1,6 +1,6 @@
 import InputData as D
-from source import ModelParameters as P, ModelEntities as Cls
 import SimPy.Plots.SamplePaths as Path
+from source import ModelParameters as P, ModelEntities as Cls
 
 # create a cohort with parameters
 myCohort = Cls.Cohort(id=1, parameters=P.Parameters())

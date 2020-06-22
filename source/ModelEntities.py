@@ -1,10 +1,11 @@
-import SimPy.DiscreteEventSim as SimCls
-import SimPy.SimulationSupport as Sim
-import SimPy.RandomVariateGenerators as RVGs
-import InputData as D
-from source import ModelOutputs as O, ModelEvents as E
-from SimPy.DataFrames import Pyramid
 from math import floor
+
+import InputData as D
+import SimPy.DiscreteEventSim as SimCls
+import SimPy.RandomVariateGenerators as RVGs
+import SimPy.SimulationSupport as Sim
+from SimPy.DataFrames import Pyramid
+from source import ModelOutputs as O, ModelEvents as E
 
 
 class Individual:

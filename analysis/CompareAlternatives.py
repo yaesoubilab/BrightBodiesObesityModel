@@ -1,11 +1,15 @@
+import os
+
 import InputData as D
 from source import Support, MultiCohortClasses as MultiCls, SamplePaths as MyPath
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-MAINTENANCE_EFFECT = D.EffectMaintenance.NONE
+MAINTENANCE_EFFECT = D.EffectMaintenance.DEPREC
 
+# change the working directory to the root directory
+os.chdir('../')
 
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(

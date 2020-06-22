@@ -1,11 +1,12 @@
-import SimPy.Plots.SamplePaths as Path
-import SimPy.EconEval as Econ
-import InputData as D
-import numpy
 import matplotlib.pyplot as plt
+import numpy
+
+import InputData as D
+import SimPy.EconEval as Econ
+import SimPy.Plots.SamplePaths as Path
 import SimPy.StatisticalClasses as Stat
-from SimPy.Plots import PopulationPyramids as Pyr
 import source.Data as Data
+from SimPy.Plots import PopulationPyramids as Pyr
 
 
 def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
