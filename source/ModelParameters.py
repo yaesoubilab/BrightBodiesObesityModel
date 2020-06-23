@@ -35,7 +35,7 @@ class Parameters:
         self.costAbove95thP = 0
         self.costBelow95thP = 0
         self.costPerUnitBMIAdultP = 0
-        self.interventionMultipliers = [] # multipliers to adjust BMI trajectories
+        self.interventionMultipliers = []  # multipliers to adjust BMI trajectories
 
 
 class ParamRVGs:
@@ -147,13 +147,10 @@ class ParamGenerator:
                     param.interventionMultipliers.append(m_control)
 
             elif self.maintenance_scenario == D.EffectMaintenance.DEPREC:
-                # TODO: Sydney, I think there is a small bug here.
-                #   if you run 'compare alternative' under the deprc scenario, I would expect to see
-                #   that all blue lines start declining from year 2 and reaches 0 at year 10.
                 deprec_difference = m_control - m_bb2
                 deprec_value = deprec_difference / 8
                 for i in range(int(D.SIM_DURATION)):
-                    deprec_multiplier = m_bb2 + (deprec_value * i)
+                    deprec_multiplier = m_bb2 + (deprec_value * (i+1))
                     param.interventionMultipliers.append(deprec_multiplier)
 
         # find multipliers to adjust BMI trajectories under the Control
@@ -170,15 +167,16 @@ class ParamGenerator:
         param.costPerUnitBMIAdultP = self.hcExpenditureParamRVGs.get_sample(
             param_name='>18 years', rng=rng)
         # adjust for inflation
-        adj_factor = (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_BB_STUDY)
-        param.costAbove95thP *= adj_factor
-        param.costBelow95thP *= adj_factor
-        param.costPerUnitBMIAdultP *= adj_factor
+        adj_factor_children = (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_HCEXP_STUDY_CHILDREN)
+        adj_factor_adults = (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_HCEXP_STUDY_ADULTS)
+        param.costAbove95thP *= adj_factor_children
+        param.costBelow95thP *= adj_factor_children
+        param.costPerUnitBMIAdultP *= adj_factor_adults
 
         # sample the cost of interventions
         total_intervention_cost = self.interventionCostParamRVGs.get_total(rng)
         # adjust to inflation
-        total_intervention_cost *= (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_HCEXP_STUDY)
+        total_intervention_cost *= (1+D.INFLATION)**(D.CURRENT_YEAR - Data.YEAR_BB_STUDY)
         # average cost per participants
         param.annualInterventionCost = total_intervention_cost/D.N_CHILDREN_BB
 

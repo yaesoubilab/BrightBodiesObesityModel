@@ -1,8 +1,8 @@
 
-# TODO: Sydney, are these years correct? I used these to inflate cost.
 # to inflate cost estimates
 YEAR_BB_STUDY = 2007
-YEAR_HCEXP_STUDY = 2010
+YEAR_HCEXP_STUDY_ADULTS = 2013
+YEAR_HCEXP_STUDY_CHILDREN = 2006
 
 # multipliers to adjust BMI trajectories
 DICT_MULTIPLIERS = {
@@ -108,11 +108,9 @@ bmi_95th_cut_offs = [
 ]
 
 # Yearly difference in BMI under control and bright bodies
-# TODO: Sydney I think LB and UB here are not lower bound and upper bounds but the error size.
-#   would you please double check?
 YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
-YEARLY_DIFF_BMI_CONTROL_LB = [.7, .8]
-YEARLY_DIFF_BMI_CONTROL_UB = [.6, .8]
+YEARLY_DIFF_BMI_CONTROL_LB = [.8, 1.0]
+YEARLY_DIFF_BMI_CONTROL_UB = [.9, 1.0]
 YEARLY_DIFF_BMI_BB = [-1.8, 0.9]
-YEARLY_DIFF_BMI_BB_LB = [.8, 1.0]
-YEARLY_DIFF_BMI_BB_UB = [.9, 1.0]
+YEARLY_DIFF_BMI_BB_LB = [.6, .8]
+YEARLY_DIFF_BMI_BB_UB = [.7, .8]

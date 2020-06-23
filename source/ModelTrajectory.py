@@ -27,7 +27,7 @@ def get_trajectories():
     # populate the data frame
     for sex in ['male', 'female']:
         for age in range(8, 17, 1):
-            file_name = 'csv_trajectories/{0}_{1}_o_f.csv'.format(sex, age)
+            file_name = 'csv_trajectories/{0}_{1}.csv'.format(sex, age)
             rows = InOutSupport.read_csv_rows(file_name=file_name,
                                               delimiter=',',
                                               if_ignore_first_row=True,
