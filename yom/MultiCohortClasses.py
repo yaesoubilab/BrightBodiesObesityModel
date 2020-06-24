@@ -1,31 +1,28 @@
 import multiprocessing as mp
 
-import InputData as D
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.StatisticalClasses as Stat
 from yom.ModelEntities import Cohort
-from yom.ModelParameters import ParamGenerator
 
 
 class MultiCohort:
     """ simulates multiple cohorts """
 
-    def __init__(self, ids, intervention, maintenance_scenario):
+    def __init__(self, ids, parameter_generator):
         """
         :param ids: (list) of ids for cohorts to simulate
-        :param intervention: intervention to simulate
-        :param maintenance_scenario: maintenance scenario to simulate
+        :param parameter_generator: an instance of ParamGenerator
         """
 
         self.ids = ids
+        self.inputs = parameter_generator.modelInputs
         self.param_sets = []  # list of parameter sets (for each cohort)
 
         # cohort outcomes
         self.multiSimOutputs = MultiSimOutputs()
 
         # create parameter sets
-        self.__populate_parameter_sets(intervention=intervention,
-                                       maintenance_scenario=maintenance_scenario)
+        self.__populate_parameter_sets(parameter_generator=parameter_generator)
 
     def simulate(self, sim_duration, if_run_in_parallel=False):
         """ simulates all cohorts
@@ -37,7 +34,7 @@ class MultiCohort:
             for i in range(len(self.ids)):
 
                 # create cohort
-                cohort = Cohort(id=self.ids[i], parameters=self.param_sets[i])
+                cohort = Cohort(id=self.ids[i], model_inputs=self.inputs, parameters=self.param_sets[i])
 
                 # simulate the cohort
                 cohort.simulate(sim_duration=sim_duration)
@@ -67,21 +64,17 @@ class MultiCohort:
         # calculate summary statistics
         self.multiSimOutputs.calculate_summary_stats()
 
-    def __populate_parameter_sets(self, intervention, maintenance_scenario):
+    def __populate_parameter_sets(self, parameter_generator):
         """
         populates parameters for the specified intervention and effect maintenance assumption
         """
-
-        # create a parameter generator
-        param_generator = ParamGenerator(intervention=intervention,
-                                         maintenance_scenario=maintenance_scenario)
 
         # create as many sets of parameters as the number of cohorts
         for i in range(len(self.ids)):
             # create new rng for each parameter set
             rng = RVGs.RNG(seed=i)
             # get and store new set of parameters
-            self.param_sets.append(param_generator.get_new_parameters(rng=rng))
+            self.param_sets.append(parameter_generator.get_new_parameters(rng=rng))
 
 
 class MultiSimOutputs:
@@ -145,9 +138,7 @@ class MultiSimOutputs:
         self.cohortInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts))
 
         # cohort health care expenditure
-        cohort_hc_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
-        self.cohortHealthCareExpenditure.append(cohort_hc_expenditure)
-        self.aveAnnualIndividualHCExpenditure.append(cohort_hc_expenditure/D.POP_SIZE/D.SIM_DURATION)
+        self.cohortHealthCareExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures))
 
     def calculate_summary_stats(self):
 

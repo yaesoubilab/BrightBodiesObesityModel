@@ -1,6 +1,4 @@
 from math import floor
-
-import InputData as D
 import SimPy.DiscreteEventSim as SimCls
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.SimulationSupport as Sim
@@ -34,24 +32,26 @@ class Individual:
 
 
 class Cohort:
-    def __init__(self, id, parameters):
+    def __init__(self, id, model_inputs, parameters):
         """ creates a cohort of individuals
         :param id: ID of this cohort
+        :param model_inputs: model inputs and settings
         :param parameters: parameters of this cohort
         """
 
         self.id = id
         self.rng = RVGs.RNG(seed=id)
+        self.inputs = model_inputs
         self.params = parameters
 
         self.individuals = []  # list of individuals
         self.simCal = SimCls.SimulationCalendar()  # simulation calendar
         # simulation outputs
-        self.simOutputs = O.SimOutputs(sim_cal=self.simCal, sim_rep=id, trace_on=D.TRACE_ON)
+        self.simOutputs = O.SimOutputs(sim_cal=self.simCal, sim_rep=id, trace_on=model_inputs.traceOn)
         # simulation trace
         self.trace = Sim.DiscreteEventSimTrace(sim_calendar=self.simCal,
-                                               if_should_trace=D.TRACE_ON,
-                                               deci=D.DECI)
+                                               if_should_trace=model_inputs.traceOn,
+                                               deci=model_inputs.deci)
 
     def __initialize(self, sim_duration):
         """ initialize the cohort
@@ -191,10 +191,10 @@ class Cohort:
         if age < 18:
             if individual.ifLessThan95th is False:
                 # annual HC expenditure for >95th (per individual)
-                hc_exp = self.params.costAbove95thP * ((1 + D.INFLATION) ** (2020 - 2008 + year_index))
+                hc_exp = self.params.costAbove95thP * ((1 + self.inputs.inflation) ** (2020 - 2008 + year_index))
             else:
                 # annual HC expenditure for <95th (per individual)
-                hc_exp = self.params.costBelow95thP * ((1 + D.INFLATION) ** (2020 - 2008 + year_index))
+                hc_exp = self.params.costBelow95thP * ((1 + self.inputs.inflation) ** (2020 - 2008 + year_index))
         else:
             # if less than 95th (which is 30)
             if individual.ifLessThan95th is True:
@@ -205,7 +205,7 @@ class Cohort:
                     hc_exp = 0
                 else:
                     hc_exp = bmi_unit_above_30 * (
-                            self.params.costPerUnitBMIAdultP * ((1 + D.INFLATION) ** (2020 - 2017)))
+                            self.params.costPerUnitBMIAdultP * ((1 + self.inputs.inflation) ** (2020 - 2017)))
 
         return hc_exp
 

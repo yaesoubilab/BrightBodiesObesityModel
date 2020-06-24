@@ -1,7 +1,7 @@
 import os
 
-import InputData as D
-from yom import Support, MultiCohortClasses as MultiCls, SamplePaths as MyPath
+from analysis import InputData as D
+from yom import OutputAnalysis, MultiCohortClasses as MultiCls, SamplePaths as MyPath
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
@@ -13,21 +13,21 @@ os.chdir('../')
 
 # for MultiCohort BRIGHT BODIES
 multiCohortBB = MultiCls.MultiCohort(
-    ids=range(D.N_COHORTS),
+    ids=range(D.nCohorts),
     intervention=D.Interventions.BRIGHT_BODIES,
     maintenance_scenario=MAINTENANCE_EFFECT
 )
 # simulate these cohorts (BB)
-multiCohortBB.simulate(D.SIM_DURATION)
+multiCohortBB.simulate(D.simDuration)
 
 # for MultiCohort CLINICAL CONTROL
 multiCohortCC = MultiCls.MultiCohort(
-    ids=range(D.N_COHORTS),
+    ids=range(D.nCohorts),
     intervention=D.Interventions.CONTROL,
     maintenance_scenario=MAINTENANCE_EFFECT
 )
 # simulate these cohorts (CC)
-multiCohortCC.simulate(D.SIM_DURATION)
+multiCohortCC.simulate(D.simDuration)
 
 # COMPARATIVE: average BMIs over 10 years
 MyPath.plot_sets_of_sample_paths(
@@ -52,14 +52,14 @@ MyPath.plot_sets_of_sample_paths(
 
 
 # plot RCT validation: BMI differences (year 0/1 and 1/2)
-Support.plot_validation(sim_outcomes_control=multiCohortCC.multiSimOutputs,
-                        sim_outcomes_bb=multiCohortBB.multiSimOutputs)
+OutputAnalysis.plot_validation(sim_outcomes_control=multiCohortCC.multiSimOutputs,
+                               sim_outcomes_bb=multiCohortBB.multiSimOutputs)
 
 # report cost-effectiveness analysis
-Support.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+OutputAnalysis.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                          sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-Support.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                              sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                              maintenance_effect=MAINTENANCE_EFFECT)
+OutputAnalysis.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                     sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                     maintenance_effect=MAINTENANCE_EFFECT)
 

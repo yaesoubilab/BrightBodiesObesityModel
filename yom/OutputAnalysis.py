@@ -1,11 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy
 
-import InputData as D
 import SimPy.EconEval as Econ
 import SimPy.Plots.SamplePaths as Path
 import SimPy.StatisticalClasses as Stat
-import yom.Data as Data
+import support.Inputs as Data
 from SimPy.Plots import PopulationPyramids as Pyr
 
 
@@ -16,7 +15,7 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
     year_one_vs_zero = []
     year_two_vs_one = []
 
-    for cohortID in range(D.N_COHORTS):
+    for cohortID in range(len(sim_outcomes.pathsOfCohortAveBMI)):
         bmi_values = sim_outcomes.pathsOfCohortAveBMI[cohortID].get_values()
 
         # year 1 minus year 0
@@ -115,7 +114,7 @@ def print_comparative_outcomes(sim_outcomes_BB, sim_outcomes_CC):
     # SAVINGS: find differences in individual expenditure (over 10 years) between interventions
     list_of_individual_expenditure_diffs = []
 
-    for cohortID in range(D.N_COHORTS):
+    for cohortID in range(D.nCohorts):
         values_cc = sim_outcomes_CC.pathsOfCohortAveBMI[cohortID].get_values()
         values_bb = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
         diff_BMI = numpy.array(values_cc) - numpy.array(values_bb)
@@ -245,7 +244,7 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
 
     # find difference in yearly average BMI between interventions
     diff_yearly_ave_bmis = []
-    for cohortID in range(D.N_COHORTS):
+    for cohortID in range(D.nCohorts):
         bmis_cc = sim_outcomes_CC.pathsOfCohortAveBMI[cohortID].get_values()
         bmis_bb = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
         diff_yearly_ave_bmis.append(numpy.array(bmis_cc) - numpy.array(bmis_bb))
@@ -260,7 +259,7 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
-        ax.plot(range(D.SIM_DURATION+1), ys, color='blue', alpha=0.2, label='Model')
+        ax.plot(range(D.simDuration + 1), ys, color='blue', alpha=0.2, label='Model')
 
     # bright bodies data
     ax.scatter([.5, 1, 2], bb_ys, color='orange', label='Bright Bodies RCT')
@@ -286,18 +285,18 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     plt.show()
 
 
-def generate_simulation_outputs(simulated_multi_cohort):
+def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist):
 
     # sample paths for population size
     Path.plot_sample_paths(
         sample_paths=simulated_multi_cohort.multiSimOutputs.pathsOfCohortPopSize,
         title='Population Size',
-        y_range=[0, 1.1 * D.POP_SIZE],
+        #y_range=[0, 1.1 * len(D.],
         x_label='Years'
     )
 
     # population pyramid at initialization
-    Pyr.plot_pyramids(observed_data=Data.age_sex_dist,
+    Pyr.plot_pyramids(observed_data=age_sex_dist,
                       simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
                       fig_size=(6, 4),
                       x_lim=10,

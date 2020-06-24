@@ -1,6 +1,4 @@
 from enum import Enum
-
-import InputData as D
 from SimPy.DiscreteEventSim import SimulationEvent as Event
 
 
@@ -25,10 +23,6 @@ class Birth(Event):
         self.individual = individual
         self.cohort = cohort
 
-        # trace
-        self.cohort.trace.add_message(
-            str(individual) + ' will be born at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
-
     def process(self, rng=None):
         """ processes birth of a new individual """
 
@@ -45,10 +39,6 @@ class BMISurvey(Event):
 
         self.individual = individual
         self.cohort = cohort
-
-        # trace
-        self.cohort.trace.add_message(
-            'Average BMI of ' + str(cohort) + ' was assessed at {t:.{deci}f}.'.format(t=time, deci=D.DECI))
 
     def process(self, rng=None):
         """ processes the population distribution test """
