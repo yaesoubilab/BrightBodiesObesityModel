@@ -1,7 +1,7 @@
 import os
 
 import InputData as D
-from source import Support, MultiCohortClasses as MultiCls, SamplePaths as MyPath
+from yom import Support, MultiCohortClasses as MultiCls, SamplePaths as MyPath
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 

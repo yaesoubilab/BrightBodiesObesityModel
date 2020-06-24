@@ -3,8 +3,8 @@ import multiprocessing as mp
 import InputData as D
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.StatisticalClasses as Stat
-from source.ModelEntities import Cohort
-from source.ModelParameters import ParamGenerator
+from yom.ModelEntities import Cohort
+from yom.ModelParameters import ParamGenerator
 
 
 class MultiCohort:

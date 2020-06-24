@@ -1,6 +1,6 @@
 import os
 import InputData as D
-from source import Support as S, MultiCohortClasses as MultiCls
+from yom import Support as S, MultiCohortClasses as MultiCls
 
 # SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
 INTERVENTION = D.Interventions.BRIGHT_BODIES

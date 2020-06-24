@@ -5,7 +5,7 @@ import InputData as D
 import SimPy.EconEval as Econ
 import SimPy.Plots.SamplePaths as Path
 import SimPy.StatisticalClasses as Stat
-import source.Data as Data
+import yom.Data as Data
 from SimPy.Plots import PopulationPyramids as Pyr
 
 

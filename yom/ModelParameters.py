@@ -1,7 +1,7 @@
 import InputData as D
 import SimPy.DataFrames as df
-import source.Data as Data
-import source.ModelTrajectory as T
+import yom.Data as Data
+import yom.ModelTrajectory as T
 from SimPy import RandomVariateGenerators as RVGs
 
 

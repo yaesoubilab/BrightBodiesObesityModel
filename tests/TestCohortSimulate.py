@@ -1,5 +1,5 @@
 import InputData as D
-from source import ModelParameters as P, ModelEntities as Cls
+from yom import ModelParameters as P, ModelEntities as Cls
 
 # Cohort
 cohortBrightBodies = Cls.Cohort(id=1,

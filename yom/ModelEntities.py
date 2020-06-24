@@ -5,7 +5,7 @@ import SimPy.DiscreteEventSim as SimCls
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.SimulationSupport as Sim
 from SimPy.DataFrames import Pyramid
-from source import ModelOutputs as O, ModelEvents as E
+from yom import ModelOutputs as O, ModelEvents as E
 
 
 class Individual:
