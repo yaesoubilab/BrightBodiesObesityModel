@@ -1,4 +1,5 @@
-from math import floor
+import math
+
 import SimPy.DiscreteEventSim as SimCls
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.SimulationSupport as Sim
@@ -144,7 +145,7 @@ class Cohort:
             if individual.ifAlive:
 
                 # year index
-                year_index = floor(self.simCal.time)
+                year_index = math.floor(self.simCal.time)
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 # note that the first element of a BMI trajectory is the id of the trajectory so we skip it
@@ -154,6 +155,7 @@ class Cohort:
 
                 # collect the cost of the intervention
                 # for the first and the second years we add the intervention cost
+                # TODO: add discounting
                 if year_index in (0, 1):
                     cohort_intervention_cost += self.params.annualInterventionCost
 
@@ -176,7 +178,7 @@ class Cohort:
         """
 
         # age of the individual at this simulation time
-        age = floor(individual.get_age(current_time=self.simCal.time))
+        age = math.floor(individual.get_age(current_time=self.simCal.time))
 
         # find the bmi 95th for this individual
         bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
@@ -187,6 +189,7 @@ class Cohort:
             individual.ifLessThan95th = False
 
         # ATTRIBUTABLE HEALTH CARE EXPENDITURES
+        # TODO: add discounting
         bmi_unit_above_30 = bmi - 30
         if age < 18:
             if individual.ifLessThan95th is False:

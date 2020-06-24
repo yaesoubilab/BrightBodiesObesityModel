@@ -1,9 +1,9 @@
 import os
-from support.ParameterGenerator import ParamGenerator
-import support.Inputs as I
-import yom.ModelInputs as yomI
+
+import bright_bodies_support.Inputs as I
 import yom.MultiCohortClasses as MultiCls
 import yom.OutputAnalysis as yomS
+from bright_bodies_support.ParameterGenerator import ParamGenerator
 
 # SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
 INTERVENTION = I.Interventions.BRIGHT_BODIES
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         ids=range(inputs.nCohorts),
         parameter_generator=ParamGenerator(
             intervention=INTERVENTION,
-            maintenance_scenario=EFFECT_MAINTENANCE.NONE,
+            maintenance_scenario=EFFECT_MAINTENANCE,
             model_inputs=inputs)
     )
     # simulate cohorts

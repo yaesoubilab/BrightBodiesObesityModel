@@ -1,7 +1,8 @@
+from enum import Enum
+
 import SimPy.DataFrames as df
 import SimPy.InOutFunctions as IO
 from SimPy import RandomVariateGenerators as RVGs
-from enum import Enum
 
 
 class Sex(Enum):
@@ -20,22 +21,22 @@ class SetOfTrajectories:
         return self.rows[i]
 
 
-def get_trajectories_grouped_by_sex_age():
+def get_trajectories_grouped_by_sex_age(csv_folder, age_min_max):
     """
+    :param csv_folder: folder (relative to the root) where csv files are located
+    :param age_min_max: (list) [min age, max age]
     :return: the list of BMI trajectories (grouped by sex and age) from the csv files
     """
 
-    # TODO: update so that it take the folder and min and max age
-
     # creating a data frame of trajectories
-    trajectories = df.DataFrameOfObjects(list_x_min=[8, 0],
-                                         list_x_max=[16, 1],
+    trajectories = df.DataFrameOfObjects(list_x_min=[age_min_max[0], 0],
+                                         list_x_max=[age_min_max[1], 1],
                                          list_x_delta=[1, 'int'])
 
     # populate the data frame
     for sex in ['male', 'female']:
-        for age in range(8, 17, 1):
-            file_name = 'csv_trajectories/{0}_{1}.csv'.format(sex, age)
+        for age in range(age_min_max[0], age_min_max[1]+1, 1):
+            file_name = csv_folder + '/{0}_{1}.csv'.format(sex, age)
             rows = IO.read_csv_rows(file_name=file_name,
                                     delimiter=',',
                                     if_ignore_first_row=True,
@@ -62,17 +63,19 @@ class Parameters:
         self.simInitialDuration = model_inputs.simInit
 
         # population distribution by age/sex for Bright Bodies (age 8 - 16)
-        # TODO: read min and max age from ageSexDist
+        min_age = model_inputs.ageSexDist[0][0]
+        max_age = model_inputs.ageSexDist[-1][0]
         self.ageSexDist = df.DataFrameWithEmpiricalDist(rows=model_inputs.ageSexDist,  # life table
-                                                        list_x_min=[8, 0],  # minimum values for age/sex groups
-                                                        list_x_max=[16, 1],  # maximum values for age/sex groups
+                                                        list_x_min=[min_age, 0],  # minimum values for age/sex groups
+                                                        list_x_max=[max_age, 1],  # maximum values for age/sex groups
                                                         list_x_delta=[1, 'int'])    # [age interval, sex categorical]
 
         # BMI 95th cut offs
-        # TODO: read min and max age from bmi95thCutOffs
+        min_age = model_inputs.bmi95thCutOffs[0][0]
+        max_age = model_inputs.bmi95thCutOffs[-1][0]
         self.bmi95thCutOffs = df.DataFrame(rows=model_inputs.bmi95thCutOffs,
-                                           list_x_min=[8, 0],  # minimum values for age/sex groups
-                                           list_x_max=[18, 1],  # maximum values for age/sex groups
+                                           list_x_min=[min_age, 0],  # minimum values for age/sex groups
+                                           list_x_max=[max_age, 1],  # maximum values for age/sex groups
                                            list_x_delta=[1, 'int'])  # [age interval, sex categorical]
 
         # cost parameters are determined later by a sample from specified probability distributions

@@ -1,4 +1,5 @@
 from enum import Enum
+import SimPy.StatisticalClasses as Stat
 
 
 class Interventions(Enum):
@@ -77,11 +78,15 @@ class ModelInputs:
             'Clinic equipment and supplies': [2900.00, 0.1 * 2900.00]
         }
 
-        # TODO: Sydney, do these studies report the confidence interval of the estimated cost?
+        # calculate the standard deviation of the estimated mean
+        # (note st_dev of the estimated mean = st_dev of observations / sqrt(n), which the standard error)
+        sd_dev_younger18_obese = Stat.get_sterr_from_half_length(confidence_interval=[30, 450], n=2812, alpha=0.05)
+        sd_dev_younger18_overweigth = Stat.get_sterr_from_half_length(confidence_interval=[30, 380], n=2832, alpha=0.05)
+
         self.dictHCExp = {
-            '<18 years, >95th %ile': [220, 0.1 * 220],
-            '<18 years, <95th %ile': [180, 0.1 * 180],
-            '>18 years': [197, 197 * 0.1]
+            '<18 years, >95th %ile': [220, sd_dev_younger18_obese],
+            '<18 years, <95th %ile': [180, sd_dev_younger18_overweigth],
+            '>18 years': [197, 43]
         }
 
         # to inflate cost estimates
@@ -139,13 +144,3 @@ class ModelInputs:
             [18, 0, 30],  # 15, male
             [18, 1, 30]  # 15, female
         ]
-
-
-# Yearly difference in BMI under control and bright bodies
-YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
-YEARLY_DIFF_BMI_CONTROL_LB = [.8, 1.0]
-YEARLY_DIFF_BMI_CONTROL_UB = [.9, 1.0]
-YEARLY_DIFF_BMI_BB = [-1.8, 0.9]
-YEARLY_DIFF_BMI_BB_LB = [.6, .8]
-YEARLY_DIFF_BMI_BB_UB = [.7, .8]
-

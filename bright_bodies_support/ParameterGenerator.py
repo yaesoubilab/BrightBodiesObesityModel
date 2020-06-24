@@ -1,5 +1,5 @@
+import bright_bodies_support.Inputs as I
 import yom.ModelInputs as yomI
-import support.Inputs as I
 
 
 class ParamGenerator:
@@ -16,7 +16,10 @@ class ParamGenerator:
         self.modelInputs = model_inputs
 
         # get BMI trajectories
-        self.trajectories = yomI.get_trajectories_grouped_by_sex_age()
+        self.trajectories = yomI.get_trajectories_grouped_by_sex_age(
+            csv_folder='csv_trajectories',
+            age_min_max=[model_inputs.ageSexDist[0][0], model_inputs.ageSexDist[-1][0]]
+        )
 
         # make dictionaries of RVGs for multipliers to adjust trajectories
         self.multiplierRVGs = yomI.ParamRVGs(
