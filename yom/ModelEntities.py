@@ -141,11 +141,13 @@ class Cohort:
         cohort_intervention_cost = 0  # cohort intervention costs at the current time
         cohort_hc_expenditure = 0  # cohort health care expenditures at the current time
 
+        # year index
+        year_index = math.floor(self.simCal.time)
+        # discount factor
+        discount_factor = math.pow(1 + self.inputs.discountRate, -year_index)
+
         for individual in self.individuals:
             if individual.ifAlive:
-
-                # year index
-                year_index = math.floor(self.simCal.time)
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
                 # note that the first element of a BMI trajectory is the id of the trajectory so we skip it
@@ -155,14 +157,13 @@ class Cohort:
 
                 # collect the cost of the intervention
                 # for the first and the second years we add the intervention cost
-                # TODO: add discounting
                 if year_index in (0, 1):
-                    cohort_intervention_cost += self.params.annualInterventionCost
+                    cohort_intervention_cost += self.params.annualInterventionCost * discount_factor
 
                 # collect the health care expenditure cost
                 cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual,
                                                                        bmi=individual_bmi,
-                                                                       year_index=year_index)
+                                                                       year_index=year_index) * discount_factor
 
         # store list of individual costs and health
         self.simOutputs.collect_costs_of_this_period(cohort_intervention_cost, cohort_hc_expenditure)
@@ -189,15 +190,14 @@ class Cohort:
             individual.ifLessThan95th = False
 
         # ATTRIBUTABLE HEALTH CARE EXPENDITURES
-        # TODO: add discounting
         bmi_unit_above_30 = bmi - 30
         if age < 18:
             if individual.ifLessThan95th is False:
                 # annual HC expenditure for >95th (per individual)
-                hc_exp = self.params.costAbove95thP * ((1 + self.inputs.inflation) ** (2020 - 2008 + year_index))
+                hc_exp = self.params.costAbove95thP
             else:
                 # annual HC expenditure for <95th (per individual)
-                hc_exp = self.params.costBelow95thP * ((1 + self.inputs.inflation) ** (2020 - 2008 + year_index))
+                hc_exp = self.params.costBelow95thP
         else:
             # if less than 95th (which is 30)
             if individual.ifLessThan95th is True:
