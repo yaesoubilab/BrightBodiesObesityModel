@@ -1,4 +1,4 @@
-import math
+from math import floor, pow
 
 import SimPy.DiscreteEventSim as SimCls
 import SimPy.RandomVariateGenerators as RVGs
@@ -142,9 +142,9 @@ class Cohort:
         cohort_hc_expenditure = 0  # cohort health care expenditures at the current time
 
         # year index
-        year_index = math.floor(self.simCal.time)
+        year_index = floor(self.simCal.time)
         # discount factor
-        discount_factor = math.pow(1 + self.inputs.discountRate, -year_index)
+        discount_factor = pow(1 + self.inputs.discountRate, -year_index)
 
         for individual in self.individuals:
             if individual.ifAlive:
@@ -179,7 +179,7 @@ class Cohort:
         """
 
         # age of the individual at this simulation time
-        age = math.floor(individual.get_age(current_time=self.simCal.time))
+        age = floor(individual.get_age(current_time=self.simCal.time))
 
         # find the bmi 95th for this individual
         bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
