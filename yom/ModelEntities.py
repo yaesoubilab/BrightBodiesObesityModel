@@ -162,8 +162,7 @@ class Cohort:
 
                 # collect the health care expenditure cost
                 cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual,
-                                                                       bmi=individual_bmi,
-                                                                       year_index=year_index) * discount_factor
+                                                                       bmi=individual_bmi) * discount_factor
 
         # store list of individual costs and health
         self.simOutputs.collect_costs_of_this_period(cohort_intervention_cost, cohort_hc_expenditure)
@@ -171,7 +170,7 @@ class Cohort:
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)
 
-    def calculate_hc_expenditure(self, individual, bmi, year_index):
+    def calculate_hc_expenditure(self, individual, bmi):
         """
         :param individual: an individual
         :param bmi: bmi of the individual
