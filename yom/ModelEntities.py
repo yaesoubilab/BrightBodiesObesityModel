@@ -207,7 +207,8 @@ class Cohort:
                     hc_exp = 0
                 else:
                     hc_exp = bmi_unit_above_30 * (
-                            self.params.costPerUnitBMIAdultP * ((1 + self.inputs.inflation) ** (2020 - 2017)))
+                            self.params.costPerUnitBMIAdultP
+                            * ((1 + self.inputs.inflation) ** (self.inputs.currentYear - 2017)))
 
         return hc_exp
 
