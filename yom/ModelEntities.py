@@ -216,8 +216,10 @@ class Cohort:
         """ processes the population distribution pyramid (age/sex) """
 
         # new pyramid
-        pyramid = Pyramid(list_x_min=[8, 0],
-                          list_x_max=[16, 1],
+        min_age = self.inputs.ageSexDist[0][0]
+        max_age = self.inputs.ageSexDist[-1][0]
+        pyramid = Pyramid(list_x_min=[min_age, 0],
+                          list_x_max=[max_age, 1],
                           list_x_delta=[1, 'int'],
                           name='Population Pyramid at Time ' + str(self.simCal.time))
 
