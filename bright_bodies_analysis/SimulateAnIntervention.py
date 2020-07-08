@@ -32,5 +32,6 @@ if __name__ == '__main__':
 
     # produce simulation outputs
     yomS.generate_simulation_outputs(simulated_multi_cohort=multiCohort,
-                                     age_sex_dist=inputs.ageSexDist)
+                                     age_sex_dist=inputs.ageSexDist,
+                                     pyramid_x_max=10)
 

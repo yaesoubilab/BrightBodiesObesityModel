@@ -23,7 +23,7 @@ def plot_ave_bmi_trajs(sim_outcomes_BB, sim_outcomes_CC):
     )
 
 
-def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist):
+def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pyramid_x_max=10):
 
     # sample paths for population size
     Path.plot_sample_paths(
@@ -33,14 +33,19 @@ def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist):
         x_label='Years'
     )
 
+    # find lables of age groups
+    age_labels = []
+    for i in range(0, len(age_sex_dist), 2):
+        age_labels.append(age_sex_dist[i][0])
+
     # population pyramid at initialization
     Pyr.plot_pyramids(observed_data=age_sex_dist,
                       simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
                       fig_size=(6, 4),
-                      x_lim=10,
+                      x_lim=pyramid_x_max,
                       title="Cohort Pyramids at Initialization",
                       colors=('blue', 'red', 'black'),
-                      y_labels=['8', '9', '10', '11', '12', '13', '14', '15', '16'],
+                      y_labels=age_labels,
                       age_group_width=1,
                       length_of_sim_bars=250,
                       scale_of_sim_legend=0.75,

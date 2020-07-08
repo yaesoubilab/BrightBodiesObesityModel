@@ -4,7 +4,7 @@ import bright_bodies_support.CEA as CEA
 import bright_bodies_support.Inputs as I
 import bright_bodies_support.Plots as P
 from bright_bodies_support.ParameterGenerator import ParamGenerator
-from yom import MultiCohortClasses as MultiCls, SamplePaths as MyPath
+from yom import MultiCohortClasses as MultiCls
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
@@ -42,7 +42,7 @@ multiCohortCC.simulate(sim_duration=inputs.simDuration,
                        if_run_in_parallel=False)
 
 # COMPARATIVE: average BMIs over 10 years
-MyPath.plot_sets_of_sample_paths(
+P.plot_sets_of_sample_paths(
     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
                           multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
     title='Cohort Average BMIs over 10 Years',
