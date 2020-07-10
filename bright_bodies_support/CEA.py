@@ -11,14 +11,14 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     # Clinical Control
     clinical_control_strategy = Econ.Strategy(
         name='Clinical Control',
-        cost_obs=sim_outcomes_CC.cohortCosts,
+        cost_obs=sim_outcomes_CC.aveIndividualCosts,
         effect_obs=sim_outcomes_CC.effects,
-        color='orange'
+        color='darkorange'
     )
     # Bright Bodies
     bright_bodies_strategy = Econ.Strategy(
         name='Bright Bodies',
-        cost_obs=sim_outcomes_BB.cohortCosts,
+        cost_obs=sim_outcomes_BB.aveIndividualCosts,
         effect_obs=sim_outcomes_BB.effects,
         color='blue'
     )
@@ -31,10 +31,13 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     # show the cost-effectiveness plane
-    CEA.plot_CE_plane(x_label='Average BMI Unit Reduction (kg/m^2) per person over 10 years',
-                      y_label='Average Additional Cost per person over 10 years',
+    CEA.plot_CE_plane(x_label='Average BMI Unit Reduction (kg/m' + r'$^2$' + ')per Person\n(Over 10 Simulation Years)',
+                      y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
                       cost_digits=0, effect_digits=1,
-                      x_range=(-0.5, 3.5)
+                      x_range=(-0.5, 3.5),
+                      title='',
+                      fig_size=(4.5, 4.2),
+                      file_name='figures/cea.png'
                       )
 
     # report the CE table
