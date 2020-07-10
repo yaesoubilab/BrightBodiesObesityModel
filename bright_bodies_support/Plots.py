@@ -106,23 +106,23 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     lower_bounds = [1, 1.1, 1.2]
     upper_bounds = [1, 1.1, 1.2]
 
-    f, ax = plt.subplots()
+    f, ax = plt.subplots(figsize=(5, 4))
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
-        ax.plot(range(len(ys)), ys, color='blue', alpha=0.2, label='Model')
+        ax.plot(range(len(ys)), ys, color='plum', alpha=0.5, label='Model', zorder=1)
 
     # bright bodies data
-    ax.scatter([.5, 1, 2], bb_ys, color='orange', label='Bright Bodies RCT')
+    ax.scatter([.5, 1, 2], bb_ys, color='purple', label='RCT', zorder=2)
     ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds],
-                fmt='none', capsize=4, ecolor='orange', elinewidth=2)
+                fmt='none', capsize=4, ecolor='purple', elinewidth=2, zorder=2)
 
-    ax.set_title('Treatment Effect: Difference in Average BMI')
-    ax.set_xlim((0.0, 10.5))
+    ax.set_title('Effectiveness of the Bright Bodies Intervention')
+    ax.set_xlim((-0.5, 10.5))
     ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     ax.set_yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
     ax.set_xlabel('Simulation Time (Years)')
-    ax.set_ylabel('Difference in BMI (kg/m^2)')
+    ax.set_ylabel('Reduction in BMI (kg/m'+r"$^2$"+')')
 
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
