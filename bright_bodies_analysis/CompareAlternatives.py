@@ -59,13 +59,12 @@ Path.plot_sets_of_sample_paths(
     file_name='figures/bmiTrajectories.png'
 )
 
-P.plot_diff_in_mean_bmi(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                        sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                        maintenance_effect=EFFECT_MAINTENANCE)
+P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                 sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                 maintenance_effect=EFFECT_MAINTENANCE)
 
-# plot RCT validation: BMI differences (year 0/1 and 1/2)
-P.plot_validation(sim_outcomes_control=multiCohortCC.multiSimOutputs,
-                  sim_outcomes_bb=multiCohortBB.multiSimOutputs)
+P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
+                            sim_outcomes_bb=multiCohortBB.multiSimOutputs)
 
 # report cost-effectiveness bright_bodies_analysis
 CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,

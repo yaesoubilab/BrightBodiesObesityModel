@@ -41,19 +41,23 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
         ys = YEARLY_DIFF_BMI_CONTROL
         lbs = YEARLY_DIFF_BMI_CONTROL_LB
         ubs = YEARLY_DIFF_BMI_CONTROL_UB
-        ax.set_title('\nControl')
+        ax.set_title('\nClinical Control')
         ax.text(-0.05, 1.025, 'A)', transform=ax.transAxes, size=11, weight='bold')
-
-    # adding RCT data
-    ax.scatter([1, 2], ys, color='orange', label="RCT Average Difference in BMI")
-    # adding error bars
-    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, ecolor='orange')
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
-        ax.scatter(1, this_y, color='blue', marker='_', s=200, alpha=0.25)
+        ax.scatter(1, this_y, color='plum', marker='_', s=200, alpha=0.5, label='Model', zorder=1)
     for this_y in year_two_vs_one:
-        ax.scatter(2, this_y, color='blue', marker='_', s=200, alpha=0.25)
+        ax.scatter(2, this_y, color='plum', marker='_', s=200, alpha=0.5, zorder=1)
+
+    # adding RCT data
+    ax.scatter([1, 2], ys, color='purple', label='RCT', zorder=2)
+    # adding error bars
+    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, color='purple', zorder=2)
+
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
+    #ax.legend(loc='upper right')
 
     ax.axhline(y=0, color='k', ls='--', linewidth=0.5)
 
@@ -62,18 +66,16 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
     ax.set_xticklabels(['Year 1 to 0', 'Year 2 to 1'])
     ax.set_ylim((-3.5, 3.5))
     if intervention == I.Interventions.CONTROL:
-        ax.set_ylabel('Difference in BMI (kg/m^2)')
+        ax.set_ylabel('Difference in BMI (kg/m'+r"$^2$"+')')
     else:
         ax.set_ylabel(' ')
 
-    ax.legend(['RCT', 'Model'], loc='upper right')
 
-
-def plot_validation(sim_outcomes_control, sim_outcomes_bb):
+def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb):
     """ generates validation graphs: BMI differences by year """
 
     # plot
-    f, axes = plt.subplots(1, 2, figsize=(7, 4), sharey=True)
+    f, axes = plt.subplots(1, 2, figsize=(5, 4), sharey=True)
 
     f.suptitle('Differences in Average BMI by Year')
     add_yearly_change_in_bmi_to_ax(ax=axes[0], sim_outcomes=sim_outcomes_control,
@@ -82,14 +84,14 @@ def plot_validation(sim_outcomes_control, sim_outcomes_bb):
                                    intervention=I.Interventions.BRIGHT_BODIES)
 
     f.subplots_adjust(hspace=2, wspace=2)
-    # f.tight_layout()
+    f.tight_layout()
 
     # bbox_inches set to tight: cleans up figures
-    plt.savefig("figures/RCT_validation.png", dpi=300)
+    plt.savefig("figures/yearlyBMIChange.png", dpi=300)
     plt.show()
 
 
-def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
+def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
@@ -128,11 +130,11 @@ def plot_diff_in_mean_bmi(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
 
     if maintenance_effect == I.EffectMaintenance.FULL:
-        plt.savefig("figures/Avg_BMI_Full_Maintenance.png", dpi=300)
+        plt.savefig("figures/bbEffFullMaint.png", dpi=300)
     elif maintenance_effect == I.EffectMaintenance.DEPREC:
-        plt.savefig("figures/Avg_BMI_Deprec_Maintenance.png", dpi=300)
+        plt.savefig("figures/bbEffDeprecMaint.png", dpi=300)
     elif maintenance_effect == I.EffectMaintenance.NONE:
-        plt.savefig("figures/Avg_BMI_No_Maintenance.png", dpi=300)
+        plt.savefig("figures/bbEffNoMaint.png", dpi=300)
     plt.show()
 
 
