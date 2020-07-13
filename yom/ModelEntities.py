@@ -20,6 +20,8 @@ class Individual:
         self.ifAlive = True
         self.trajectory = bmi_trajectory
         self.ifLessThan95th = False
+        self.ifObese = None
+        self.ifOverweight = None
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -181,22 +183,25 @@ class Cohort:
         age = floor(individual.get_age(current_time=self.simCal.time))
 
         # find the bmi 95th for this individual
-        bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
+        bmi_95th_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
+        bmi_85th_cut_off = self.params.bmi85thCutOffs.get_value([age, individual.sex])
         # if the individual is above or below the BMI 95th percentile
-        if bmi < bmi_cut_off:
-            individual.ifLessThan95th = True
-        else:
-            individual.ifLessThan95th = False
+        if bmi >= bmi_95th_cut_off:
+            individual.ifObese = True
+        elif bmi >= bmi_85th_cut_off and bmi < bmi_95th_cut_off:
+            individual.ifOverweight = True
 
         # ATTRIBUTABLE HEALTH CARE EXPENDITURES
         bmi_unit_above_30 = bmi - 30
         if age < 18:
-            if individual.ifLessThan95th is False:
+            if individual.ifObese is True:
                 # annual HC expenditure for >95th (per individual)
                 hc_exp = self.params.costAbove95thP
+            elif individual.ifOverweight is True:
+                # annual HC expenditure for 85-94th (per individual)
+                hc_exp = self.params.cost85_94thP
             else:
-                # annual HC expenditure for <95th (per individual)
-                hc_exp = self.params.costBelow95thP
+                hc_exp = 0
         else:
             # if less than 95th (which is 30)
             if individual.ifLessThan95th is True:
