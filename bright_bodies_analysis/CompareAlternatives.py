@@ -92,5 +92,11 @@ P.plot_sets_of_sample_paths(
     ci_upper_values_cc=[0, 37.9, 39, 39.1]
 )
 
+# -------- OUTCOMES  ----------
+
 CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                       sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+
+CEA.report_comparative_effect_estimates(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                        sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+

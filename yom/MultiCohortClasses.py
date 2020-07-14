@@ -100,7 +100,7 @@ class MultiSimOutputs:
         # cost: total cost (including the intervention costs and HC expenditures) for all participants
         #       over the entire simulation duration.
         self.cohortCosts = []     # (list) of costs from each simulated cohort
-        self.aveIndividualCosts = [] # (list) of average individual cost in ech simulated cohort
+        self.aveIndividualCosts = []  # (list) of average individual cost in ech simulated cohort
 
         # intervention costs for all participants over entire simulation duration
         self.cohortInterventionCosts = []
