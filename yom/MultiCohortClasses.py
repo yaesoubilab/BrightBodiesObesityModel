@@ -85,6 +85,7 @@ class MultiSimOutputs:
         self.statCohortCost = None      # cohort total cost over the simulation period
         self.statCohortInterventionCost = None  # cohort intervention cost over the simulation period
         self.statCohortHCExpenditure = None     # cohort health care expenditure over the simulation period
+        self.statIndividualHCExpenditure = None # individual health care expenditure over the simulation period
 
         self.pathsOfCohortPopSize = []  # (list of list) sample paths of cohort population size
         self.pathsOfCohortAveBMI = []   # (list of list) sample paths of cohort BMI
@@ -108,7 +109,7 @@ class MultiSimOutputs:
         self.cohortHealthCareExpenditure = []
 
         # average health care expenditures per year per person
-        self.aveAnnualIndividualHCExpenditure = []
+        self.aveIndividualHCExpenditure = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -143,6 +144,9 @@ class MultiSimOutputs:
         # cohort health care expenditure
         self.cohortHealthCareExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures))
 
+        # individual health care expenditure (over 10 year sim duration)
+        self.aveIndividualHCExpenditure.append(sum(simulated_cohort.simOutputs.annualIndividualHCExpenditures))
+
     def calculate_summary_stats(self):
 
         self.statEffect = Stat.SummaryStat(name='Effect', data=self.effects)
@@ -151,6 +155,9 @@ class MultiSimOutputs:
             name='Cohort intervention cost', data=self.cohortInterventionCosts)
         self.statCohortHCExpenditure = Stat.SummaryStat(
             name='Cohort health care expenditure', data=self.cohortHealthCareExpenditure)
+        self.statIndividualHCExpenditure = Stat.SummaryStat(
+            name='Individual health care expenditure', data=self.aveIndividualHCExpenditure
+        )
 
     def get_mean_interval_change_in_bmi(self, year, deci=None):
         """

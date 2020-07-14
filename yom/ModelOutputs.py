@@ -35,6 +35,10 @@ class SimOutputs:
         # list that holds the cohort total expenditure during the simulation
         # Expenditure: direct/indirect HC costs acquired each year
         self.annualCohortHCExpenditures = []
+        # list that holds the individual total expenditure during the simulation
+        # Expenditure: direct/indirect HC costs acquired each year
+        self.annualIndividualHCExpenditures = []
+
         # cohort total cost
         self.totalCost = 0
 
@@ -77,6 +81,9 @@ class SimOutputs:
 
         # list of cohort expenditure totals per year (to get total expenditure)
         self.annualCohortHCExpenditures.append(hc_expenditure)
+
+        # list of individual expenditure totals per year (to get total expenditure per individual)
+        self.annualIndividualHCExpenditures.append(hc_expenditure / 90)
 
         # update total cohort cost
         self.totalCost += intervention_cost + hc_expenditure
