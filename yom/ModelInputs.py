@@ -10,6 +10,12 @@ class Sex(Enum):
     FEMALE = 1
 
 
+class WeightStatus(Enum):
+    NormalWeight = 0
+    OverWeight = 1
+    Obese = 2
+
+
 class SetOfTrajectories:
     # class to select randomly a row from a set of rows
     def __init__(self, rows):
