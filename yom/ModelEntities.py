@@ -199,7 +199,7 @@ class Cohort:
                 hc_exp = self.params.costAbove95thP
             elif individual.ifOverweight is True:
                 # annual HC expenditure for 85-94th (per individual)
-                hc_exp = self.params.cost85_94thP
+                hc_exp = self.params.cost85To94thP
             else:
                 hc_exp = 0
         else:
@@ -211,9 +211,7 @@ class Cohort:
                 if bmi_unit_above_30 < 0:
                     hc_exp = 0
                 else:
-                    hc_exp = bmi_unit_above_30 * (
-                            self.params.costPerUnitBMIAdultP
-                            * ((1 + self.inputs.inflation) ** (self.inputs.currentYear - 2017)))
+                    hc_exp = bmi_unit_above_30 * self.params.costPerUnitBMIAdultP
 
         return hc_exp
 

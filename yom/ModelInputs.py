@@ -85,7 +85,7 @@ class Parameters:
         # cost parameters are determined later by a sample from specified probability distributions
         self.annualInterventionCost = 0
         self.costAbove95thP = 0
-        self.cost85_94thP = 0
+        self.cost85To94thP = 0
         self.costPerUnitBMIAdultP = 0
         self.interventionMultipliers = []  # multipliers to adjust BMI trajectories
 
