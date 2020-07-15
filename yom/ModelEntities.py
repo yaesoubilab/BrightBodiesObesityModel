@@ -5,6 +5,7 @@ import SimPy.RandomVariateGenerators as RVGs
 import SimPy.SimulationSupport as Sim
 from SimPy.DataFrames import Pyramid
 from yom import ModelOutputs as O, ModelEvents as E
+from yom.ModelInputs import WeightStatus
 
 
 class Individual:
@@ -19,7 +20,8 @@ class Individual:
         self.initialAge = age_sex[0]
         self.ifAlive = True
         self.trajectory = bmi_trajectory
-        self.ifLessThan95th = False
+        self.BMI = None
+        self.WeightStatus = None
 
     def __str__(self):
         return "Individual {0}".format(self.id)
@@ -30,6 +32,27 @@ class Individual:
         :return: age (current time + age at initialization)
         """
         return current_time + self.initialAge
+
+    def update_weight_status(self, bmi, current_time, params):
+        """
+        update the weight status (normal weight, overweight, obese) of the individual given the current BMI
+        :param bmi: the individual's current BMI
+        :param current_time: current simulation time (to calculate the individual current age)
+        :param params: parameter object that contains overweight and obese thresholds
+        """
+
+        self.BMI = bmi
+
+        # age of the individual at this simulation time
+        age = floor(self.get_age(current_time=current_time))
+
+        # if the individual is above or below the BMI 95th percentile
+        if bmi >= params.bmi95thCutOffs.get_value([age, self.sex]):
+            self.WeightStatus = WeightStatus.Obese
+        elif bmi >= params.bmi85thCutOffs.get_value([age, self.sex]) :
+            self.WeightStatus = WeightStatus.OverWeight
+        else:
+            self.WeightStatus = WeightStatus.NormalWeight
 
 
 class Cohort:
@@ -153,6 +176,12 @@ class Cohort:
                 # note that the first element of a BMI trajectory is the id of the trajectory so we skip it
                 individual_bmi = individual.trajectory[year_index + 1] \
                                  * self.params.interventionMultipliers[year_index]
+
+                # update the individual's weight status
+                individual.update_weight_status(bmi=individual_bmi,
+                                                current_time=self.simCal.time,
+                                                params=self.params)
+
                 individual_bmis.append(individual_bmi)
 
                 # collect the cost of the intervention
@@ -161,8 +190,7 @@ class Cohort:
                     cohort_intervention_cost += self.params.annualInterventionCost * discount_factor
 
                 # collect the health care expenditure cost
-                cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual,
-                                                                       bmi=individual_bmi) * discount_factor
+                cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual) * discount_factor
 
         # store list of individual costs and health
         self.simOutputs.collect_costs_of_this_period(cohort_intervention_cost, cohort_hc_expenditure)
@@ -170,45 +198,32 @@ class Cohort:
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)
 
-    def calculate_hc_expenditure(self, individual, bmi):
+    def calculate_hc_expenditure(self, individual):
         """
         :param individual: an individual
-        :param bmi: bmi of the individual
         :return: the health care expenditure of an individual
         """
 
-        # age of the individual at this simulation time
-        age = floor(individual.get_age(current_time=self.simCal.time))
-
-        # find the bmi 95th for this individual
-        bmi_cut_off = self.params.bmi95thCutOffs.get_value([age, individual.sex])
-        # if the individual is above or below the BMI 95th percentile
-        if bmi < bmi_cut_off:
-            individual.ifLessThan95th = True
-        else:
-            individual.ifLessThan95th = False
-
-        # ATTRIBUTABLE HEALTH CARE EXPENDITURES
-        bmi_unit_above_30 = bmi - 30
-        if age < 18:
-            if individual.ifLessThan95th is False:
+        if individual.get_age(current_time=self.simCal.time) < 18:
+            if individual.WeightStatus == WeightStatus.Obese:
                 # annual HC expenditure for >95th (per individual)
                 hc_exp = self.params.costAbove95thP
+            elif individual.WeightStatus == WeightStatus.OverWeight:
+                # annual HC expenditure for 85-94th (per individual)
+                hc_exp = self.params.cost85To94thP
             else:
-                # annual HC expenditure for <95th (per individual)
-                hc_exp = self.params.costBelow95thP
+                hc_exp = 0
         else:
             # if less than 95th (which is 30)
-            if individual.ifLessThan95th is True:
+            if individual.WeightStatus != WeightStatus.Obese:
                 # no additional attributable expenditure
                 hc_exp = 0
             else:
+                bmi_unit_above_30 = individual.BMI - 30
                 if bmi_unit_above_30 < 0:
                     hc_exp = 0
                 else:
-                    hc_exp = bmi_unit_above_30 * (
-                            self.params.costPerUnitBMIAdultP
-                            * ((1 + self.inputs.inflation) ** (self.inputs.currentYear - 2017)))
+                    hc_exp = bmi_unit_above_30 * self.params.costPerUnitBMIAdultP
 
         return hc_exp
 

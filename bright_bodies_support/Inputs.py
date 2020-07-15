@@ -119,6 +119,39 @@ class ModelInputs:
         ]
 
         # bmi cut offs
+        # 85th bmi cutoffs
+        self.bmi85thCutOffs = [
+            # age, sex, bmi_cutoff
+            [2, 0, 18.2],  # 2, male
+            [2, 1, 18.0],  # 2, female
+            [3, 0, 17.4],  # 3, male
+            [3, 1, 17.2],  # 3, female
+            [4, 0, 16.9],  # 4, male
+            [4, 1, 16.8],  # 4, female
+            [5, 0, 16.8],  # 5, male
+            [5, 1, 16.8],  # 5, female
+            [6, 0, 17.0],  # 6, male
+            [6, 1, 17.1],  # 6, female
+            [7, 0, 17.4],  # 7, male
+            [7, 1, 17.6],  # 7, female
+            [8, 0, 17.9],  # 8, male
+            [8, 1, 18.3],  # 8, female
+            [9, 0, 18.6],  # 9, male
+            [9, 1, 19.1],  # 9, female
+            [10, 0, 19.4],  # 10, male
+            [10, 1, 19.9],  # 10, female
+            [11, 0, 20.2],  # 11, male
+            [11, 1, 20.8],  # 11, female
+            [12, 0, 21.0],  # 12, male
+            [12, 1, 21.7],  # 12, female
+            [13, 0, 21.8],  # 13, male
+            [13, 1, 22.6],  # 13, female
+            [14, 0, 22.6],  # 14, male
+            [14, 1, 23.3],  # 14, female
+            [15, 0, 23.4],  # 15, male
+            [15, 1, 24.0],  # 15, female
+        ]
+        # 95th bmi cutoffs
         self.bmi95thCutOffs = [
             # age, sex, bmi_cutoff
             [8, 0, 20.0],  # 8, male

@@ -10,6 +10,12 @@ class Sex(Enum):
     FEMALE = 1
 
 
+class WeightStatus(Enum):
+    NormalWeight = 0
+    OverWeight = 1
+    Obese = 2
+
+
 class SetOfTrajectories:
     # class to select randomly a row from a set of rows
     def __init__(self, rows):
@@ -77,11 +83,15 @@ class Parameters:
                                            list_x_min=[min_age, 0],  # minimum values for age/sex groups
                                            list_x_max=[max_age, 1],  # maximum values for age/sex groups
                                            list_x_delta=[1, 'int'])  # [age interval, sex categorical]
+        self.bmi85thCutOffs = df.DataFrame(rows=model_inputs.bmi85thCutOffs,
+                                           list_x_min=[min_age, 0],  # minimum values for age/sex groups
+                                           list_x_max=[max_age, 1],  # maximum values for age/sex groups
+                                           list_x_delta=[1, 'int'])  # [age interval, sex categorical]
 
         # cost parameters are determined later by a sample from specified probability distributions
         self.annualInterventionCost = 0
         self.costAbove95thP = 0
-        self.costBelow95thP = 0
+        self.cost85To94thP = 0
         self.costPerUnitBMIAdultP = 0
         self.interventionMultipliers = []  # multipliers to adjust BMI trajectories
 
