@@ -67,38 +67,26 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
 
-def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC):
+def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):
     """ performs HC expenditure savings analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    :param pop_size: population size
     """
 
-    # INDIVIDUAL: find difference in average total and annual individual HC EXPENDITURE between interventions
-    diff_ave_individual_expenditure = []
-    for cohortID in range(len(sim_outcomes_CC.cohortHealthCareExpenditure)):
-        hc_exp_cc = sim_outcomes_CC.cohortHealthCareExpenditure[cohortID]
-        hc_exp_bb = sim_outcomes_BB.cohortHealthCareExpenditure[cohortID]
-        pop_size = max(sim_outcomes_BB.pathsOfCohortPopSize[cohortID].get_values())
-
-        # individual total:
-        # divide cohort total HC expenditure (over 10 years) by pop size
-        individual_hc_exp_cc = hc_exp_cc/pop_size
-        individual_hc_exp_bb = hc_exp_bb/pop_size
-        diff_ave_individual_expenditure.append(
-            numpy.array(individual_hc_exp_cc) - numpy.array(individual_hc_exp_bb))
-
-    statIndividualHCExpenditure = Stat.SummaryStat(
+    stat_diff_ind_hc_exp = Stat.DifferenceStatPaired(
         name='Individual Total HC Expenditure',
-        data=diff_ave_individual_expenditure
+        x=numpy.array(sim_outcomes_CC.cohortHealthCareExpenditure)/pop_size,
+        y_ref=numpy.array(sim_outcomes_BB.cohortHealthCareExpenditure)/pop_size
     )
 
     # generate CSV values
     hc_expenditure_savings_values = [
         ['HC Expenditure Savings over 10 years:', 'Mean (PI)'],
-        ['Individual Total', statIndividualHCExpenditure.get_formatted_mean_and_interval(interval_type='p')],
+        ['Individual Total', stat_diff_ind_hc_exp.get_formatted_mean_and_interval(interval_type='p')],
     ]
-    # write CSV
 
+    # write CSV
     IO.write_csv(rows=hc_expenditure_savings_values,
                  file_name='bright_bodies_analysis/ComparativeHCSavings.csv')
 
@@ -117,8 +105,8 @@ def report_incremental_effect(sim_outcomes_BB, sim_outcomes_CC):
 
     # create list of lists:
     differences_ave_effect_values = [
-        ['Difference in Average Effect (BMI Unit Reduction) per person:', 'Mean', 'PI'],
-        ['BB v. CC', stat_diff_ave_effect.get_mean(), stat_diff_ave_effect.get_interval(interval_type='p')],
+        ['Difference in Average Effect (BMI Unit Reduction) per person:', 'Mean (PI)'],
+        ['BB v. CC', stat_diff_ave_effect.get_formatted_mean_and_interval(interval_type='p', deci=2)],
     ]
 
     # generate CSV
