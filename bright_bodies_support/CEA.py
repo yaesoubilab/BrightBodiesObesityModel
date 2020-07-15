@@ -126,32 +126,28 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC):
         ['Individual Annual', statIndividualAnnualHCExpenditure.get_formatted_mean_and_interval(interval_type='p')]
     ]
     # write CSV
-    IO.write_csv(rows=hc_expenditure_savings_values, file_name='comparativeHCSavings.csv')
+    IO.write_csv(rows=hc_expenditure_savings_values,
+                 file_name='bright_bodies_analysis/ComparativeHCSavings.csv')
 
 
-def report_comparative_effect_estimates(sim_outcomes_BB, sim_outcomes_CC):
+def report_incremental_effect(sim_outcomes_BB, sim_outcomes_CC):
     """ performs HC expenditure savings analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     """
 
     # find difference in yearly average BMI between interventions
-    difference_ave_effect = []
-    for cohortID in range(len(sim_outcomes_CC.effects)):
-        ave_effect_cc = sim_outcomes_CC.effects[cohortID]
-        ave_effect_bb = sim_outcomes_BB.effects[cohortID]
-        difference_ave_effect.append(numpy.array(ave_effect_cc) - numpy.array(ave_effect_bb))
-
-    statDiffAveEffect = Stat.SummaryStat(
-        name='Cohort HC Expenditure',
-        data=difference_ave_effect
-    )
+    stat_diff_ave_effect = Stat.DifferenceStatPaired(
+        name='Difference in effect',
+        x=sim_outcomes_CC.effects,
+        y_ref=sim_outcomes_BB.effects)
 
     # create list of lists:
     differences_ave_effect_values = [
         ['Difference in Average Effect (BMI Unit Reduction) per person:', 'Mean', 'PI'],
-        ['BB v. CC', statDiffAveEffect.get_mean(), statDiffAveEffect.get_interval(interval_type='p')],
+        ['BB v. CC', stat_diff_ave_effect.get_mean(), stat_diff_ave_effect.get_interval(interval_type='p')],
     ]
 
     # generate CSV
-    IO.write_csv(rows=differences_ave_effect_values, file_name='comparativeEffectOutcomes.csv')
+    IO.write_csv(rows=differences_ave_effect_values,
+                 file_name='bright_bodies_analysis/ComparativeEffectOutcomes.csv')

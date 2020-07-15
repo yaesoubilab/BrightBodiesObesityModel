@@ -97,6 +97,6 @@ P.plot_sets_of_sample_paths(
 CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                       sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-CEA.report_comparative_effect_estimates(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                        sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+CEA.report_incremental_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                              sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
