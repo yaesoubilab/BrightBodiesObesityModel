@@ -73,7 +73,7 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC):
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     """
 
-    # COHORT: find difference in yearly average cohort HC EXPENDITURE between interventions
+    # COHORT: find difference in average cohort HC EXPENDITURE between interventions
     diff_yearly_ave_expenditure = []
     for cohortID in range(len(sim_outcomes_CC.cohortHealthCareExpenditure)):
         hc_exp_cc = sim_outcomes_CC.cohortHealthCareExpenditure[cohortID]
@@ -85,26 +85,47 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC):
         data=diff_yearly_ave_expenditure
     )
 
-    # INDIVIDUAL: find difference in yearly average individual HC expenditure btw int.
-    diff_yearly_ave_individual_expenditure = []
+    # INDIVIDUAL: find difference in average total and annual individual HC EXPENDITURE between interventions
+    diff_ave_individual_expenditure = []
+    diff_annual_ave_individual_expenditure = []
     for cohortID in range(len(sim_outcomes_CC.cohortHealthCareExpenditure)):
-        hc_exp_cc = sim_outcomes_CC.aveIndividualHCExpenditure[cohortID]
-        hc_exp_bb = sim_outcomes_BB.aveIndividualHCExpenditure[cohortID]
-        diff_yearly_ave_individual_expenditure.append(numpy.array(hc_exp_cc) - numpy.array(hc_exp_bb))
+        hc_exp_cc = sim_outcomes_CC.cohortHealthCareExpenditure[cohortID]
+        hc_exp_bb = sim_outcomes_BB.cohortHealthCareExpenditure[cohortID]
+        pop_size = max(sim_outcomes_BB.pathsOfCohortPopSize[cohortID].get_values())
+        sim_duration = len(sim_outcomes_BB.changeInCohortAveBMIByYear[cohortID])
+
+        # individual total:
+        # divide cohort total HC expenditure (over 10 years) by pop size
+        individual_hc_exp_cc = hc_exp_cc/pop_size
+        individual_hc_exp_bb = hc_exp_bb/pop_size
+        diff_ave_individual_expenditure.append(
+            numpy.array(individual_hc_exp_cc) - numpy.array(individual_hc_exp_bb))
+
+        # individual annual:
+        # divide individual total HC expenditure by sim duration
+        individual_annual_hc_exp_cc = individual_hc_exp_cc/sim_duration
+        individual_annual_hc_exp_bb = individual_hc_exp_bb/sim_duration
+        diff_annual_ave_individual_expenditure.append(
+            numpy.array(individual_annual_hc_exp_cc) - numpy.array(individual_annual_hc_exp_bb))
 
     statIndividualHCExpenditure = Stat.SummaryStat(
-        name='Individual HC Expenditure',
-        data=diff_yearly_ave_individual_expenditure
+        name='Individual Total HC Expenditure',
+        data=diff_ave_individual_expenditure
     )
 
-    # create list of lists:
+    statIndividualAnnualHCExpenditure = Stat.SummaryStat(
+        name='Individual Annual HC Expenditure',
+        data=diff_annual_ave_individual_expenditure
+    )
+
+    # generate CSV values
     hc_expenditure_savings_values = [
         ['HC Expenditure Savings over 10 years:', 'Mean (PI)'],
         ['Cohort (90p)', statCohortHCExpenditure.get_formatted_mean_and_interval(interval_type='p')],
-        ['Individual', statIndividualHCExpenditure.get_formatted_mean_and_interval(interval_type='p')]
+        ['Individual Total', statIndividualHCExpenditure.get_formatted_mean_and_interval(interval_type='p')],
+        ['Individual Annual', statIndividualAnnualHCExpenditure.get_formatted_mean_and_interval(interval_type='p')]
     ]
-
-    # generate CSV
+    # write CSV
     IO.write_csv(rows=hc_expenditure_savings_values, file_name='comparativeHCSavings.csv')
 
 
