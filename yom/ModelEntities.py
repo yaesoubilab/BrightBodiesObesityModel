@@ -185,8 +185,8 @@ class Cohort:
                 individual_bmis.append(individual_bmi)
 
                 # collect the cost of the intervention
-                # for the first and the second years we add the intervention cost
-                if year_index in (0, 1):
+                # for the first year we add the intervention cost
+                if year_index == 0:
                     cohort_intervention_cost += self.params.annualInterventionCost * discount_factor
 
                 # collect the health care expenditure cost

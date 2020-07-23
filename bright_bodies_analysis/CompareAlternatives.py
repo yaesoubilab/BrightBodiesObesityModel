@@ -10,7 +10,7 @@ import SimPy.Plots.SamplePaths as Path
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.FULL
+EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
 # change the working directory to the root directory
 os.chdir('../')
@@ -98,6 +98,6 @@ CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                       sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                       pop_size=inputs.popSize)
 
-CEA.report_incremental_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                              sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+CEA.report_incremental_cost_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 

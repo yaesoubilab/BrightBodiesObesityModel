@@ -39,8 +39,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
                       y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
                       cost_digits=0, effect_digits=1,
                       x_range=(-0.5, 3.5),
-                      title='',
-                      fig_size=(4.5, 4.2),
+                      title='Cost-Effectiveness Plane',
+                      fig_size=(6, 4.2),
                       file_name='figures/cea.png'
                       )
 
@@ -91,7 +91,7 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):
                  file_name='bright_bodies_analysis/ComparativeHCSavings.csv')
 
 
-def report_incremental_effect(sim_outcomes_BB, sim_outcomes_CC):
+def report_incremental_cost_effect(sim_outcomes_BB, sim_outcomes_CC):
     """ reports incremental effect
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
@@ -112,3 +112,21 @@ def report_incremental_effect(sim_outcomes_BB, sim_outcomes_CC):
     # generate CSV
     IO.write_csv(rows=differences_ave_effect_values,
                  file_name='bright_bodies_analysis/ComparativeEffectOutcomes.csv')
+
+    # INCREMENTAL COST
+
+    # find difference in yearly average BMI between interventions
+    stat_diff_ave_cost = Stat.DifferenceStatPaired(
+        name='Difference in cost',
+        x=sim_outcomes_CC.aveIndividualCosts,
+        y_ref=sim_outcomes_BB.aveIndividualCosts)
+
+    # create list of lists:
+    differences_ave_cost_values = [
+        ['Difference in Average Cost per person:', 'Mean (PI)'],
+        ['BB v. CC', stat_diff_ave_cost.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+    ]
+
+    # generate CSV
+    IO.write_csv(rows=differences_ave_cost_values,
+                 file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')

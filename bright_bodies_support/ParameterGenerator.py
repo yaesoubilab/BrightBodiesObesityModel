@@ -104,8 +104,7 @@ class ParamGenerator:
         total_intervention_cost = self.interventionCostParamRVGs.get_total(rng)
         # adjust to inflation
         total_intervention_cost *= (1 + self.modelInputs.inflation) ** \
-                                   (self.modelInputs.currentYear - self.modelInputs.yearBBStudy)
+                                   (self.modelInputs.currentYear - self.modelInputs.yearInterventionCosts)
         # average cost per participants
         param.annualInterventionCost = total_intervention_cost/self.modelInputs.nChildrenBB
-
         return param

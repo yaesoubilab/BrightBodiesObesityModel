@@ -44,38 +44,46 @@ class ModelInputs:
         # dictionary of cost items for Bright Bodies
         # each element is a list of [mean, stDev]
         self.dictCostBB = {
-            'Exercise physiologist': [9592.00, 0.1 * 9592.00],
-            'Games and equipment': [1900.00, 0.1 * 1900.00],
-            'Motivational tools': [240.00, 0.1 * 240.00],
-            'Printed material': [25.00, 0.1 * 25.00],
+            'Exercise physiologist A': [5474.56, 0.1 * 5474.56],
+            'Exercise physiologist B': [6843.20, 0.1 * 6843.20],
+            'Games and equipment': [2409.66, 0.1 * 2409.66],
+            'Motivational tools': [304.38, 0.1 * 304.38],
+            'Printed material (Exercise Session)': [31.71, 0.1 * 31.71],
             'Gym room and utilities': [0.00, 0.1 * 0.00],
-            'First aid kit': [150.00, 0.1 * 150.00],
-            'Registered dietitian': [6805.00, 0.1 * 6805.00],
-            'Social worker': [1200.00, 0.1 * 1200.00],
-            'Educational tools': [1350.00, 0.1 * 1350.00],
-            'Classroom and utilities': [0.00, 0.1 * 0.00],
-            'Exercise physiologist (admin)': [6990.00, 0.1 * 6990.00],
-            'Registered dietitian (admin)': [16376.00, 0.1 * 16376.00],
-            'Technician': [1200.00, 0.1 * 1200.00],
-            'Body fat analyzer and scale': [700.00, 0.1 * 700.00],
-            'Stadiometer': [100.00, 0.1 * 100.00],
-            'Medical consultation': [5100.00, 0.1 * 5100.00]
+            'First aid kit': [190.24, 0.1 * 190.24],
+            'Registered dietitian A': [1558.44, 0.1 * 1558.44],
+            'Registered dietitian B': [4675.32, 0.1 * 4675.32],
+            'Social worker (Nutrition Session)': [1259.96, 0.1 * 1259.96],
+            'Educational tools': [1712.13, 0.1 * 1712.13],
+            'Classroom and utilities (Nutrition Session)': [0.00, 0.1 * 0.00],
+            'Social worker (Parent Session)': [1259.96, 0.1 * 1259.96],
+            'Printed material (Parent Session)': [31.71, 0.1 * 31.71],
+            'Classroom and utilities (Parent Session)': [0.00, 0.1 * 0.00],
+            'Program coordinator (exercise physiologist)(admin)': [6843.20, 0.1 * 6843.20],
+            'Program director (registered dietitian)(admin)': [12467.52, 0.1 * 12467.52],
+            'Dept clinical secretary': [549.30, 0.1 * 549.30],
+            'Technician': [1416.60, 0.1 * 1416.60],
+            'Body fat analyzer and scale': [887.77, 0.1 * 887.77],
+            'Stadiometer': [76.09, 0.1 * 76.09],
+            'Medical consultation': [5331.56, 0.1 * 5331.56],
+            'Rent space, utilities': [3804.73, 0.1 * 3804.73],
+            'Cleaning service': [1122.39, 0.1 * 1122.39],
+            'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
         }
 
         # dictionary of cost items for the Control
         # each element is a list of [mean, stDev]
         self.dictCostControl = {
-            'Nurse practitioner': [11686.00, 0.1 * 11686.00],
-            'Registered dietitian (CC)': [6329.00, 0.1 * 6329.00],
-            'Social worker (CC)': [6460.00, 0.1 * 6460.00],
-            'Dept clinical secretary': [834.00, 0.1 * 834.00],
-            'Clinic secretary': [1669.00, 0.1 * 1669.00],
-            'Typing': [2504.00, 0.1 * 2504.00],
-            'Lab technician': [1408.00, 0.1 * 1408.00],
-            'Medical consultation (CC)': [10256.00, 0.1 * 10256.00],
-            'Rent space, utilities': [3000.00, 0.1 * 3000.00],
-            'Cleaning service': [885.00, 0.1 * 885.00],
-            'Clinic equipment and supplies': [2900.00, 0.1 * 2900.00]
+            'Nurse visit / follow up': [14517.90, 0.1 * 14517.90],
+            'Nutrition visit / follow up': [5619.38, 0.1 * 5619.38],
+            'Behavioral visit / follow up': [4361.40, 0.1 * 4361.40],
+            'Dept clinical secretary': [549.30, 0.1 * 549.30],
+            'Typing': [1647.90, 0.1 * 1647.90],
+            'Lab technician': [1416.60, 0.1 * 1416.60],
+            'Medical consultation': [12303.60, 0.1 * 12303.60],
+            'Rent space, utilities': [3804.73, 0.1 * 3804.73],
+            'Cleaning service': [1122.39, 0.1 * 1122.39],
+            'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
         }
 
         # calculate the standard deviation of the estimated mean
@@ -90,7 +98,7 @@ class ModelInputs:
         }
 
         # to inflate cost estimates
-        self.yearBBStudy = 2007
+        self.yearInterventionCosts = 2019
         self.yearHCExpStudyAdults = 2013
         self.yearHCExpStudyChildren = 2006
         self.nChildrenBB = 90
