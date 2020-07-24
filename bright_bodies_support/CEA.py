@@ -35,12 +35,12 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     # show the cost-effectiveness plane
-    CEA.plot_CE_plane(x_label='Average BMI Unit Reduction (kg/m' + r'$^2$' + ')per Person\n(Over 10 Simulation Years)',
+    CEA.plot_CE_plane(x_label='Average BMI Unit Reduction (kg/m' + r'$^2$' + ') per Person\n(Over 10 Simulation Years)',
                       y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
                       cost_digits=0, effect_digits=1,
                       x_range=(-0.5, 3.5),
                       title='Cost-Effectiveness Plane',
-                      fig_size=(6, 4.2),
+                      fig_size=(4.6, 4),
                       file_name='figures/cea.png'
                       )
 
