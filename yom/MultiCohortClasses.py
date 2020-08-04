@@ -3,6 +3,7 @@ import multiprocessing as mp
 import SimPy.RandomVariateGenerators as RVGs
 import SimPy.StatisticalClasses as Stat
 from yom.ModelEntities import Cohort
+import numpy as np
 
 
 class MultiCohort:
@@ -99,13 +100,17 @@ class MultiSimOutputs:
         # cost: total cost (including the intervention costs and HC expenditures) for all participants
         #       over the entire simulation duration.
         self.cohortCosts = []     # (list) of costs from each simulated cohort
-        self.aveIndividualCosts = []  # (list) of average individual cost in ech simulated cohort
+        self.aveIndividualCosts = []  # (list) of average individual cost in each simulated cohort
 
         # intervention costs for all participants over entire simulation duration
         self.cohortInterventionCosts = []
+        self.aveIndividualInterventionCosts = []
 
         # list of total health care expenditures for all people over the simulation
         self.cohortHealthCareExpenditure = []
+        self.aveIndividualHCExpenditure = []
+
+        self.costSavings = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
@@ -136,9 +141,17 @@ class MultiSimOutputs:
 
         # cohort intervention costs
         self.cohortInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts))
-
+        self.aveIndividualInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts)/
+                                                   simulated_cohort.simOutputs.popSize)
         # cohort health care expenditure
         self.cohortHealthCareExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures))
+        self.aveIndividualHCExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)/
+                                               simulated_cohort.simOutputs.popSize)
+
+        # COST-SAVING FIGURE
+        # list of lists of cost by year
+        self.costSavings.append(simulated_cohort.simOutputs.discounted_cost_by_year)
+        # print(simulated_cohort.simOutputs.discounted_cost_by_year)
 
     def calculate_summary_stats(self):
 

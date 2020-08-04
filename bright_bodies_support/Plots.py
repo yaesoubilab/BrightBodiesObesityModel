@@ -119,7 +119,8 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds],
                 fmt='none', capsize=4, ecolor='purple', elinewidth=2, zorder=2)
 
-    ax.set_title('Effectiveness of the Bright Bodies Intervention')
+    ax.set_title('Effectiveness of the Bright Bodies Intervention'
+                 '\nAssuming Gradual Decay of Intervention Effect')
     ax.set_xlim((-0.5, 10.5))
     ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     ax.set_yticks([0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0])
@@ -215,3 +216,4 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
         fig.show()
     else:
         Fig.output_figure(fig, output_type)
+

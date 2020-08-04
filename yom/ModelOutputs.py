@@ -39,6 +39,8 @@ class SimOutputs:
         # Expenditure: direct/indirect HC costs acquired each year
         self.annualIndividualHCExpenditures = []
 
+        self.discounted_cost_by_year = []
+
         # cohort total cost
         self.totalCost = 0
 
@@ -87,3 +89,6 @@ class SimOutputs:
 
         # update total cohort cost
         self.totalCost += intervention_cost + hc_expenditure
+
+        # for new cost-saving figure:
+        self.discounted_cost_by_year.append(intervention_cost+hc_expenditure)

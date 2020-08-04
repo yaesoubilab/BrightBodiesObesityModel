@@ -47,10 +47,11 @@ multiCohortCC.simulate(sim_duration=inputs.simDuration,
 Path.plot_sets_of_sample_paths(
     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
                           multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
-    title='Average BMIs of Simulated Cohorts',
+    title='Average BMIs of Simulated Cohorts'
+          '\nAssuming Gradual Decay of Intervention Effect',
     y_range=[0, 40],
     x_label='Simulation Time (Year)',
-    y_label='Average BMI (kg/m'+r"$^2$"+')',
+    y_label='Average BMI (kg/m'+r"$^2$"+') per Person-Year',
     legends=['Clinical Control', 'Bright Bodies'],
     connect='line',
     color_codes=['darkorange', 'blue'],
@@ -98,6 +99,6 @@ CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                       sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                       pop_size=inputs.popSize)
 
-CEA.report_incremental_cost_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+CEA.report_incremental_cost_effect_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                           sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
