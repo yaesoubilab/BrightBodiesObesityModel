@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy
 from matplotlib import collections as matcoll
+import matplotlib.patches as mpatches
 
 import SimPy.Plots.FigSupport as Fig
 import SimPy.Plots.SamplePaths as Path
@@ -256,6 +257,13 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
         difference_avg_cost_by_year = cumulative_cost_bb - cumulative_cost_cc
         single_cohort_difference_avg_cost_by_year.append(difference_avg_cost_by_year)
         plt.plot(x, single_cohort_difference_avg_cost_by_year[cohort], alpha=0.05, c='purple')
+
+    ax.legend(['Average'])
+
+    colors = ["fuchsia", "purple"]
+    texts = ["Average", "Individual Cohorts"]
+    patches = [mpatches.Patch(color=colors[i], label="{:s}".format(texts[i])) for i in range(len(texts))]
+    plt.legend(handles=patches, loc='lower left', ncol=2)
 
     plt.axhline(color='black')
     plt.show()
