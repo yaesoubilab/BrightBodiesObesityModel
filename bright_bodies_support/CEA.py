@@ -167,6 +167,8 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     IO.write_csv(rows=(differences_ave_cost_values, differences_ave_int_cost_values, differences_ave_hc_cost_values),
                  file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
 
+    # TODO: Sydney, would you please make a new function for this
+    #   in bright_bodies_support/Plots.py
     # FOR COST-SAVINGS
 
     # list (array) of cost of BB each year for each cohort
