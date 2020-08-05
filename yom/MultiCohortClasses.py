@@ -150,7 +150,7 @@ class MultiSimOutputs:
 
         # COST-SAVING FIGURE
         # list of lists of cost by year
-        self.costSavings.append(simulated_cohort.simOutputs.discounted_cost_by_year)
+        self.costSavings.append(simulated_cohort.simOutputs.cumulativeCohortCost)
         # print(simulated_cohort.simOutputs.discounted_cost_by_year)
 
     def calculate_summary_stats(self):

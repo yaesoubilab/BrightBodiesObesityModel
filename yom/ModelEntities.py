@@ -155,14 +155,14 @@ class Cohort:
         # add the new individual to the population (list of individuals)
         self.individuals.append(individual)
 
-    def process_obesity_outcomes(self):
+    def process_cohort_outcomes(self):
         """
         collect BMIs, intervention cost, and health care expenditures of the cohort at this simulation time
         """
 
         individual_bmis = []  # list of BMI values of all individuals at the current time
-        cohort_intervention_cost = 0  # cohort intervention costs at the current time
-        cohort_hc_expenditure = 0  # cohort health care expenditures at the current time
+        cohort_discounted_intervention_cost = 0  # cohort intervention costs at the current time
+        cohort_discounted_hc_expenditure = 0  # cohort health care expenditures at the current time
 
         # year index
         year_index = floor(self.simCal.time)
@@ -187,13 +187,16 @@ class Cohort:
                 # collect the cost of the intervention
                 # for the first year we add the intervention cost
                 if year_index == 0:
-                    cohort_intervention_cost += self.params.annualInterventionCost * discount_factor
+                    cohort_discounted_intervention_cost += self.params.annualInterventionCost * discount_factor
 
                 # collect the health care expenditure cost
-                cohort_hc_expenditure += self.calculate_hc_expenditure(individual=individual) * discount_factor
+                cohort_discounted_hc_expenditure += self.calculate_hc_expenditure(individual=individual) * discount_factor
 
         # store list of individual costs and health
-        self.simOutputs.collect_costs_of_this_period(cohort_intervention_cost, cohort_hc_expenditure)
+        self.simOutputs.collect_costs_of_this_period(
+            intervention_cost=cohort_discounted_intervention_cost,
+            hc_expenditure=cohort_discounted_hc_expenditure,
+            cohort_size=self.inputs.popSize)
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)

@@ -44,7 +44,7 @@ class BMISurvey(Event):
     def process(self, rng=None):
         """ processes the population distribution test """
 
-        self.cohort.process_obesity_outcomes()
+        self.cohort.process_cohort_outcomes()
 
 
 class PopSurvey(Event):
