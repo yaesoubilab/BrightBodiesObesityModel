@@ -217,3 +217,48 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     else:
         Fig.output_figure(fig, output_type)
 
+
+def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+
+    # list (array) of cost of BB each year for each cohort
+    total_cost_by_year_bb = numpy.array(sim_outcomes_BB.costSavings)
+    # average of each element over all the lists (ex. average first element of all lists, add to new list)
+    average_cost_by_year_bb = (total_cost_by_year_bb.mean(axis=0))
+    print(average_cost_by_year_bb)
+
+    # list (array) of cost of BB each year for each cohort
+    total_cost_by_year_cc = numpy.array(sim_outcomes_CC.costSavings)
+    # average of each element over all the lists (ex. average first element of all lists, add to new list)
+    average_cost_by_year_cc = (total_cost_by_year_cc.mean(axis=0))
+    print(average_cost_by_year_cc)
+
+    difference_average_cost_by_year = average_cost_by_year_bb - average_cost_by_year_cc
+    print(difference_average_cost_by_year)
+
+    # FIGURE: Years until BB Cost-Saving
+    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    y = difference_average_cost_by_year
+
+    f, ax = plt.subplots()
+
+    ax.plot(x, y, linewidth=6, color='fuchsia')
+    ax.set_title('Average Time to Cost-Savings of BB Cohorts relative to CC Cohorts: \n'
+                 'Difference in Cumulative Cost by Simulation Year')
+    ax.set_xlabel('Simulation Years')
+    ax.set_ylabel('Difference in Total Discounted Cost by Year ($)')
+
+    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+
+    single_cohort_difference_avg_cost_by_year = []
+    for cohort in range(len(sim_outcomes_BB.costSavings)):
+        cumulative_cost_bb = numpy.array(sim_outcomes_BB.costSavings[cohort])
+        cumulative_cost_cc = numpy.array(sim_outcomes_CC.costSavings[cohort])
+        difference_avg_cost_by_year = cumulative_cost_bb - cumulative_cost_cc
+        single_cohort_difference_avg_cost_by_year.append(difference_avg_cost_by_year)
+        plt.plot(x, single_cohort_difference_avg_cost_by_year[cohort], alpha=0.05, c='purple')
+
+    plt.axhline(color='black')
+    plt.show()
+
+    plt.savefig("figures/TimeToCostSavings.png", dpi=300)
+

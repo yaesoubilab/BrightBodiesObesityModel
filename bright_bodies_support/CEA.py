@@ -5,6 +5,7 @@ import SimPy.StatisticalClasses as Stat
 import SimPy.InOutFunctions as IO
 import matplotlib.pyplot as plt
 
+
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
     """ performs cost-effectiveness bright_bodies_analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
@@ -166,40 +167,4 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     # generate CSV
     IO.write_csv(rows=(differences_ave_cost_values, differences_ave_int_cost_values, differences_ave_hc_cost_values),
                  file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
-
-    # TODO: Sydney, would you please make a new function for this
-    #   in bright_bodies_support/Plots.py
-    # FOR COST-SAVINGS
-
-    # list (array) of cost of BB each year for each cohort
-    total_cost_by_year_bb = np.array(sim_outcomes_BB.costSavings)
-    # average of each element over all the lists (ex. average first element of all lists, add to new list)
-    average_cost_by_year_bb = (total_cost_by_year_bb.mean(axis=0))
-    print(average_cost_by_year_bb)
-
-    # list (array) of cost of BB each year for each cohort
-    total_cost_by_year_cc = np.array(sim_outcomes_CC.costSavings)
-    # average of each element over all the lists (ex. average first element of all lists, add to new list)
-    average_cost_by_year_cc = (total_cost_by_year_cc.mean(axis=0))
-    print(average_cost_by_year_cc)
-
-    difference_average_cost_by_year = average_cost_by_year_bb - average_cost_by_year_cc
-    print(difference_average_cost_by_year)
-
-    # FIGURE: Years until BB Cost-Saving
-    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    y = difference_average_cost_by_year
-
-    f, ax = plt.subplots()
-    ax.plot(x, y)
-    ax.set_title('Average Time to Cost-Savings of BB Cohorts relative to CC Cohorts: \n'
-                 'Difference in Total Cost by Simulation Year')
-    ax.set_xlabel('Simulation Years')
-    ax.set_ylabel('Difference in Total Discounted Cost by Year ($)')
-
-    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    plt.axhline(color='black')
-    plt.show()
-
-    plt.savefig("figures/TimeToCostSavings.png", dpi=300)
 

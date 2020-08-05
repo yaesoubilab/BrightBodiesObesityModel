@@ -110,6 +110,7 @@ class MultiSimOutputs:
         self.cohortHealthCareExpenditure = []
         self.aveIndividualHCExpenditure = []
 
+        # list of lists of total cumulative cohort costs
         self.costSavings = []
 
     def extract_outcomes(self, simulated_cohort):
