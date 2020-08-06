@@ -64,17 +64,19 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         file_name='bright_bodies_analysis/CETable.csv')
 
     # do CBA
-    CBA = Econ.CBA(
-        strategies=[clinical_control_strategy, bright_bodies_strategy],
-        wtp_range=[0, 50000],
-        if_paired=True,
-        health_measure='d'
-    )
-    CBA.plot_acceptability_curves(
-        x_label='Willingness-to-pay threshold\n($ per average BMI unit reduction)',
-        y_range=[-0.01, 1.01],
-        fig_size=(4.2, 4)
-    )
+    if_cba = False
+    if if_cba:
+        CBA = Econ.CBA(
+            strategies=[clinical_control_strategy, bright_bodies_strategy],
+            wtp_range=[0, 50000],
+            if_paired=True,
+            health_measure='d'
+        )
+        CBA.plot_acceptability_curves(
+            x_label='Willingness-to-pay threshold\n($ per average BMI unit reduction)',
+            y_range=[-0.01, 1.01],
+            fig_size=(4.2, 4)
+        )
 
 
 def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):

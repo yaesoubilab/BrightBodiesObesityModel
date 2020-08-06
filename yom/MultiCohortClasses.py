@@ -48,6 +48,7 @@ class MultiCohort:
             cohorts = []
             for i in range(len(self.ids)):
                 cohorts.append(Cohort(id=self.ids[i],
+                                      model_inputs=self.inputs,
                                       parameters=self.param_sets[i]))
 
             # create a list of arguments for simulating the cohorts in parallel
@@ -110,11 +111,13 @@ class MultiSimOutputs:
         self.cohortHealthCareExpenditure = []
         self.aveIndividualHCExpenditure = []
 
-        # list of lists of total cumulative cohort costs
-        self.costSavings = []
+        # list of lists of cumulative average individual costs in all cohorts
+        self.cumAveIndividualCosts = []
 
     def extract_outcomes(self, simulated_cohort):
         """ extracts outcomes of a simulated cohort """
+
+        pop_size = simulated_cohort.simOutputs.popSize
 
         # store sample path of cohort population size
         self.pathsOfCohortPopSize.append(simulated_cohort.simOutputs.pathPopSize)
@@ -137,22 +140,21 @@ class MultiSimOutputs:
 
         # COSTS: Intervention Costs + HC Expenditure
         self.cohortCosts.append(simulated_cohort.simOutputs.totalCost)
-        self.aveIndividualCosts.append(simulated_cohort.simOutputs.totalCost/
-                                       simulated_cohort.simOutputs.popSize)
+        self.aveIndividualCosts.append(simulated_cohort.simOutputs.totalCost / pop_size)
 
         # cohort intervention costs
-        self.cohortInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts))
-        self.aveIndividualInterventionCosts.append(sum(simulated_cohort.simOutputs.annualCohortInterventionCosts)/
-                                                   simulated_cohort.simOutputs.popSize)
+        cohort_intervention_cost = sum(simulated_cohort.simOutputs.annualCohortInterventionCosts)
+        self.cohortInterventionCosts.append(cohort_intervention_cost)
+        self.aveIndividualInterventionCosts.append(cohort_intervention_cost / pop_size)
         # cohort health care expenditure
-        self.cohortHealthCareExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures))
-        self.aveIndividualHCExpenditure.append(sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)/
-                                               simulated_cohort.simOutputs.popSize)
+        cohort_hc_expenditure = sum(simulated_cohort.simOutputs.annualCohortHCExpenditures)
+        self.cohortHealthCareExpenditure.append(cohort_hc_expenditure)
+        self.aveIndividualHCExpenditure.append(cohort_hc_expenditure / pop_size)
 
-        # COST-SAVING FIGURE
         # list of lists of cost by year
-        self.costSavings.append(simulated_cohort.simOutputs.cumulativeCohortCost)
-        # print(simulated_cohort.simOutputs.discounted_cost_by_year)
+
+        cum_ave_individual_cost = [c/pop_size for c in simulated_cohort.simOutputs.cumulativeCohortCost]
+        self.cumAveIndividualCosts.append(cum_ave_individual_cost)
 
     def calculate_summary_stats(self):
 

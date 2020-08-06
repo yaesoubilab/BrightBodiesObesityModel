@@ -36,20 +36,20 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
         ys = YEARLY_DIFF_BMI_BB
         lbs = YEARLY_DIFF_BMI_BB_LB
         ubs = YEARLY_DIFF_BMI_BB_UB
-        ax.set_title('\nBright Bodies')
+        ax.set_title('Bright Bodies')
         ax.text(-0.05, 1.025, 'B)', transform=ax.transAxes, size=11, weight='bold')
     else:
         ys = YEARLY_DIFF_BMI_CONTROL
         lbs = YEARLY_DIFF_BMI_CONTROL_LB
         ubs = YEARLY_DIFF_BMI_CONTROL_UB
-        ax.set_title('\nClinical Control')
+        ax.set_title('Clinical Control')
         ax.text(-0.05, 1.025, 'A)', transform=ax.transAxes, size=11, weight='bold')
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
-        ax.scatter(1, this_y, color='plum', marker='_', s=200, alpha=0.5, label='Model', zorder=1)
+        ax.scatter(1, this_y, color='plum', marker='_', s=200, alpha=0.5, linewidth=0.5, label='Model', zorder=1)
     for this_y in year_two_vs_one:
-        ax.scatter(2, this_y, color='plum', marker='_', s=200, alpha=0.5, zorder=1)
+        ax.scatter(2, this_y, color='plum', marker='_', s=200, alpha=0.5, linewidth=0.5, zorder=1)
 
     # adding RCT data
     ax.scatter([1, 2], ys, color='purple', label='RCT', zorder=2)
@@ -109,11 +109,11 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     lower_bounds = [1, 1.1, 1.2]
     upper_bounds = [1, 1.1, 1.2]
 
-    f, ax = plt.subplots(figsize=(5, 4))
+    f, ax = plt.subplots(figsize=(6, 5))
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
-        ax.plot(range(len(ys)), ys, color='plum', alpha=0.5, label='Model', zorder=1)
+        ax.plot(range(len(ys)), ys, color='plum', alpha=0.5, linewidth=0.5, label='Model', zorder=1)
 
     # bright bodies data
     ax.scatter([.5, 1, 2], bb_ys, color='purple', label='RCT', zorder=2)
@@ -219,54 +219,54 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
         Fig.output_figure(fig, output_type)
 
 
-def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, figure_size=None):
 
-    # list (array) of cost of BB each year for each cohort
-    total_cost_by_year_bb = numpy.array(sim_outcomes_BB.costSavings)
-    # average of each element over all the lists (ex. average first element of all lists, add to new list)
-    average_cost_by_year_bb = (total_cost_by_year_bb.mean(axis=0))
-    print(average_cost_by_year_bb)
+    # list (array) of cumulative average cost of BB
+    cum_ave_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts)
+    # average of each element over all the lists
+    ave_cum_ave_cost_bb = (cum_ave_cost_bb.mean(axis=0))
 
-    # list (array) of cost of BB each year for each cohort
-    total_cost_by_year_cc = numpy.array(sim_outcomes_CC.costSavings)
-    # average of each element over all the lists (ex. average first element of all lists, add to new list)
-    average_cost_by_year_cc = (total_cost_by_year_cc.mean(axis=0))
-    print(average_cost_by_year_cc)
+    # list (array) of cumulative average cost of control
+    cum_ave_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts)
+    # average of each element over all the lists
+    ave_cum_ave_cost_cc = (cum_ave_cost_cc.mean(axis=0))
 
-    difference_average_cost_by_year = average_cost_by_year_bb - average_cost_by_year_cc
-    print(difference_average_cost_by_year)
+    # difference in cumulative average cost of BB and control
+    diff_cum_ave_cost = ave_cum_ave_cost_bb - ave_cum_ave_cost_cc
 
-    # FIGURE: Years until BB Cost-Saving
-    x = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    y = difference_average_cost_by_year
+    # x and y
+    x = range(1, len(diff_cum_ave_cost))  # simulation years
+    y = diff_cum_ave_cost[:-1]  # excluding the last observation
 
-    f, ax = plt.subplots()
-
-    ax.plot(x, y, linewidth=6, color='fuchsia')
-    ax.set_title('Average Time to Cost-Savings of BB Cohorts relative to CC Cohorts: \n'
-                 'Difference in Cumulative Cost by Simulation Year')
+    # make a figure
+    f, ax = plt.subplots(figsize=figure_size)
+    ax.set_title('Time to Cost-Savings of Bright Bodies\nRelative to the Control')
     ax.set_xlabel('Simulation Years')
-    ax.set_ylabel('Difference in Total Discounted Cost by Year ($)')
+    ax.set_ylabel('Difference in cumulative discounted cost per person ($)')
 
-    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    # average
+    ax.plot(x, y, linewidth=4, color='purple', zorder=1, label='Average')
 
-    single_cohort_difference_avg_cost_by_year = []
-    for cohort in range(len(sim_outcomes_BB.costSavings)):
-        cumulative_cost_bb = numpy.array(sim_outcomes_BB.costSavings[cohort])
-        cumulative_cost_cc = numpy.array(sim_outcomes_CC.costSavings[cohort])
-        difference_avg_cost_by_year = cumulative_cost_bb - cumulative_cost_cc
-        single_cohort_difference_avg_cost_by_year.append(difference_avg_cost_by_year)
-        plt.plot(x, single_cohort_difference_avg_cost_by_year[cohort], alpha=0.05, c='purple')
+    ax.set_xticks(x)
 
-    ax.legend(['Average'])
+    for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
+        cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
+        cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
+        diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
+        plt.plot(x, diff_avg_cum_cost[:-1], alpha=0.2, linewidth=0.5, c='purple', zorder=2)
 
-    colors = ["fuchsia", "purple"]
-    texts = ["Average", "Individual Cohorts"]
-    patches = [mpatches.Patch(color=colors[i], label="{:s}".format(texts[i])) for i in range(len(texts))]
-    plt.legend(handles=patches, loc='lower left', ncol=2)
+    ax.legend(['Average', 'Individual Cohort'], loc='lower left')
 
-    plt.axhline(color='black')
+    # colors = ["fuchsia", "purple"]
+    # texts = ["Average", "Individual Cohorts"]
+    # patches = [mpatches.Patch(color=colors[i], label="{:s}".format(texts[i])) for i in range(len(texts))]
+    # plt.legend(handles=patches, loc='lower left', ncol=2)
+
+    plt.axhline(color='k', ls='--', linewidth=0.5)
+
+    plt.tight_layout()
+    plt.savefig('figures/TimeToCostSavings.png', dpi=300)
     plt.show()
 
-    plt.savefig("figures/TimeToCostSavings.png", dpi=300)
+
 

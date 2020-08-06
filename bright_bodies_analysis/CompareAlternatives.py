@@ -10,109 +10,113 @@ import SimPy.Plots.SamplePaths as Path
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.FULL
+EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
-# change the working directory to the root directory
-os.chdir('../')
+# this line is needed to avoid errors that occur on Windows computers when running the model in parallel
+if __name__ == '__main__':
 
-# create an instance of the model inputs
-inputs = I.ModelInputs()
+    # change the working directory to the root directory
+    os.chdir('../')
 
-# for MultiCohort BRIGHT BODIES
-multiCohortBB = MultiCls.MultiCohort(
-    ids=range(inputs.nCohorts),
-    parameter_generator=ParamGenerator(
-        intervention=I.Interventions.BRIGHT_BODIES,
-        maintenance_scenario=EFFECT_MAINTENANCE,
-        model_inputs=inputs)
-)
-# simulate these cohorts (BB)
-multiCohortBB.simulate(sim_duration=inputs.simDuration,
-                       if_run_in_parallel=False)
+    # create an instance of the model inputs
+    inputs = I.ModelInputs()
 
-# for MultiCohort CLINICAL CONTROL
-multiCohortCC = MultiCls.MultiCohort(
-    ids=range(inputs.nCohorts),
-    parameter_generator=ParamGenerator(
-        intervention=I.Interventions.CONTROL,
-        maintenance_scenario=EFFECT_MAINTENANCE,
-        model_inputs=inputs)
-)
-# simulate these cohorts (CC)
-multiCohortCC.simulate(sim_duration=inputs.simDuration,
-                       if_run_in_parallel=False)
+    # for MultiCohort BRIGHT BODIES
+    multiCohortBB = MultiCls.MultiCohort(
+        ids=range(inputs.nCohorts),
+        parameter_generator=ParamGenerator(
+            intervention=I.Interventions.BRIGHT_BODIES,
+            maintenance_scenario=EFFECT_MAINTENANCE,
+            model_inputs=inputs)
+    )
+    # simulate these cohorts (BB)
+    multiCohortBB.simulate(sim_duration=inputs.simDuration,
+                           if_run_in_parallel=False)
 
-# -------- FIGURES  ----------
+    # for MultiCohort CLINICAL CONTROL
+    multiCohortCC = MultiCls.MultiCohort(
+        ids=range(inputs.nCohorts),
+        parameter_generator=ParamGenerator(
+            intervention=I.Interventions.CONTROL,
+            maintenance_scenario=EFFECT_MAINTENANCE,
+            model_inputs=inputs)
+    )
+    # simulate these cohorts (CC)
+    multiCohortCC.simulate(sim_duration=inputs.simDuration,
+                           if_run_in_parallel=False)
 
-Path.plot_sets_of_sample_paths(
-    sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
-                          multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
-    title='Average BMIs of Simulated Cohorts'
-          '\nAssuming Gradual Decay of Intervention Effect',
-    y_range=[0, 40],
-    x_label='Simulation Time (Year)',
-    y_label='Average BMI (kg/m'+r"$^2$"+') per Person-Year',
-    legends=['Clinical Control', 'Bright Bodies'],
-    connect='line',
-    color_codes=['darkorange', 'blue'],
-    transparency=0.5,
-    figure_size=(5, 4),
-    file_name='figures/bmiTrajectories.png'
-)
+    # -------- FIGURES  ----------
 
-P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                 sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                 maintenance_effect=EFFECT_MAINTENANCE)
+    Path.plot_sets_of_sample_paths(
+        sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
+                              multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
+        title='Average BMIs of Simulated Cohorts'
+              '\nAssuming Gradual Decay of Intervention Effect',
+        y_range=[0, 40],
+        x_label='Simulation Time (Year)',
+        y_label='Average BMI (kg/m'+r"$^2$"+') per Person-Year',
+        legends=['Clinical Control', 'Bright Bodies'],
+        connect='line',
+        color_codes=['darkorange', 'blue'],
+        transparency=0.5,
+        figure_size=(5, 4),
+        file_name='figures/bmiTrajectories.png'
+    )
 
-P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
-                            sim_outcomes_bb=multiCohortBB.multiSimOutputs)
+    P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                     sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                     maintenance_effect=EFFECT_MAINTENANCE)
 
-# report cost-effectiveness bright_bodies_analysis
-CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-               sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+    P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
+                                sim_outcomes_bb=multiCohortBB.multiSimOutputs)
+
+    # report cost-effectiveness bright_bodies_analysis
+    CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
 
-# COMPARATIVE: average BMIs over 10 years
-P.plot_sets_of_sample_paths(
-    sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
-                          multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
-    title='Cohort Average BMIs over 10 Years',
-    y_range=[0, 40],
-    x_label='Simulation Year',
-    y_label='Average BMI (kg/m'+r"$^2$"+')',
-    legends=['Model: Clinical Control', 'Model: Bright Bodies'],
-    connect='line',
-    color_codes=['orange', 'blue'],
-    transparency=0.5,
-    x_points=[0.0, 0.5, 1, 2],
-    y_points_bb=[35.7, 33.6, 33.9, 34.8],
-    y_points_cc=[36.2, 37.1, 38.1, 38.1],
-    ci_lower_values_bb=[0, 33, 33.3, 34],
-    ci_upper_values_bb=[0, 34.2, 34.6, 35.6],
-    ci_lower_values_cc=[0, 36.3, 37.3, 37.1],
-    ci_upper_values_cc=[0, 37.9, 39, 39.1]
-)
+    # COMPARATIVE: average BMIs over 10 years
+    P.plot_sets_of_sample_paths(
+        sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
+                              multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
+        title='Cohort Average BMIs over 10 Years',
+        y_range=[0, 40],
+        x_label='Simulation Year',
+        y_label='Average BMI (kg/m'+r"$^2$"+')',
+        legends=['Model: Clinical Control', 'Model: Bright Bodies'],
+        connect='line',
+        color_codes=['orange', 'blue'],
+        transparency=0.5,
+        x_points=[0.0, 0.5, 1, 2],
+        y_points_bb=[35.7, 33.6, 33.9, 34.8],
+        y_points_cc=[36.2, 37.1, 38.1, 38.1],
+        ci_lower_values_bb=[0, 33, 33.3, 34],
+        ci_upper_values_bb=[0, 34.2, 34.6, 35.6],
+        ci_lower_values_cc=[0, 36.3, 37.3, 37.1],
+        ci_upper_values_cc=[0, 37.9, 39, 39.1]
+    )
 
-# -------- OUTCOMES  ----------
+    # -------- OUTCOMES  ----------
 
-CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                      sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                      pop_size=inputs.popSize)
+    CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                          sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                          pop_size=inputs.popSize)
 
-CEA.report_incremental_cost_effect_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                           sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+    CEA.report_incremental_cost_effect_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                               sim_outcomes_CC=multiCohortCC.multiSimOutputs)
 
-P.plot_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                            sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+    P.plot_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                figure_size=(6, 5))
 
-# Path.plot_sets_of_sample_paths(
-#     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.costSavings,
-#                           multiCohortBB.multiSimOutputs.costSavings],
-#     title='Cohort Time to Cost Savings over 10 Years',
-#     x_label='Simulation Year',
-#     y_label='Cumulative Discounted Cost (kg/m' + r"$^2$" + ')',
-#     legends=['Clinical Control', 'Bright Bodies'],
-#     connect='line',
-#     color_codes=['orange', 'blue'],
-#     transparency=0.5
-# )
+    # Path.plot_sets_of_sample_paths(
+    #     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.costSavings,
+    #                           multiCohortBB.multiSimOutputs.costSavings],
+    #     title='Cohort Time to Cost Savings over 10 Years',
+    #     x_label='Simulation Year',
+    #     y_label='Cumulative Discounted Cost (kg/m' + r"$^2$" + ')',
+    #     legends=['Clinical Control', 'Bright Bodies'],
+    #     connect='line',
+    #     color_codes=['orange', 'blue'],
+    #     transparency=0.5
+    # )
