@@ -147,11 +147,12 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
 def plot_sets_of_sample_paths(sets_of_sample_paths,
                               title=None, x_label=None, y_label=None,
                               x_range=None, y_range=None,
-                              figure_size=None, output_type='show',
+                              figure_size=None,
                               legends=None, transparency=1, color_codes=None, connect='step',
                               x_points=None, y_points_bb=None, y_points_cc=None,
                               ci_lower_values_bb=None, ci_upper_values_bb=None,
-                              ci_lower_values_cc=None, ci_upper_values_cc=None):
+                              ci_lower_values_cc=None, ci_upper_values_cc=None,
+                              file_name=None):
     """ graphs multiple sample paths
     :param sets_of_sample_paths: (list) of list of sample paths
     :param title: (string) title of the figure
@@ -160,12 +161,12 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     :param x_range: (list) [x_min, x_max]
     :param y_range: (list) [y_min, y_max]
     :param figure_size: (tuple) figure size
-    :param output_type: select from 'show', 'pdf' or 'png'
     :param legends: (list of strings) for legends
     :param transparency: float (0.0 transparent through 1.0 opaque)
     :param color_codes: (list of strings) color code of sample path sets
             e.g. 'b' blue 'g' green 'r' red 'c' cyan 'm' magenta 'y' yellow 'k' black
     :param connect: (string) set to 'step' to produce an step graph and to 'line' to produce a line graph
+    :param file_name: (string) filename to save the figure as
     """
 
     if len(sets_of_sample_paths) == 1:
@@ -192,15 +193,15 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     if y_range is not None:
         ax.set_ylim(y_range)
 
-    # cc: blue
-    ax.scatter(x_points, y_points_cc, color='orange', marker="o", label='RCT: Clinical Control')
-    ax.scatter(x_points, ci_lower_values_cc, color='orange', marker="_")
-    ax.scatter(x_points, ci_upper_values_cc, color='orange', marker="_")
+    # cc:
+    ax.scatter(x_points, y_points_cc, color=color_codes[0], marker="o", label='RCT: Clinical Control')
+    ax.scatter(x_points, ci_lower_values_cc, color=color_codes[0], marker="_")
+    ax.scatter(x_points, ci_upper_values_cc, color=color_codes[0], marker="_")
 
-    # bb: green
-    ax.scatter(x_points, y_points_bb, color='blue', marker="o", label='RCT: Bright Bodies')
-    ax.scatter(x_points, ci_lower_values_bb, color='blue', marker="_")
-    ax.scatter(x_points, ci_upper_values_bb, color='blue', marker="_")
+    # bb:
+    ax.scatter(x_points, y_points_bb, color=color_codes[1], marker="o", label='RCT: Bright Bodies')
+    ax.scatter(x_points, ci_lower_values_bb, color=color_codes[1], marker="_")
+    ax.scatter(x_points, ci_upper_values_bb, color=color_codes[1], marker="_")
 
     # generate lines
     ax.add_collection(linecoll_bb)
@@ -217,10 +218,7 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     # set the minimum of y-axis to zero
     ax.set_ylim(bottom=0)  # the minimum has to be set after plotting the values
     # output figure
-    if output_type == 'show':
-        fig.show()
-    else:
-        Fig.output_figure(fig, output_type)
+    Fig.output_figure(fig, file_name)
 
 
 def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,

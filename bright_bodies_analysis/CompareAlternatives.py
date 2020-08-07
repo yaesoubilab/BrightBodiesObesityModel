@@ -97,7 +97,7 @@ if __name__ == '__main__':
         y_label='Average BMI (kg/m'+r"$^2$"+')',
         legends=['Model: Clinical Control', 'Model: Bright Bodies'],
         connect='line',
-        color_codes=['orange', 'blue'],
+        color_codes=[COLOR_CC, COLOR_BB],
         transparency=0.5,
         x_points=[0.0, 0.5, 1, 2],
         y_points_bb=[35.7, 33.6, 33.9, 34.8],
@@ -105,7 +105,8 @@ if __name__ == '__main__':
         ci_lower_values_bb=[0, 33, 33.3, 34],
         ci_upper_values_bb=[0, 34.2, 34.6, 35.6],
         ci_lower_values_cc=[0, 36.3, 37.3, 37.1],
-        ci_upper_values_cc=[0, 37.9, 39, 39.1]
+        ci_upper_values_cc=[0, 37.9, 39, 39.1],
+        file_name='figures/bmiTrajectoriesUnadjusted.png'
     )
 
     # -------- OUTCOMES  ----------
