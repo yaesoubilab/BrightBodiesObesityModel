@@ -12,6 +12,12 @@ import SimPy.Plots.SamplePaths as Path
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
 EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
+# color codes
+COLOR_CC = 'coral'
+COLOR_BB = 'royalblue'
+COLOR_MODEL = 'plum'
+COLOR_DATA = 'purple'
+
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
 if __name__ == '__main__':
 
@@ -31,7 +37,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (BB)
     multiCohortBB.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=False)
+                           if_run_in_parallel=True)
 
     # for MultiCohort CLINICAL CONTROL
     multiCohortCC = MultiCls.MultiCohort(
@@ -43,7 +49,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (CC)
     multiCohortCC.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=False)
+                           if_run_in_parallel=True)
 
     # -------- FIGURES  ----------
 
@@ -57,22 +63,28 @@ if __name__ == '__main__':
         y_label='Average BMI (kg/m'+r"$^2$"+') per Person-Year',
         legends=['Clinical Control', 'Bright Bodies'],
         connect='line',
-        color_codes=['darkorange', 'blue'],
+        color_codes=[COLOR_CC, COLOR_BB],
         transparency=0.5,
-        figure_size=(5, 4),
+        figure_size=(5.5, 4.5),
         file_name='figures/bmiTrajectories.png'
     )
 
     P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                      sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                     maintenance_effect=EFFECT_MAINTENANCE)
+                     maintenance_effect=EFFECT_MAINTENANCE,
+                     color_model=COLOR_MODEL,
+                     color_data=COLOR_DATA)
 
     P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
-                                sim_outcomes_bb=multiCohortBB.multiSimOutputs)
+                                sim_outcomes_bb=multiCohortBB.multiSimOutputs,
+                                color_model=COLOR_MODEL,
+                                color_data=COLOR_DATA
+                                )
 
     # report cost-effectiveness bright_bodies_analysis
     CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                   sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+                   sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                   color_bb=COLOR_BB, color_cc=COLOR_CC)
 
 
     # COMPARATIVE: average BMIs over 10 years
@@ -107,6 +119,7 @@ if __name__ == '__main__':
 
     P.plot_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                 sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                color=COLOR_DATA,
                                 figure_size=(6, 5))
 
     # Path.plot_sets_of_sample_paths(

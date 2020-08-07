@@ -17,7 +17,7 @@ YEARLY_DIFF_BMI_BB_LB = [.6, .8]
 YEARLY_DIFF_BMI_BB_UB = [.7, .8]
 
 
-def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
+def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, color_data):
     """ add yearly change in BMI to provided axis """
 
     # BMI difference by year
@@ -47,20 +47,20 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
-        ax.scatter(1, this_y, color='plum', marker='_', s=200, alpha=0.5, linewidth=0.5, label='Model', zorder=1)
+        ax.scatter(1, this_y, color=color_model, marker='_', s=200, alpha=0.5, linewidth=0.5, label='Model', zorder=1)
     for this_y in year_two_vs_one:
-        ax.scatter(2, this_y, color='plum', marker='_', s=200, alpha=0.5, linewidth=0.5, zorder=1)
+        ax.scatter(2, this_y, color=color_model, marker='_', s=200, alpha=0.5, linewidth=0.5, zorder=1)
 
     # adding RCT data
-    ax.scatter([1, 2], ys, color='purple', label='RCT', zorder=2)
+    ax.scatter([1, 2], ys, color=color_data, label='RCT', zorder=2)
     # adding error bars
-    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, color='purple', zorder=2)
+    ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, color=color_data, zorder=2)
 
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
     #ax.legend(loc='upper right')
 
-    ax.axhline(y=0, color='k', ls='--', linewidth=0.5)
+    ax.axhline(y=0, color='k', ls='--', linewidth=0.75)
 
     ax.set_xlim((0.5, 2.5))
     ax.set_xticks([1, 2])
@@ -72,7 +72,7 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention):
         ax.set_ylabel(' ')
 
 
-def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb):
+def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, color_model, color_data):
     """ generates validation graphs: BMI differences by year """
 
     # plot
@@ -80,19 +80,23 @@ def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb):
 
     f.suptitle('Differences in Average BMI by Year')
     add_yearly_change_in_bmi_to_ax(ax=axes[0], sim_outcomes=sim_outcomes_control,
-                                   intervention=I.Interventions.CONTROL)
+                                   intervention=I.Interventions.CONTROL,
+                                   color_model=color_model,
+                                   color_data=color_data)
     add_yearly_change_in_bmi_to_ax(ax=axes[1], sim_outcomes=sim_outcomes_bb,
-                                   intervention=I.Interventions.BRIGHT_BODIES)
+                                   intervention=I.Interventions.BRIGHT_BODIES,
+                                   color_model=color_model,
+                                   color_data=color_data)
 
     f.subplots_adjust(hspace=2, wspace=2)
     f.tight_layout()
 
     # bbox_inches set to tight: cleans up figures
     plt.savefig("figures/yearlyBMIChange.png", dpi=300)
-    plt.show()
+    #plt.show()
 
 
-def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
+def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_model, color_data):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
@@ -113,12 +117,12 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
-        ax.plot(range(len(ys)), ys, color='plum', alpha=0.5, linewidth=0.5, label='Model', zorder=1)
+        ax.plot(range(len(ys)), ys, color=color_model, alpha=0.5, linewidth=0.75, label='Model', zorder=1)
 
     # bright bodies data
-    ax.scatter([.5, 1, 2], bb_ys, color='purple', label='RCT', zorder=2)
+    ax.scatter([.5, 1, 2], bb_ys, color=color_data, label='RCT', zorder=2)
     ax.errorbar([.5, 1, 2], bb_ys, yerr=[lower_bounds, upper_bounds],
-                fmt='none', capsize=4, ecolor='purple', elinewidth=2, zorder=2)
+                fmt='none', capsize=4, ecolor=color_data, elinewidth=2, zorder=2)
 
     ax.set_title('Effectiveness of the Bright Bodies Intervention'
                  '\nAssuming Gradual Decay of Intervention Effect')
@@ -137,7 +141,7 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
         plt.savefig("figures/bbEffDeprecMaint.png", dpi=300)
     elif maintenance_effect == I.EffectMaintenance.NONE:
         plt.savefig("figures/bbEffNoMaint.png", dpi=300)
-    plt.show()
+    # plt.show()
 
 
 def plot_sets_of_sample_paths(sets_of_sample_paths,
@@ -219,7 +223,8 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
         Fig.output_figure(fig, output_type)
 
 
-def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, figure_size=None):
+def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
+                              color, figure_size=None):
 
     # list (array) of cumulative average cost of BB
     cum_ave_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts)
@@ -245,7 +250,7 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, figure_size=None
     ax.set_ylabel('Difference in cumulative discounted cost per person ($)')
 
     # average
-    ax.plot(x, y, linewidth=4, color='purple', zorder=1, label='Average')
+    ax.plot(x, y, linewidth=4, color=color, zorder=1, label='Average')
 
     ax.set_xticks(x)
 
@@ -253,7 +258,7 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, figure_size=None
         cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
         cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
         diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
-        plt.plot(x, diff_avg_cum_cost[:-1], alpha=0.2, linewidth=0.5, c='purple', zorder=2)
+        plt.plot(x, diff_avg_cum_cost[:-1], alpha=0.2, linewidth=0.5, c=color, zorder=2)
 
     ax.legend(['Average', 'Individual Cohort'], loc='lower left')
 
@@ -266,7 +271,7 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, figure_size=None
 
     plt.tight_layout()
     plt.savefig('figures/TimeToCostSavings.png', dpi=300)
-    plt.show()
+    # plt.show()
 
 
 

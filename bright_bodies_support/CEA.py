@@ -6,10 +6,12 @@ import SimPy.InOutFunctions as IO
 import matplotlib.pyplot as plt
 
 
-def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
+def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
     """ performs cost-effectiveness bright_bodies_analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    :param color_bb: color code for Bright Bodies
+    :param color_cc: color code for Clinical Control
     """
 
     # Define Two Strategies
@@ -18,14 +20,14 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
         name='Clinical Control',
         cost_obs=sim_outcomes_CC.aveIndividualCosts,
         effect_obs=sim_outcomes_CC.effects,
-        color='darkorange'
+        color=color_cc
     )
     # Bright Bodies
     bright_bodies_strategy = Econ.Strategy(
         name='Bright Bodies',
         cost_obs=sim_outcomes_BB.aveIndividualCosts,
         effect_obs=sim_outcomes_BB.effects,
-        color='blue'
+        color=color_bb
     )
 
     # do CEA
@@ -43,15 +45,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC):
                       x_range=(-0.5, 3.5),
                       title='Cost-Effectiveness Plane',
                       fig_size=(4.6, 4),
-                      file_name='figures/cea.png'
-                      )
-    CEA.plot_CE_plane(x_label='Average BMI Unit Reduction (kg/m' + r'$^2$' + ') per Person-Year'
-                                                                             '\n(Over 10 Simulation Years)',
-                      y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
-                      cost_digits=0, effect_digits=1,
-                      x_range=(-0.5, 3.5),
-                      title='Cost-Effectiveness Plane',
-                      fig_size=(4.6, 4),
+                      file_name='figures/CEA.png'
                       )
 
     # report the CE table
