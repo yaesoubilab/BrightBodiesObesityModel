@@ -3,7 +3,7 @@ import SimPy.EconEval as Econ
 import numpy as np
 import SimPy.StatisticalClasses as Stat
 import SimPy.InOutFunctions as IO
-import matplotlib.pyplot as plt
+import numpy
 
 
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
@@ -164,3 +164,50 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     IO.write_csv(rows=(differences_ave_cost_values, differences_ave_int_cost_values, differences_ave_hc_cost_values),
                  file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
 
+
+def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+    """ reports incremental effect
+    :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
+    :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    """
+
+    list_of_lists_of_diff_avg_cum_cost = []
+    for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
+        cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
+        cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
+        diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
+        list_of_lists_of_diff_avg_cum_cost.append(diff_avg_cum_cost)
+
+    # algorithm for exact time to cost-savings
+    list_of_time_of_cost_savings = []
+    for list in list_of_lists_of_diff_avg_cum_cost:
+        diff_avg_cum_cost_values = list
+        # x-axis
+        x_axis = numpy.arange(0, 11)
+        # year during which cost savings occurs
+        year_before_cost_savings = numpy.argwhere(numpy.diff(numpy.sign(diff_avg_cum_cost_values - x_axis))).flatten()
+        # year following cost savings
+        year_after_cost_savings = year_before_cost_savings+1
+        # find exact time during year of cost savings
+        C1 = int(year_before_cost_savings[0])
+        C2 = int(year_after_cost_savings[0])
+
+        x = list[C1]
+        y = list[C2]
+
+        time_of_cost_savings = C1 + (x/(x-y))
+        list_of_time_of_cost_savings.append(time_of_cost_savings)
+
+    # find mean and UI of time to cost-saving
+    stat_time_to_cost_savings = Stat.SummaryStat(
+        data=list_of_time_of_cost_savings,
+        name='Time to Cost Savings'
+    )
+
+    avg_time_to_cost_savings = [
+        ['Time to Cost Savings', 'Mean (PI)'],
+        ['BB v. CC', stat_time_to_cost_savings.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+    ]
+    # generate CSV
+    IO.write_csv(rows=avg_time_to_cost_savings,
+                 file_name='bright_bodies_analysis/TimeToCostSavings.csv')

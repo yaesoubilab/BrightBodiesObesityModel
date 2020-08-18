@@ -123,6 +123,9 @@ if __name__ == '__main__':
                                 color=COLOR_DATA,
                                 figure_size=(6, 5))
 
+    CEA.report_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+
     # Path.plot_sets_of_sample_paths(
     #     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.costSavings,
     #                           multiCohortBB.multiSimOutputs.costSavings],

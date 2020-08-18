@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy
 from matplotlib import collections as matcoll
-import matplotlib.patches as mpatches
 
 import SimPy.Plots.FigSupport as Fig
 import SimPy.Plots.SamplePaths as Path
@@ -252,10 +251,12 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
 
     ax.set_xticks(x)
 
+    list_of_lists_of_diff_avg_cum_cost = []
     for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
         cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
         cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
         diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
+        list_of_lists_of_diff_avg_cum_cost.append(diff_avg_cum_cost)
         plt.plot(x, diff_avg_cum_cost[:-1], alpha=0.2, linewidth=0.5, c=color, zorder=2)
 
     ax.legend(['Average', 'Individual Cohort'], loc='lower left')
@@ -270,6 +271,3 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
     plt.tight_layout()
     plt.savefig('figures/TimeToCostSavings.png', dpi=300)
     # plt.show()
-
-
-
