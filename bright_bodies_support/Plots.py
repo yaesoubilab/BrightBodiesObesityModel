@@ -5,7 +5,7 @@ from matplotlib import collections as matcoll
 import SimPy.Plots.FigSupport as Fig
 import SimPy.Plots.SamplePaths as Path
 import bright_bodies_support.Inputs as I
-
+import bright_bodies_support.CEA as CEA
 
 # Yearly difference in BMI under control and bright bodies
 YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
@@ -237,7 +237,7 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
     diff_cum_ave_cost = ave_cum_ave_cost_bb - ave_cum_ave_cost_cc
 
     # x and y
-    x = range(1, len(diff_cum_ave_cost))  # simulation years
+    x = range(0, 10)  # simulation years
     y = diff_cum_ave_cost[:-1]  # excluding the last observation
 
     # make a figure
@@ -251,13 +251,10 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
 
     ax.set_xticks(x)
 
-    list_of_lists_of_diff_avg_cum_cost = []
-    for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
-        cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
-        cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
-        diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
-        list_of_lists_of_diff_avg_cum_cost.append(diff_avg_cum_cost)
-        plt.plot(x, diff_avg_cum_cost[:-1], alpha=0.2, linewidth=0.5, c=color, zorder=2)
+    ave_cum_costs = CEA.get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
+                                                       sim_outcomes_CC=sim_outcomes_CC)
+    for list in ave_cum_costs:
+        plt.plot(x, list[:-1], alpha=0.2, linewidth=0.5, c=color, zorder=2)
 
     ax.legend(['Average', 'Individual Cohort'], loc='lower left')
 

@@ -4,6 +4,7 @@ import numpy as np
 import SimPy.StatisticalClasses as Stat
 import SimPy.InOutFunctions as IO
 import numpy
+import bright_bodies_support.Inputs as I
 
 
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
@@ -133,7 +134,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
         ['Difference in Average Cost per person:', 'Mean (PI)'],
         ['BB v. CC', stat_diff_ave_cost.get_formatted_mean_and_interval(interval_type='p', deci=2)],
     ]
-    print(differences_ave_cost_values)
+    # print(differences_ave_cost_values)
 
     # INTERVENTION COST
     # find difference in yearly average intervention costs between interventions (individual)
@@ -165,27 +166,39 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
                  file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
 
 
-def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+def get_list_of_diff_ave_cum_costs(sim_outcomes_BB, sim_outcomes_CC):
     """ reports incremental effect
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     """
-
     list_of_lists_of_diff_avg_cum_cost = []
     for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
         cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
         cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
         diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
         list_of_lists_of_diff_avg_cum_cost.append(diff_avg_cum_cost)
+        # return diff_avg_cum_cost, list_of_lists_of_diff_avg_cum_cost
+    return list_of_lists_of_diff_avg_cum_cost
+
+
+def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+    """ reports incremental effect
+    :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
+    :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    """
+
+    ave_cum_costs = get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
+                                                   sim_outcomes_CC=sim_outcomes_CC)
 
     # algorithm for exact time to cost-savings
     list_of_time_of_cost_savings = []
-    for list in list_of_lists_of_diff_avg_cum_cost:
+    for list in ave_cum_costs:
         diff_avg_cum_cost_values = list
         # x-axis
-        x_axis = numpy.arange(0, 11)
+        x_axis = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         # year during which cost savings occurs
         year_before_cost_savings = numpy.argwhere(numpy.diff(numpy.sign(diff_avg_cum_cost_values - x_axis))).flatten()
+        print(numpy.argwhere(numpy.diff(numpy.sign(diff_avg_cum_cost_values - x_axis))).flatten())
         # year following cost savings
         year_after_cost_savings = year_before_cost_savings+1
         # find exact time during year of cost savings

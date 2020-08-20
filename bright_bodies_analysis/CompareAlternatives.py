@@ -10,7 +10,7 @@ import SimPy.Plots.SamplePaths as Path
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
+EFFECT_MAINTENANCE = I.EffectMaintenance.NONE
 
 # color codes
 COLOR_CC = 'coral'
@@ -85,7 +85,6 @@ if __name__ == '__main__':
     CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                    color_bb=COLOR_BB, color_cc=COLOR_CC)
-
 
     # COMPARATIVE: average BMIs over 10 years
     P.plot_sets_of_sample_paths(
