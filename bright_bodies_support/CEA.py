@@ -187,29 +187,29 @@ def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     """
 
-    ave_cum_costs = get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
-                                                   sim_outcomes_CC=sim_outcomes_CC)
+    incremental_cum_costs = get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
+                                                           sim_outcomes_CC=sim_outcomes_CC)
 
     # algorithm for exact time to cost-savings
     list_of_time_of_cost_savings = []
-    for list in ave_cum_costs:
-        diff_avg_cum_cost_values = list
-        # x-axis
-        x_axis = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        # year during which cost savings occurs
-        year_before_cost_savings = numpy.argwhere(numpy.diff(numpy.sign(diff_avg_cum_cost_values - x_axis))).flatten()
-        print(numpy.argwhere(numpy.diff(numpy.sign(diff_avg_cum_cost_values - x_axis))).flatten())
-        # year following cost savings
-        year_after_cost_savings = year_before_cost_savings+1
-        # find exact time during year of cost savings
-        C1 = int(year_before_cost_savings[0])
-        C2 = int(year_after_cost_savings[0])
+    for incremental_costs in incremental_cum_costs:
 
-        x = list[C1]
-        y = list[C2]
+        # find year index when cost-saving occurs
+        cost_saving_occurred = False
+        for year_index, incre_cost in enumerate(incremental_costs):
+            if incre_cost < 0:
+                cost_saving_occurred = True
+                break
 
-        time_of_cost_savings = C1 + (x/(x-y))
-        list_of_time_of_cost_savings.append(time_of_cost_savings)
+        # estimate the time until cost saving
+        if cost_saving_occurred:
+            cost_last_positive = incremental_costs[year_index-1]
+            cost_first_negative = incremental_costs[year_index]
+            time_of_cost_saving = year_index + (cost_last_positive / (cost_last_positive - cost_first_negative))
+        else:
+            time_of_cost_saving = np.inf
+
+        list_of_time_of_cost_savings.append(time_of_cost_saving)
 
     # find mean and UI of time to cost-saving
     stat_time_to_cost_savings = Stat.SummaryStat(
