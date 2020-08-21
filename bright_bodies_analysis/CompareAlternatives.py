@@ -124,15 +124,3 @@ if __name__ == '__main__':
 
     CEA.report_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                     sim_outcomes_CC=multiCohortCC.multiSimOutputs)
-
-    # Path.plot_sets_of_sample_paths(
-    #     sets_of_sample_paths=[multiCohortCC.multiSimOutputs.costSavings,
-    #                           multiCohortBB.multiSimOutputs.costSavings],
-    #     title='Cohort Time to Cost Savings over 10 Years',
-    #     x_label='Simulation Year',
-    #     y_label='Cumulative Discounted Cost (kg/m' + r"$^2$" + ')',
-    #     legends=['Clinical Control', 'Bright Bodies'],
-    #     connect='line',
-    #     color_codes=['orange', 'blue'],
-    #     transparency=0.5
-    # )

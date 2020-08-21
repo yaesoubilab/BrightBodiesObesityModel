@@ -223,27 +223,18 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
 def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
                               color, figure_size=None):
 
-    # list (array) of cumulative average cost of BB
-    cum_ave_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts)
-    # average of each element over all the lists
-    ave_cum_ave_cost_bb = (cum_ave_cost_bb.mean(axis=0))
-
-    # list (array) of cumulative average cost of control
-    cum_ave_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts)
-    # average of each element over all the lists
-    ave_cum_ave_cost_cc = (cum_ave_cost_cc.mean(axis=0))
-
-    # difference in cumulative average cost of BB and control
-    diff_cum_ave_cost = ave_cum_ave_cost_bb - ave_cum_ave_cost_cc
+    ave_cum_costs = CEA.get_list_of_diff_ave_cum_costs(multisim_outcomes_BB=sim_outcomes_BB,
+                                                       multisim_outcomes_CC=sim_outcomes_CC)
+    diff_cum_ave_cost = numpy.array(ave_cum_costs).mean(axis=0)
 
     # x and y
-    x = range(0, 10)  # simulation years
+    x = range(1, len(diff_cum_ave_cost))  # simulation years
     y = diff_cum_ave_cost[:-1]  # excluding the last observation
 
     # make a figure
     f, ax = plt.subplots(figsize=figure_size)
     ax.set_title('Time to Cost-Savings of Bright Bodies\nRelative to the Control')
-    ax.set_xlabel('Simulation Years')
+    ax.set_xlabel('Simulation Period (Year)')
     ax.set_ylabel('Difference in cumulative discounted cost per person ($)')
 
     # average
@@ -251,8 +242,6 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
 
     ax.set_xticks(x)
 
-    ave_cum_costs = CEA.get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
-                                                       sim_outcomes_CC=sim_outcomes_CC)
     for list in ave_cum_costs:
         plt.plot(x, list[:-1], alpha=0.2, linewidth=0.5, c=color, zorder=2)
 
@@ -267,4 +256,3 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
 
     plt.tight_layout()
     plt.savefig('figures/TimeToCostSavings.png', dpi=300)
-    # plt.show()

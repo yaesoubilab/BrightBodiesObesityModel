@@ -166,19 +166,43 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
                  file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
 
 
-def get_list_of_diff_ave_cum_costs(sim_outcomes_BB, sim_outcomes_CC):
-    """ reports incremental effect
-    :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
-    :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+def get_list_of_diff_ave_cum_costs(multisim_outcomes_BB, multisim_outcomes_CC):
+    """ reports difference in cumulative average cost (over individuals) by cohort
+    :param multisim_outcomes_BB: outcomes of multiple cohorts simulated under Bright Bodies
+    :param multisim_outcomes_CC: outcomes of multiple cohorts simulated under Clinical Control
     """
     list_of_lists_of_diff_avg_cum_cost = []
-    for cohort in range(len(sim_outcomes_BB.cumAveIndividualCosts)):
-        cumulative_cost_bb = numpy.array(sim_outcomes_BB.cumAveIndividualCosts[cohort])
-        cumulative_cost_cc = numpy.array(sim_outcomes_CC.cumAveIndividualCosts[cohort])
+    for cohort in range(len(multisim_outcomes_BB.cumAveIndividualCosts)):
+        cumulative_cost_bb = numpy.array(multisim_outcomes_BB.cumAveIndividualCosts[cohort])
+        cumulative_cost_cc = numpy.array(multisim_outcomes_CC.cumAveIndividualCosts[cohort])
         diff_avg_cum_cost = cumulative_cost_bb - cumulative_cost_cc
         list_of_lists_of_diff_avg_cum_cost.append(diff_avg_cum_cost)
         # return diff_avg_cum_cost, list_of_lists_of_diff_avg_cum_cost
     return list_of_lists_of_diff_avg_cum_cost
+
+
+def get_estimated_time_of_cost_saving(incremental_costs):
+    """
+    :param incremental_costs: (list) of non-increasing incremental cost values
+    :return: estimated time where cost-saving occurs
+    """
+
+    # find year index when cost-saving occurs
+    cost_saving_occurred = False
+    for year_index, incre_cost in enumerate(incremental_costs):
+        if incre_cost < 0:
+            cost_saving_occurred = True
+            break
+
+    # estimate the time until cost saving
+    if cost_saving_occurred:
+        cost_last_positive = incremental_costs[year_index - 1]
+        cost_first_negative = incremental_costs[year_index]
+        time_of_cost_saving = year_index + (cost_last_positive / (cost_last_positive - cost_first_negative))
+    else:
+        time_of_cost_saving = np.inf
+
+    return time_of_cost_saving
 
 
 def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
@@ -187,28 +211,19 @@ def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     """
 
-    incremental_cum_costs = get_list_of_diff_ave_cum_costs(sim_outcomes_BB=sim_outcomes_BB,
-                                                           sim_outcomes_CC=sim_outcomes_CC)
+    incremental_cum_costs = get_list_of_diff_ave_cum_costs(multisim_outcomes_BB=sim_outcomes_BB,
+                                                           multisim_outcomes_CC=sim_outcomes_CC)
+
+    diff_cum_ave_cost = numpy.array(incremental_cum_costs).mean(axis=0)
+
+    expected_time_until_cost_saving = get_estimated_time_of_cost_saving(diff_cum_ave_cost)
 
     # algorithm for exact time to cost-savings
     list_of_time_of_cost_savings = []
     for incremental_costs in incremental_cum_costs:
 
         # find year index when cost-saving occurs
-        cost_saving_occurred = False
-        for year_index, incre_cost in enumerate(incremental_costs):
-            if incre_cost < 0:
-                cost_saving_occurred = True
-                break
-
-        # estimate the time until cost saving
-        if cost_saving_occurred:
-            cost_last_positive = incremental_costs[year_index-1]
-            cost_first_negative = incremental_costs[year_index]
-            time_of_cost_saving = year_index + (cost_last_positive / (cost_last_positive - cost_first_negative))
-        else:
-            time_of_cost_saving = np.inf
-
+        time_of_cost_saving = get_estimated_time_of_cost_saving(incremental_costs)
         list_of_time_of_cost_savings.append(time_of_cost_saving)
 
     # find mean and UI of time to cost-saving
@@ -218,8 +233,10 @@ def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
     )
 
     avg_time_to_cost_savings = [
-        ['Time to Cost Savings', 'Mean (PI)'],
-        ['BB v. CC', stat_time_to_cost_savings.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+        ['Time to Cost Savings', 'Mean', 'PI'],
+        ['BB v. CC',
+         '{:.{prec}f}'.format(expected_time_until_cost_saving, prec=2),
+         stat_time_to_cost_savings.get_formatted_interval(interval_type='p', deci=2)],
     ]
     # generate CSV
     IO.write_csv(rows=avg_time_to_cost_savings,
