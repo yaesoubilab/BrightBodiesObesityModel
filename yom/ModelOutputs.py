@@ -85,45 +85,14 @@ class SimOutputs:
         # list of cohort expenditure totals per year (to get total expenditure)
         self.annualCohortHCExpenditures.append(hc_expenditure)
 
-        # # list of cohort total cumulative cost by this year
-        # cum = 0
-        # if len(self.cumulativeCohortCost) > 0:
-        #     cum = self.cumulativeCohortCost[-1]
-        # self.cumulativeCohortCost.append(intervention_cost + hc_expenditure + cum)
+        # list of cohort total cumulative cost by this year
+        cum = 0
+        if len(self.cumulativeCohortCost) > 0:
+            cum = self.cumulativeCohortCost[-1]
+        self.cumulativeCohortCost.append(intervention_cost + hc_expenditure + cum)
 
         # list of individual expenditure totals per year (to get total expenditure per individual)
         self.annualIndividualHCExpenditures.append(hc_expenditure / cohort_size)
 
         # update total cohort cost
         self.totalCost += intervention_cost + hc_expenditure
-
-        # half-cycle correction
-
-        annualCostValue = intervention_cost + hc_expenditure
-        print('cost value ', annualCostValue)
-        self.listAnnualCostValues.append(annualCostValue)
-        print('og cost values', self.listAnnualCostValues)
-
-        print(self.simCal.time)
-
-        # find index for last value and current value
-        this_index = round(self.simCal.time)
-        last_index = round(self.simCal.time) - 1
-
-        # find current cost value and last cost value
-        this_cost = self.listAnnualCostValues[this_index]
-        last_cost = self.listAnnualCostValues[last_index]
-
-        # average current cost value and last cost value
-        hcc_cost = 0.5 * (this_cost + last_cost)
-        print(this_cost, last_cost, hcc_cost)
-
-        if self.simCal.time > 0.1:
-            self.hccCostValues.append(hcc_cost)
-            print('hcc cost list', self.hccCostValues)
-
-        # list of cohort total cumulative cost by this year
-        cum = 0
-        if len(self.cumulativeCohortCost) > 0:
-            cum = self.cumulativeCohortCost[-1]
-        self.cumulativeCohortCost.append(hcc_cost + cum)

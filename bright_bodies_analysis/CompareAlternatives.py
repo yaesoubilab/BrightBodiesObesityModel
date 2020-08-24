@@ -10,7 +10,7 @@ import SimPy.Plots.SamplePaths as Path
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.FULL
+EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
 # color codes
 COLOR_CC = 'coral'
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (BB)
     multiCohortBB.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=True)
+                           if_run_in_parallel=False)
 
     # for MultiCohort CLINICAL CONTROL
     multiCohortCC = MultiCls.MultiCohort(
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (CC)
     multiCohortCC.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=True)
+                           if_run_in_parallel=False)
 
     # -------- FIGURES  ----------
 
