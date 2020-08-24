@@ -212,7 +212,7 @@ class Cohort:
                     hc_now = self.calculate_hc_expenditure(individual=individual,
                                                            intervention_multiplier=intervention_multp_now,
                                                            sim_year_index=year_index)
-                    cohort_discounted_hc_expenditure += (hc_last_year + hc_now) / 2 * discount_factor
+                    cohort_discounted_hc_expenditure += 0.5 * (hc_last_year + hc_now) * discount_factor
 
         # store list of individual costs and health
         self.simOutputs.collect_costs_of_this_period(
