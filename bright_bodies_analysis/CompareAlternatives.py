@@ -10,7 +10,7 @@ import SimPy.Plots.SamplePaths as Path
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
+EFFECT_MAINTENANCE = I.EffectMaintenance.NONE
 
 # color codes
 COLOR_CC = 'coral'
