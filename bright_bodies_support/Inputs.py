@@ -41,31 +41,36 @@ class ModelInputs:
             'BB Year 2': [0.951, 0.01]
         }
 
+        # fringe
+        fringe_rate = 0.314
+
         # dictionary of cost items for Bright Bodies
         # each element is a list of [mean, stDev]
         self.dictCostBB = {
-            'Exercise physiologist A': [5474.56, 0.1 * 5474.56],
-            'Exercise physiologist B': [6843.20, 0.1 * 6843.20],
+            'Exercise physiologist A': [5474.56+(5474.56*fringe_rate), 0.1 * 5474.56+(5474.56*fringe_rate)],
+            'Exercise physiologist B': [6843.20+(6843.20*fringe_rate), 0.1 * 6843.20+(6843.20*fringe_rate)],
             'Games and equipment': [2409.66, 0.1 * 2409.66],
             'Motivational tools': [304.38, 0.1 * 304.38],
             'Printed material (Exercise Session)': [31.71, 0.1 * 31.71],
             'Gym room and utilities': [0.00, 0.1 * 0.00],
             'First aid kit': [190.24, 0.1 * 190.24],
-            'Registered dietitian A': [1558.44, 0.1 * 1558.44],
-            'Registered dietitian B': [4675.32, 0.1 * 4675.32],
-            'Social worker (Nutrition Session)': [1259.96, 0.1 * 1259.96],
+            'Registered dietitian A': [1558.44+(1558.44*fringe_rate), 0.1 * 1558.44+(1558.44*fringe_rate)],
+            'Registered dietitian B': [4675.32+(4675.32*fringe_rate), 0.1 * 4675.32+(4675.32*fringe_rate)],
+            'Social worker (Nutrition Session)': [1259.96+(1259.96*fringe_rate), 0.1 * 1259.96+(1259.96*fringe_rate)],
             'Educational tools': [1712.13, 0.1 * 1712.13],
             'Classroom and utilities (Nutrition Session)': [0.00, 0.1 * 0.00],
-            'Social worker (Parent Session)': [1259.96, 0.1 * 1259.96],
+            'Social worker (Parent Session)': [1259.96+(1259.96*fringe_rate), 0.1 * 1259.96+(1259.96*fringe_rate)],
             'Printed material (Parent Session)': [31.71, 0.1 * 31.71],
             'Classroom and utilities (Parent Session)': [0.00, 0.1 * 0.00],
-            'Program coordinator (exercise physiologist)(admin)': [6843.20, 0.1 * 6843.20],
-            'Program director (registered dietitian)(admin)': [12467.52, 0.1 * 12467.52],
-            'Dept clinical secretary': [549.30, 0.1 * 549.30],
-            'Technician': [1416.60, 0.1 * 1416.60],
+            'Program coordinator (exercise physiologist)(admin)': [6843.20+(6843.20*fringe_rate),
+                                                                   0.1 * 6843.20+(6843.20*fringe_rate)],
+            'Program director (registered dietitian)(admin)': [12467.52+(12467.52*fringe_rate),
+                                                               0.1 * 12467.52+(12467.52*fringe_rate)],
+            'Dept clinical secretary': [549.30+(549.30*fringe_rate), 0.1 * 549.30+(549.30*fringe_rate)],
+            'Technician': [1416.60+(1416.60*fringe_rate), 0.1 * 1416.60+(1416.60*fringe_rate)],
             'Body fat analyzer and scale': [887.77, 0.1 * 887.77],
             'Stadiometer': [76.09, 0.1 * 76.09],
-            'Medical consultation': [5331.56, 0.1 * 5331.56],
+            'Medical consultation': [5331.56+(5331.56*fringe_rate), 0.1 * 5331.56+(5331.56*fringe_rate)],
             'Rent space, utilities': [3804.73, 0.1 * 3804.73],
             'Cleaning service': [1122.39, 0.1 * 1122.39],
             'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
@@ -74,13 +79,13 @@ class ModelInputs:
         # dictionary of cost items for the Control
         # each element is a list of [mean, stDev]
         self.dictCostControl = {
-            'Nurse visit / follow up': [14517.90, 0.1 * 14517.90],
-            'Nutrition visit / follow up': [5619.38, 0.1 * 5619.38],
-            'Behavioral visit / follow up': [4361.40, 0.1 * 4361.40],
-            'Dept clinical secretary': [549.30, 0.1 * 549.30],
-            'Typing': [1647.90, 0.1 * 1647.90],
-            'Lab technician': [1416.60, 0.1 * 1416.60],
-            'Medical consultation': [12303.60, 0.1 * 12303.60],
+            'Nurse visit / follow up': [14517.90+(14517.90*fringe_rate), 0.1 * 14517.90+(14517.90*fringe_rate)],
+            'Nutrition visit / follow up': [5619.38+(5619.38*fringe_rate), 0.1 * 5619.38+(5619.38*fringe_rate)],
+            'Behavioral visit / follow up': [4361.40+(4361.40*fringe_rate), 0.1 * 4361.40+(4361.40*fringe_rate)],
+            'Dept clinical secretary': [549.30+(549.30*fringe_rate), 0.1 * 549.30+(549.30*fringe_rate)],
+            'Typing': [1647.90+(1647.90*fringe_rate), 0.1 * 1647.90+(1647.90*fringe_rate)],
+            'Lab technician': [1416.60+(1416.60*fringe_rate), 0.1 * 1416.60+(1416.60*fringe_rate)],
+            'Medical consultation': [12303.60+(12303.60*fringe_rate), 0.1 * 12303.60+(12303.60*fringe_rate)],
             'Rent space, utilities': [3804.73, 0.1 * 3804.73],
             'Cleaning service': [1122.39, 0.1 * 1122.39],
             'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
