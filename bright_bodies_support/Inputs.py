@@ -1,5 +1,5 @@
 from enum import Enum
-import SimPy.StatisticalClasses as Stat
+import SimPy.Statistics as Stat
 
 
 class Interventions(Enum):

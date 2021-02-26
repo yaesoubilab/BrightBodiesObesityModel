@@ -2,7 +2,7 @@ from math import floor, pow
 
 import SimPy.DiscreteEventSim as SimCls
 import SimPy.RandomVariateGenerators as RVGs
-import SimPy.SimulationSupport as Sim
+import SimPy.Support.Simulation as Sim
 from SimPy.DataFrames import Pyramid
 from yom import ModelOutputs as O, ModelEvents as E
 from yom.ModelInputs import WeightStatus

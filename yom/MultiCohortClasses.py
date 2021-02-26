@@ -1,7 +1,7 @@
 import multiprocessing as mp
 
 import SimPy.RandomVariateGenerators as RVGs
-import SimPy.StatisticalClasses as Stat
+import SimPy.Statistics as Stat
 from yom.ModelEntities import Cohort
 import numpy as np
 

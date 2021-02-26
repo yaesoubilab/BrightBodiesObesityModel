@@ -1,7 +1,7 @@
 import SimPy.EconEval as Econ
 
 import numpy as np
-import SimPy.StatisticalClasses as Stat
+import SimPy.Statistics as Stat
 import SimPy.InOutFunctions as IO
 import numpy
 import bright_bodies_support.Inputs as I
