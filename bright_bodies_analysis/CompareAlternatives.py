@@ -11,6 +11,7 @@ import SimPy.Plots.SamplePaths as Path
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
 EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
+RUN_IN_PARALLEL = True
 
 # color codes
 COLOR_CC = 'coral'
@@ -37,7 +38,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (BB)
     multiCohortBB.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=False)
+                           if_run_in_parallel=RUN_IN_PARALLEL)
 
     # for MultiCohort CLINICAL CONTROL
     multiCohortCC = MultiCls.MultiCohort(
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     )
     # simulate these cohorts (CC)
     multiCohortCC.simulate(sim_duration=inputs.simDuration,
-                           if_run_in_parallel=False)
+                           if_run_in_parallel=RUN_IN_PARALLEL)
 
     # -------- FIGURES  ----------
 

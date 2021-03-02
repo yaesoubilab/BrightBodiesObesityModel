@@ -201,7 +201,7 @@ class Cohort:
 
                 # collect the cost of the intervention
                 # for the first year we add the intervention cost
-                if year_index == 0:
+                if year_index == 1:
                     cohort_discounted_intervention_cost += self.params.annualInterventionCost * discount_factor
 
                 # collect the health care expenditure cost (corrected for half-cycle effect)
@@ -215,10 +215,11 @@ class Cohort:
                     cohort_discounted_hc_expenditure += 0.5 * (hc_last_year + hc_now) * discount_factor
 
         # store list of individual costs and health
-        self.simOutputs.collect_costs_of_this_period(
-            intervention_cost=cohort_discounted_intervention_cost,
-            hc_expenditure=cohort_discounted_hc_expenditure,
-            cohort_size=self.inputs.popSize)
+        if year_index > 0:
+            self.simOutputs.collect_costs_of_this_period(
+                intervention_cost=cohort_discounted_intervention_cost,
+                hc_expenditure=cohort_discounted_hc_expenditure,
+                cohort_size=self.inputs.popSize)
 
         # calculate and store average BMI for this year
         self.simOutputs.collect_bmi(individual_bmis)
