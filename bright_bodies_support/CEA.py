@@ -90,7 +90,7 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):
     # generate CSV values
     hc_expenditure_savings_values = [
         ['HC Expenditure Savings over 10 years:', 'Mean (PI)'],
-        ['Individual Total', stat_diff_ind_hc_exp.get_formatted_mean_and_interval(interval_type='p')],
+        ['Individual Total', stat_diff_ind_hc_exp.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
 
     # write CSV
@@ -132,7 +132,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     # create list of lists:
     differences_ave_cost_values = [
         ['Difference in Average Cost per person:', 'Mean (PI)'],
-        ['BB v. CC', stat_diff_ave_cost.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+        ['BB v. CC', stat_diff_ave_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
     # print(differences_ave_cost_values)
 
@@ -146,7 +146,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     # create list of lists:
     differences_ave_int_cost_values = [
         ['Difference in Average Intervention Cost per person:', 'Mean (PI)'],
-        ['BB v. CC', stat_diff_ave_int_cost.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+        ['BB v. CC', stat_diff_ave_int_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
 
     # HC EXPENDITURE COST
@@ -159,7 +159,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     # create list of lists:
     differences_ave_hc_cost_values = [
         ['Difference in Average HC Cost per person:', 'Mean (PI)'],
-        ['BB v. CC', stat_diff_ave_hc_cost.get_formatted_mean_and_interval(interval_type='p', deci=2)],
+        ['BB v. CC', stat_diff_ave_hc_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
     # generate CSV
     IO.write_csv(rows=(differences_ave_cost_values, differences_ave_int_cost_values, differences_ave_hc_cost_values),
