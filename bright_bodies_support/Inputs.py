@@ -1,4 +1,5 @@
 from enum import Enum
+
 import SimPy.Statistics as Stat
 
 
@@ -52,16 +53,16 @@ class ModelInputs:
             'Games and equipment': [2409.66, 0.1 * 2409.66],
             'Motivational tools': [304.38, 0.1 * 304.38],
             'Printed material (Exercise Session)': [31.71, 0.1 * 31.71],
-            'Gym room and utilities': [0.00, 0.1 * 0.00],
+            'Gym room and utilities': [10400, 0.1 * 10400],
             'First aid kit': [190.24, 0.1 * 190.24],
             'Registered dietitian A': [(1558.44*(1+fringe_rate)), 0.1 * 1558.44*(1+fringe_rate)],
             'Registered dietitian B': [(4675.32*(1+fringe_rate)), 0.1 * 4675.32*(1+fringe_rate)],
             'Social worker (Nutrition Session)': [(1259.96*(1+fringe_rate)), 0.1 * 1259.96*(1+fringe_rate)],
             'Educational tools': [1712.13, 0.1 * 1712.13],
-            'Classroom and utilities (Nutrition Session)': [0.00, 0.1 * 0.00],
+            'Classroom and utilities (Nutrition Session)': [2600, 0.1 * 2600],
             'Social worker (Parent Session)': [(1259.96*(1+fringe_rate)), 0.1 * 1259.96+(1259.96*fringe_rate)],
             'Printed material (Parent Session)': [31.71, 0.1 * 31.71],
-            'Classroom and utilities (Parent Session)': [0.00, 0.1 * 0.00],
+            'Classroom and utilities (Parent Session)': [2600, 0.1 * 2600],
             'Program coordinator (exercise physiologist)(admin)': [(6843.20*(1+fringe_rate)),
                                                                    0.1 * 6843.20*(1+fringe_rate)],
             'Program director (registered dietitian)(admin)': [(12467.52*(1+fringe_rate)),
