@@ -1,10 +1,9 @@
-import SimPy.EconEval as Econ
-
-import numpy as np
-import SimPy.Statistics as Stat
-import SimPy.InOutFunctions as IO
 import numpy
-import bright_bodies_support.Inputs as I
+import numpy as np
+
+import SimPy.EconEval as Econ
+import SimPy.InOutFunctions as IO
+import SimPy.Statistics as Stat
 
 
 def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
@@ -43,7 +42,8 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
                                                                              '\n(Over 10 Simulation Years)',
                       y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
                       cost_digits=0, effect_digits=1,
-                      x_range=(-0.5, 3.5),
+                      x_range=(-0.5, 4),
+                      y_range=(-4000, 500),
                       title='Cost-Effectiveness Plane',
                       fig_size=(4.6, 4),
                       file_name='figures/CEA.png'
@@ -53,7 +53,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
     CEA.build_CE_table(
         interval_type='c',
         alpha=0.05,
-        cost_digits=2,
+        cost_digits=0,
         effect_digits=2,
         icer_digits=2,
         file_name='bright_bodies_analysis/CETable.csv')

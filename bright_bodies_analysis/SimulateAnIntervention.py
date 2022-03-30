@@ -7,7 +7,7 @@ from bright_bodies_support.ParameterGenerator import ParamGenerator
 
 # SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
 INTERVENTION = I.Interventions.BRIGHT_BODIES
-EFFECT_MAINTENANCE = I.EffectMaintenance.NONE
+EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
 if __name__ == '__main__':

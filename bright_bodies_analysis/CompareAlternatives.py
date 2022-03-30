@@ -1,16 +1,16 @@
 import os
 
+import SimPy.Plots.SamplePaths as Path
 import bright_bodies_support.CEA as CEA
 import bright_bodies_support.Inputs as I
 import bright_bodies_support.Plots as P
 from bright_bodies_support.ParameterGenerator import ParamGenerator
 from yom import MultiCohortClasses as MultiCls
-import SimPy.Plots.SamplePaths as Path
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
+EFFECT_MAINTENANCE = I.EffectMaintenance.NONE
 RUN_IN_PARALLEL = True
 
 # color codes
