@@ -113,13 +113,13 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC, mai
         y_ref=sim_outcomes_BB.effects)
 
     # create list of lists:
-    differences_ave_effect_values = [
-        ['Difference in Average Effect (BMI Unit Reduction) per person:', 'Mean (PI)'],
+    diff_ave_effect_values = [
+        ['BMI Unit Reduction (per person):', 'Mean (PI)'],
         ['BB v. CC', stat_diff_ave_effect.get_formatted_mean_and_interval(interval_type='p', deci=2)],
     ]
 
     # generate CSV
-    IO.write_csv(rows=differences_ave_effect_values,
+    IO.write_csv(rows=diff_ave_effect_values,
                  file_name='outputs/csv/ComparativeEffectOutcomes-{}.csv'.format(maintenance_effect))
 
     # INCREMENTAL COST
@@ -128,26 +128,25 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC, mai
     # find difference in yearly average BMI between interventions
     stat_diff_ave_cost = Stat.DifferenceStatPaired(
         name='Difference in cost',
-        x=sim_outcomes_CC.aveIndividualCosts,
-        y_ref=sim_outcomes_BB.aveIndividualCosts)
+        x=sim_outcomes_BB.aveIndividualCosts,
+        y_ref=sim_outcomes_CC.aveIndividualCosts)
 
     # create list of lists:
     differences_ave_cost_values = [
-        ['Difference in Average Cost per person:', 'Mean (PI)'],
+        ['Increase in Average Cost (per person):', 'Mean (PI)'],
         ['BB v. CC', stat_diff_ave_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
-    # print(differences_ave_cost_values)
 
     # INTERVENTION COST
     # find difference in yearly average intervention costs between interventions (individual)
     stat_diff_ave_int_cost = Stat.DifferenceStatPaired(
         name='Difference in cost',
-        x=sim_outcomes_CC.aveIndividualInterventionCosts,
-        y_ref=sim_outcomes_BB.aveIndividualInterventionCosts)
+        x=sim_outcomes_BB.aveIndividualInterventionCosts,
+        y_ref=sim_outcomes_CC.aveIndividualInterventionCosts)
 
     # create list of lists:
     differences_ave_int_cost_values = [
-        ['Difference in Average Intervention Cost per person:', 'Mean (PI)'],
+        ['Increase in Average Intervention Cost per person:', 'Mean (PI)'],
         ['BB v. CC', stat_diff_ave_int_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
 
@@ -155,12 +154,12 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC, mai
     # find difference in yearly average BMI between interventions
     stat_diff_ave_hc_cost = Stat.DifferenceStatPaired(
         name='Difference in cost',
-        x=sim_outcomes_CC.aveIndividualHCExpenditure,
-        y_ref=sim_outcomes_BB.aveIndividualHCExpenditure)
+        x=sim_outcomes_BB.aveIndividualHCExpenditure,
+        y_ref=sim_outcomes_CC.aveIndividualHCExpenditure)
 
     # create list of lists:
     differences_ave_hc_cost_values = [
-        ['Difference in Average HC Cost per person:', 'Mean (PI)'],
+        ['Increase in Average HC Cost per person:', 'Mean (PI)'],
         ['BB v. CC', stat_diff_ave_hc_cost.get_formatted_mean_and_interval(interval_type='p', deci=0)],
     ]
     # generate CSV

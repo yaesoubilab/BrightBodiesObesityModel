@@ -1,3 +1,3 @@
-"['Difference in Average Cost per person:', 'Mean (PI)']","['BB v. CC', '-125 (-265, 36)']"
-"['Difference in Average Intervention Cost per person:', 'Mean (PI)']","['BB v. CC', '-355 (-433, -289)']"
-"['Difference in Average HC Cost per person:', 'Mean (PI)']","['BB v. CC', '231 (114, 372)']"
+"['Increase in Average Cost (per person):', 'Mean (PI)']","['BB v. CC', '125 (-36, 265)']"
+"['Increase in Average Intervention Cost per person:', 'Mean (PI)']","['BB v. CC', '355 (289, 433)']"
+"['Increase in Average HC Cost per person:', 'Mean (PI)']","['BB v. CC', '-231 (-372, -114)']"
