@@ -1,16 +1,13 @@
-import os
-
-import SimPy.Plots.SamplePaths as Path
 import bright_bodies_support.CEA as CEA
 import bright_bodies_support.Inputs as I
 import bright_bodies_support.Plots as P
+import deampy.plots.sample_paths as Path
 from bright_bodies_support.ParameterGenerator import ParamGenerator
 from yom import MultiCohortClasses as MultiCls
 
 # SIMULATE BOTH INTERVENTIONS AND PRINT COMPARATIVE OUTCOMES
 
 # *** Alter maintenance scenarios via MAINTENANCE_EFFECT.
-EFFECT_MAINTENANCE = I.EffectMaintenance.NONE
 RUN_IN_PARALLEL = True
 
 # color codes
@@ -19,11 +16,15 @@ COLOR_BB = 'royalblue'
 COLOR_MODEL = 'plum'
 COLOR_DATA = 'purple'
 
+
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
-if __name__ == '__main__':
+def compare(scenario):
+    """
+    :param scenario: effect maintenance scenario
+    """
 
     # change the working directory to the root directory
-    os.chdir('../')
+    # os.chdir('../')
 
     # create an instance of the model inputs
     inputs = I.ModelInputs()
@@ -33,7 +34,7 @@ if __name__ == '__main__':
         ids=range(inputs.nCohorts),
         parameter_generator=ParamGenerator(
             intervention=I.Interventions.BRIGHT_BODIES,
-            maintenance_scenario=EFFECT_MAINTENANCE,
+            maintenance_scenario=scenario,
             model_inputs=inputs)
     )
     # simulate these cohorts (BB)
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         ids=range(inputs.nCohorts),
         parameter_generator=ParamGenerator(
             intervention=I.Interventions.CONTROL,
-            maintenance_scenario=EFFECT_MAINTENANCE,
+            maintenance_scenario=scenario,
             model_inputs=inputs)
     )
     # simulate these cohorts (CC)
@@ -67,17 +68,18 @@ if __name__ == '__main__':
         color_codes=[COLOR_CC, COLOR_BB],
         transparency=0.5,
         figure_size=(5.5, 4.5),
-        file_name='figures/bmiTrajectories.png'
+        file_name='outputs/figs/bmiTrajectories-{}.png'.format(scenario.name)
     )
 
     P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                      sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                     maintenance_effect=EFFECT_MAINTENANCE,
+                     maintenance_effect=scenario,
                      color_model=COLOR_MODEL,
                      color_data=COLOR_DATA)
 
     P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
                                 sim_outcomes_bb=multiCohortBB.multiSimOutputs,
+                                maintenance_effect=scenario,
                                 color_model=COLOR_MODEL,
                                 color_data=COLOR_DATA
                                 )
@@ -85,6 +87,7 @@ if __name__ == '__main__':
     # report cost-effectiveness bright_bodies_analysis
     CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                   maintenance_effect=scenario,
                    color_bb=COLOR_BB, color_cc=COLOR_CC)
 
     # COMPARATIVE: average BMIs over 10 years
@@ -106,22 +109,33 @@ if __name__ == '__main__':
         ci_upper_values_bb=[0, 34.2, 34.6, 35.6],
         ci_lower_values_cc=[0, 36.3, 37.3, 37.1],
         ci_upper_values_cc=[0, 37.9, 39, 39.1],
-        file_name='figures/bmiTrajectoriesUnadjusted.png'
+        file_name='outputs/figs/bmiTrajectoriesUnadjusted-{}.png'.format(scenario)
     )
 
     # -------- OUTCOMES  ----------
 
     CEA.report_HC_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                           sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                          pop_size=inputs.popSize)
+                          pop_size=inputs.popSize,
+                          maintenance_effect=scenario,)
 
     CEA.report_incremental_cost_effect_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                               sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+                                               sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                               maintenance_effect=scenario,)
 
     P.plot_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                 sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                maintenance_effect=scenario,
                                 color=COLOR_DATA,
                                 figure_size=(6, 5))
 
     CEA.report_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs)
+                                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                                    maintenance_effect=scenario,)
+
+
+if __name__ == '__main__':
+
+    compare(scenario=I.EffectMaintenance.DEPREC)
+    compare(scenario=I.EffectMaintenance.NONE)
+    compare(scenario=I.EffectMaintenance.FULL)

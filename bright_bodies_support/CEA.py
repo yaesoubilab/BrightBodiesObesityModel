@@ -1,15 +1,16 @@
 import numpy
 import numpy as np
 
-import SimPy.EconEval as Econ
-import SimPy.InOutFunctions as IO
-import SimPy.Statistics as Stat
+import deampy.econ_eval as Econ
+import deampy.in_out_functions as IO
+import deampy.statistics as Stat
 
 
-def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
+def report_CEA(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_bb, color_cc):
     """ performs cost-effectiveness bright_bodies_analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    :param maintenance_effect: scenario for the maintenance effect
     :param color_bb: color code for Bright Bodies
     :param color_cc: color code for Clinical Control
     """
@@ -42,12 +43,11 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
                                                                              '\n(Over 10 Simulation Years)',
                       y_label='Average Additional Cost per Person ($)\n(Over 10 Simulation Years)',
                       cost_digits=0, effect_digits=1,
-                      x_range=(-0.5, 4),
-                      y_range=(-4000, 500),
+                      x_range=(-0.5, 4), y_range=(-4000, 500),
                       title='Cost-Effectiveness Plane',
                       fig_size=(4.6, 4),
-                      file_name='figures/CEA.png'
-                      )
+                      file_name='outputs/figs/CEA-{}.png'.format(maintenance_effect),
+                      add_clouds=True)
 
     # report the CE table
     CEA.build_CE_table(
@@ -56,7 +56,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
         cost_digits=0,
         effect_digits=2,
         icer_digits=2,
-        file_name='bright_bodies_analysis/CETable.csv')
+        file_name='outputs/csv/CEA-{}.csv'.format(maintenance_effect))
 
     # do CBA
     if_cba = False
@@ -74,11 +74,12 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, color_bb, color_cc):
         )
 
 
-def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):
+def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size, maintenance_effect):
     """ performs HC expenditure savings analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
     :param pop_size: population size
+    :param maintenance_effect: scenario for maintenance effect
     """
 
     stat_diff_ind_hc_exp = Stat.DifferenceStatPaired(
@@ -95,13 +96,14 @@ def report_HC_savings(sim_outcomes_BB, sim_outcomes_CC, pop_size):
 
     # write CSV
     IO.write_csv(rows=hc_expenditure_savings_values,
-                 file_name='bright_bodies_analysis/ComparativeHCSavings.csv')
+                 file_name='outputs/csv/ComparativeHCSavings-{}.csv'.format(maintenance_effect))
 
 
-def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
+def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     """ reports incremental effect
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    :param maintenance_effect: scenario for maintenance effect
     """
 
     # find difference in yearly average BMI between interventions
@@ -118,7 +120,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
 
     # generate CSV
     IO.write_csv(rows=differences_ave_effect_values,
-                 file_name='bright_bodies_analysis/ComparativeEffectOutcomes.csv')
+                 file_name='outputs/csv/ComparativeEffectOutcomes-{}.csv'.format(maintenance_effect))
 
     # INCREMENTAL COST
 
@@ -163,7 +165,7 @@ def report_incremental_cost_effect_savings(sim_outcomes_BB, sim_outcomes_CC):
     ]
     # generate CSV
     IO.write_csv(rows=(differences_ave_cost_values, differences_ave_int_cost_values, differences_ave_hc_cost_values),
-                 file_name='bright_bodies_analysis/ComparativeCostOutcomes.csv')
+                 file_name='outputs/csv/ComparativeCostOutcomes-{}.csv'.format(maintenance_effect))
 
 
 def get_list_of_diff_ave_cum_costs(multisim_outcomes_BB, multisim_outcomes_CC):
@@ -205,10 +207,11 @@ def get_estimated_time_of_cost_saving(incremental_costs):
     return time_of_cost_saving
 
 
-def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
+def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect):
     """ reports incremental effect
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
+    :param maintenance_effect: scenario for maintenance effect
     """
 
     incremental_cum_costs = get_list_of_diff_ave_cum_costs(multisim_outcomes_BB=sim_outcomes_BB,
@@ -240,4 +243,4 @@ def report_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC):
     ]
     # generate CSV
     IO.write_csv(rows=avg_time_to_cost_savings,
-                 file_name='bright_bodies_analysis/TimeToCostSavings.csv')
+                 file_name='outputs/csv/TimeToCostSavings-{}.csv'.format(maintenance_effect))

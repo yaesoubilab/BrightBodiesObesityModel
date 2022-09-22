@@ -1,4 +1,4 @@
-import SimPy.SamplePath as Path
+import deampy.sample_path as Path
 
 
 class SimOutputs:

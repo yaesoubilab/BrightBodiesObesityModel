@@ -1,5 +1,6 @@
 import bright_bodies_support.Inputs as I
 import yom.ModelInputs as yomI
+from definitions import ROOT_DIR
 
 
 class ParamGenerator:
@@ -17,7 +18,7 @@ class ParamGenerator:
 
         # get BMI trajectories
         self.trajectories = yomI.get_trajectories_grouped_by_sex_age(
-            csv_folder='csv_trajectories',
+            csv_folder=ROOT_DIR+'/csv_trajectories',
             age_min_max=[model_inputs.ageSexDist[0][0], model_inputs.ageSexDist[-1][0]]
         )
 

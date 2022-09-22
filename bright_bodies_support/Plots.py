@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy
 from matplotlib import collections as matcoll
 
-import SimPy.Plots.FigSupport as Fig
-import SimPy.Plots.SamplePaths as Path
-import bright_bodies_support.Inputs as I
 import bright_bodies_support.CEA as CEA
+import bright_bodies_support.Inputs as I
+import deampy.plots.sample_paths as Path
+from deampy.plots.plot_support import output_figure
 
 # Yearly difference in BMI under control and bright bodies
 YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
@@ -71,7 +71,7 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, 
         ax.set_ylabel(' ')
 
 
-def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, color_model, color_data):
+def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, maintenance_effect, color_model, color_data):
     """ generates validation graphs: BMI differences by year """
 
     # plot
@@ -91,7 +91,7 @@ def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, color_model
     f.tight_layout()
 
     # bbox_inches set to tight: cleans up figures
-    plt.savefig("figures/yearlyBMIChange.png", dpi=300)
+    output_figure(plt=f, filename="outputs/figs/yearlyBMIChange-{}.png".format(maintenance_effect.name), dpi=300)
     #plt.show()
 
 
@@ -134,12 +134,7 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
     handles, labels = ax.get_legend_handles_labels()
     ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
 
-    if maintenance_effect == I.EffectMaintenance.FULL:
-        plt.savefig("figures/bbEffFullMaint.png", dpi=300)
-    elif maintenance_effect == I.EffectMaintenance.DEPREC:
-        plt.savefig("figures/bbEffDeprecMaint.png", dpi=300)
-    elif maintenance_effect == I.EffectMaintenance.NONE:
-        plt.savefig("figures/bbEffNoMaint.png", dpi=300)
+    output_figure(plt=f, filename="outputs/figs/bbEffect-{}.png".format(maintenance_effect.name), dpi=300)
     # plt.show()
 
 
@@ -217,10 +212,10 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     # set the minimum of y-axis to zero
     ax.set_ylim(bottom=0)  # the minimum has to be set after plotting the values
     # output figure
-    Fig.output_figure(fig, file_name)
+    output_figure(plt=fig, filename=file_name, dpi=300)
 
 
-def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
+def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect,
                               color, figure_size=None):
 
     ave_cum_costs = CEA.get_list_of_diff_ave_cum_costs(multisim_outcomes_BB=sim_outcomes_BB,
@@ -255,4 +250,4 @@ def plot_time_to_cost_savings(sim_outcomes_BB, sim_outcomes_CC,
     plt.axhline(color='k', ls='--', linewidth=0.5)
 
     plt.tight_layout()
-    plt.savefig('figures/TimeToCostSavings.png', dpi=300)
+    output_figure(plt=f, filename='outputs/figs/TimeToCostSavings-{}.png'.format(maintenance_effect), dpi=300)

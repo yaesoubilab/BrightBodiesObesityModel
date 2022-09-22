@@ -1,6 +1,6 @@
 from enum import Enum
 
-from SimPy.DiscreteEventSim import SimulationEvent as Event
+from deampy.discrete_event_sim import SimulationEvent as Event
 
 
 class Priority(Enum):

@@ -1,5 +1,5 @@
-import SimPy.Plots.SamplePaths as Path
-from SimPy.Plots import PopulationPyramids as Pyr
+import deampy.plots.sample_paths as Path
+from deampy.plots.pop_pyramids import plot_pyramids
 
 
 def plot_ave_bmi_trajs(sim_outcomes_BB, sim_outcomes_CC):
@@ -39,17 +39,17 @@ def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pyramid_x_
         age_labels.append(age_sex_dist[i][0])
 
     # population pyramid at initialization
-    Pyr.plot_pyramids(observed_data=age_sex_dist,
-                      simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
-                      fig_size=(6, 4),
-                      x_lim=pyramid_x_max,
-                      title="Cohort Pyramids at Initialization",
-                      colors=('blue', 'red', 'black'),
-                      y_labels=age_labels,
-                      age_group_width=1,
-                      length_of_sim_bars=250,
-                      scale_of_sim_legend=0.75,
-                      transparency=0.5)
+    plot_pyramids(observed_data=age_sex_dist,
+                  simulated_data=simulated_multi_cohort.multiSimOutputs.popPyramidAtStart,
+                  fig_size=(6, 4),
+                  x_lim=pyramid_x_max,
+                  title="Cohort Pyramids at Initialization",
+                  colors=('blue', 'red', 'black'),
+                  y_labels=age_labels,
+                  age_group_width=1,
+                  length_of_sim_bars=250,
+                  scale_of_sim_legend=0.75,
+                  transparency=0.5)
     # colors: https://www.webucator.com/blog/2015/03/python-color-constants-module/
 
     # sample paths for average BMIs at each time step

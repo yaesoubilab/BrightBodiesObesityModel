@@ -1,9 +1,8 @@
 import multiprocessing as mp
 
-import SimPy.RandomVariateGenerators as RVGs
-import SimPy.Statistics as Stat
+import deampy.random_variats as RVGs
+import deampy.statistics as Stat
 from yom.ModelEntities import Cohort
-import numpy as np
 
 
 class MultiCohort:

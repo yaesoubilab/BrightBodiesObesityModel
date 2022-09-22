@@ -1,6 +1,6 @@
 from enum import Enum
 
-import SimPy.Statistics as Stat
+import deampy.statistics as Stat
 
 
 class Interventions(Enum):

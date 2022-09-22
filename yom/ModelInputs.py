@@ -1,8 +1,8 @@
 from enum import Enum
 
-import SimPy.DataFrames as df
-import SimPy.InOutFunctions as IO
-from SimPy import RandomVariateGenerators as RVGs
+import deampy.data_structure as df
+import deampy.in_out_functions as IO
+from deampy import random_variats as RVGs
 
 
 class Sex(Enum):

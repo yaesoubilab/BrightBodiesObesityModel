@@ -1,9 +1,9 @@
 from math import floor, pow
 
-import SimPy.DiscreteEventSim as SimCls
-import SimPy.RandomVariateGenerators as RVGs
-import SimPy.Support.Simulation as Sim
-from SimPy.DataFrames import Pyramid
+import deampy.discrete_event_sim as SimCls
+import deampy.random_variats as RVGs
+import deampy.support.simulation as Sim
+from deampy.data_structure import Pyramid
 from yom import ModelOutputs as O, ModelEvents as E
 from yom.ModelInputs import WeightStatus
 
