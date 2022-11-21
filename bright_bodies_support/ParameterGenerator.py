@@ -22,11 +22,22 @@ class ParamGenerator:
             age_min_max=[model_inputs.ageSexDist[0][0], model_inputs.ageSexDist[-1][0]]
         )
 
-        # make dictionaries of RVGs for multipliers to adjust trajectories
-        self.multiplierRVGs = yomI.ParamRVGs(
-            dict_of_parameters=model_inputs.dictTrajMultipliers,
+        # factors to adjust BMIs under clinical control
+        self.ccAdjFactorRVG = yomI.ParamRVGs(
+            dict_of_parameters=model_inputs.dictAdjFactorCC,
             dist='lognormal'
         )
+
+        # make dictionaries of RVGs for multipliers to adjust trajectories
+        self.bbEffectivenessRVGs = yomI.ParamRVGs(
+            dict_of_parameters=model_inputs.dictEffBB,
+            dist='lognormal'
+        )
+
+        # self.bbMultiplierRVGs = yomI.ParamRVGs(
+        #     dict_of_parameters=model_inputs.dictTrajMultipliers,
+        #     dist='lognormal'
+        # )
 
         # make dictionaries of RVGs for Bright Bodies cost items
         if intervention == I.Interventions.BRIGHT_BODIES:
@@ -55,35 +66,35 @@ class ParamGenerator:
                                 model_inputs=self.modelInputs)
 
         # find multipliers to adjust trajectories
-        m_bb1 = self.multiplierRVGs.get_sample(param_name='BB Year 1', rng=rng)
-        m_bb2 = self.multiplierRVGs.get_sample(param_name='BB Year 2', rng=rng)
-        m_control = self.multiplierRVGs.get_sample(param_name='Control', rng=rng)
+        ratio_control = self.ccAdjFactorRVG.get_sample(param_name='Control', rng=rng)
+        bb_eff_yr1 = self.bbEffectivenessRVGs.get_sample(param_name='BB Year 1', rng=rng)
+        bb_eff_yr2 = self.bbEffectivenessRVGs.get_sample(param_name='BB Year 2', rng=rng)
 
         # find multipliers to adjust BMI trajectories under the Bright Bodies intervention
         if self.intervention == I.Interventions.BRIGHT_BODIES:
 
-            param.interventionMultipliers = [1.0, m_bb1, m_bb2]
+            param.interventionMultipliers = [1.0, ratio_control*bb_eff_yr1, ratio_control*bb_eff_yr2]
 
             if self.maintenance_scenario == I.EffectMaintenance.FULL:
                 for i in range(int(self.modelInputs.simDuration)):
-                    param.interventionMultipliers.append(m_bb2)
+                    param.interventionMultipliers.append(ratio_control*bb_eff_yr2)
 
             elif self.maintenance_scenario == I.EffectMaintenance.NONE:
                 for i in range(int(self.modelInputs.simDuration)):
-                    param.interventionMultipliers.append(m_control)
+                    param.interventionMultipliers.append(ratio_control)
 
             elif self.maintenance_scenario == I.EffectMaintenance.DEPREC:
-                deprec_difference = m_control - m_bb2
+                deprec_difference = ratio_control - bb_eff_yr2 * ratio_control
                 deprec_value = deprec_difference / 8
                 for i in range(int(self.modelInputs.simDuration)):
-                    deprec_multiplier = m_bb2 + (deprec_value * (i+1))
+                    deprec_multiplier = bb_eff_yr2 * ratio_control + (deprec_value * (i+1))
                     param.interventionMultipliers.append(deprec_multiplier)
 
         # find multipliers to adjust BMI trajectories under the Control
         else:
             param.interventionMultipliers = [1.0]
             for i in range(10):
-                param.interventionMultipliers.append(m_control)
+                param.interventionMultipliers.append(ratio_control)
 
         # sample health care expenditure items
         param.costAbove95thP = self.hcExpenditureParamRVGs.get_sample(

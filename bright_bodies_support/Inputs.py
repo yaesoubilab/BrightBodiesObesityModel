@@ -28,7 +28,7 @@ class ModelInputs:
         self.simInit = 0.00001  # (years) initialization period to create the cohort
         self.simDuration = 10   # (years) simulation duration
         self.popSize = 90     # population size of each cohort
-        self.nCohorts = 200      # number of cohorts
+        self.nCohorts = 64      # number of cohorts
 
         # to discount outcomes and calculate the current value of old costs
         self.currentYear = 2020
@@ -36,11 +36,24 @@ class ModelInputs:
         self.discountRate = 0.03
 
         # multipliers to adjust BMI trajectories
-        self.dictTrajMultipliers = {
-            'Control': [1.049, 0.01],
-            'BB Year 1': [0.925, 0.01],
-            'BB Year 2': [0.951, 0.01]
+        self.dictAdjFactorCC = {
+            'Control': [1.049, 0.01],  # all years
         }
+        # effectiveness of bright bodies (BMI under BB = effectiveness * BMI under control)
+        self.dictEffBB = {
+            'BB Year 1': [0.88, 0.01],
+            'BB Year 2': [0.9, 0.01]
+        }
+
+        # self.dictTrajMultipliers = {
+        #     'Control': [1.049, 0.01],
+        #     'BB Year 1': [0.925, 0.01],
+        #     'BB Year 2': [0.951, 0.01]
+        # }
+        # self.dictTrajMultipliers = {
+        #     'BB Year 1': [1, 0],
+        #     'BB Year 2': [1, 0]
+        # }
 
         # fringe
         fringe_rate = 0.4575

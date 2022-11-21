@@ -193,7 +193,6 @@ class Cohort:
             if individual.ifAlive:
 
                 # record BMI for this individual (baseline BMI * intervention multiplier) and add to list
-                # note that the first element of a BMI trajectory is the id of the trajectory so we skip it
                 individual_bmi = individual.get_bmi(sim_year_index=year_index,
                                                     intervention_multiplier=intervention_multp_now)
 
