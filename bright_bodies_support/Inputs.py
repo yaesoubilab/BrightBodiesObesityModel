@@ -28,7 +28,7 @@ class ModelInputs:
         self.simInit = 0.00001  # (years) initialization period to create the cohort
         self.simDuration = 10   # (years) simulation duration
         self.popSize = 90     # population size of each cohort
-        self.nCohorts = 64      # number of cohorts
+        self.nCohorts = 8      # number of cohorts
 
         # to discount outcomes and calculate the current value of old costs
         self.currentYear = 2020

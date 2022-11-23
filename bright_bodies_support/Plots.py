@@ -71,11 +71,12 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, 
         ax.set_ylabel(' ')
 
 
-def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, maintenance_effect, color_model, color_data):
+def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, maintenance_effect, color_model, color_data,
+                              figsize=(5, 4)):
     """ generates validation graphs: BMI differences by year """
 
     # plot
-    f, axes = plt.subplots(1, 2, figsize=(5, 4), sharey=True)
+    f, axes = plt.subplots(1, 2, figsize=figsize, sharey=True)
 
     f.suptitle('Differences in Average BMI by Year')
     add_yearly_change_in_bmi_to_ax(ax=axes[0], sim_outcomes=sim_outcomes_control,
@@ -95,7 +96,7 @@ def plot_yearly_change_in_bmi(sim_outcomes_control, sim_outcomes_bb, maintenance
     #plt.show()
 
 
-def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_model, color_data):
+def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_model, color_data, figsize=(6, 5)):
     """ plot differences in BMI by intervention
     and compare to RCT data """
 
@@ -112,7 +113,7 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
     lower_bounds = [1, 1.1, 1.2]
     upper_bounds = [1, 1.1, 1.2]
 
-    f, ax = plt.subplots(figsize=(6, 5))
+    f, ax = plt.subplots(figsize=figsize)
 
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
@@ -141,7 +142,7 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
 def plot_sets_of_sample_paths(sets_of_sample_paths,
                               title=None, x_label=None, y_label=None,
                               x_range=None, y_range=None,
-                              figure_size=None,
+                              fig_size=None,
                               legends=None, transparency=1, color_codes=None, connect='step',
                               x_points=None, y_points_bb=None, y_points_cc=None,
                               ci_lower_values_bb=None, ci_upper_values_bb=None,
@@ -154,7 +155,7 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     :param y_label: (string) y-axis label
     :param x_range: (list) [x_min, x_max]
     :param y_range: (list) [y_min, y_max]
-    :param figure_size: (tuple) figure size
+    :param fig_size: (tuple) figure size
     :param legends: (list of strings) for legends
     :param transparency: float (0.0 transparent through 1.0 opaque)
     :param color_codes: (list of strings) color code of sample path sets
@@ -178,7 +179,7 @@ def plot_sets_of_sample_paths(sets_of_sample_paths,
     linecoll_bb = matcoll.LineCollection(lines_bb)
     linecoll_cc = matcoll.LineCollection(lines_cc)
 
-    fig, ax = plt.subplots(figsize=figure_size)
+    fig, ax = plt.subplots(figsize=fig_size)
     ax.set_title(title)  # title
     ax.set_xlabel(x_label)  # x-axis label
     ax.set_ylabel(y_label)  # y-axis label

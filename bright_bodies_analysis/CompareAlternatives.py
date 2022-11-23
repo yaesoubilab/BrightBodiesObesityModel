@@ -55,6 +55,23 @@ def compare(scenario):
 
     # -------- FIGURES  ----------
 
+    # fig 1
+    P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
+                                sim_outcomes_bb=multiCohortBB.multiSimOutputs,
+                                maintenance_effect=scenario,
+                                color_model=COLOR_MODEL,
+                                color_data=COLOR_DATA,
+                                figsize=(5.5, 5))
+
+    # fig 2
+    P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
+                     sim_outcomes_CC=multiCohortCC.multiSimOutputs,
+                     maintenance_effect=scenario,
+                     color_model=COLOR_MODEL,
+                     color_data=COLOR_DATA,
+                     figsize=(5.5, 5))
+
+    # fig 3
     Path.plot_sets_of_sample_paths(
         sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
                               multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
@@ -67,34 +84,24 @@ def compare(scenario):
         connect='line',
         color_codes=[COLOR_CC, COLOR_BB],
         transparency=0.5,
-        figure_size=(5.5, 4.5),
+        figure_size=(5.5, 5),
         file_name='outputs/figs/bmiTrajectories-{}.png'.format(scenario.name)
     )
 
-    P.plot_bb_effect(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
-                     sim_outcomes_CC=multiCohortCC.multiSimOutputs,
-                     maintenance_effect=scenario,
-                     color_model=COLOR_MODEL,
-                     color_data=COLOR_DATA)
-
-    P.plot_yearly_change_in_bmi(sim_outcomes_control=multiCohortCC.multiSimOutputs,
-                                sim_outcomes_bb=multiCohortBB.multiSimOutputs,
-                                maintenance_effect=scenario,
-                                color_model=COLOR_MODEL,
-                                color_data=COLOR_DATA
-                                )
-
+    # fig 5
     # report cost-effectiveness bright_bodies_analysis
     CEA.report_CEA(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                    sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                    maintenance_effect=scenario,
-                   color_bb=COLOR_BB, color_cc=COLOR_CC)
+                   color_bb=COLOR_BB, color_cc=COLOR_CC,
+                   fig_size=(5.5, 5))
 
     # COMPARATIVE: average BMIs over 10 years
     P.plot_sets_of_sample_paths(
         sets_of_sample_paths=[multiCohortCC.multiSimOutputs.pathsOfCohortAveBMI,
                               multiCohortBB.multiSimOutputs.pathsOfCohortAveBMI],
         title='Cohort Average BMIs over 10 Years',
+        fig_size=(6, 5),
         y_range=[0, 40],
         x_label='Simulation Year',
         y_label='Average BMI (kg/m'+r"$^2$"+')',
@@ -123,11 +130,12 @@ def compare(scenario):
                                                sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                                                maintenance_effect=scenario,)
 
+    # fig. 4
     P.plot_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                 sim_outcomes_CC=multiCohortCC.multiSimOutputs,
                                 maintenance_effect=scenario,
                                 color=COLOR_DATA,
-                                figure_size=(6, 5))
+                                figure_size=(5.5, 5))
 
     CEA.report_time_to_cost_savings(sim_outcomes_BB=multiCohortBB.multiSimOutputs,
                                     sim_outcomes_CC=multiCohortCC.multiSimOutputs,

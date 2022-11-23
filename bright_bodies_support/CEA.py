@@ -6,7 +6,7 @@ import deampy.in_out_functions as IO
 import deampy.statistics as Stat
 
 
-def report_CEA(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_bb, color_cc):
+def report_CEA(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_bb, color_cc, fig_size=(4.6, 4)):
     """ performs cost-effectiveness bright_bodies_analysis
     :param sim_outcomes_BB: outcomes of a cohort simulated under Bright Bodies
     :param sim_outcomes_CC: outcomes of a cohort simulated under Clinical Control
@@ -45,7 +45,7 @@ def report_CEA(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_bb, c
                       cost_digits=0, effect_digits=1,
                       x_range=(-0.5, 4), y_range=(-4000, 500),
                       title='Cost-Effectiveness Plane',
-                      fig_size=(4.6, 4),
+                      fig_size=fig_size,
                       file_name='outputs/figs/CEA-{}.png'.format(maintenance_effect),
                       add_clouds=True)
 
