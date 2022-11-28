@@ -106,7 +106,7 @@ class ModelInputs:
         }
 
         # to inflate cost estimates
-        self.inflation = 0.03
+        self.inflation = 0.022
         self.yearInterventionCosts = 2019
         self.yearHCExpStudyAdults = 2013
         self.yearHCExpStudyChildren = 2006
