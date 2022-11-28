@@ -32,7 +32,6 @@ class ModelInputs:
 
         # to discount outcomes and calculate the current value of old costs
         self.currentYear = 2020
-        self.inflation = 0.03
         self.discountRate = 0.03
 
         # multipliers to adjust BMI trajectories
@@ -107,6 +106,7 @@ class ModelInputs:
         }
 
         # to inflate cost estimates
+        self.inflation = 0.03
         self.yearInterventionCosts = 2019
         self.yearHCExpStudyAdults = 2013
         self.yearHCExpStudyChildren = 2006
