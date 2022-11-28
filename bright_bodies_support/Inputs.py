@@ -32,7 +32,7 @@ class ModelInputs:
 
         # to discount outcomes and calculate the current value of old costs
         self.currentYear = 2020
-        self.inflation = 0.02
+        self.inflation = 0.03
         self.discountRate = 0.03
 
         # multipliers to adjust BMI trajectories
@@ -45,23 +45,13 @@ class ModelInputs:
             'BB Year 2': [0.9, 0.01]
         }
 
-        # self.dictTrajMultipliers = {
-        #     'Control': [1.049, 0.01],
-        #     'BB Year 1': [0.925, 0.01],
-        #     'BB Year 2': [0.951, 0.01]
-        # }
-        # self.dictTrajMultipliers = {
-        #     'BB Year 1': [1, 0],
-        #     'BB Year 2': [1, 0]
-        # }
-
         # fringe
         fringe_rate = 0.4575
 
         # dictionary of cost items for Bright Bodies
         # each element is a list of [mean, stDev]
         self.dictCostBB = {
-            'Exercise physiologist A': [(5474.56*(1+fringe_rate)), 0.1 * (5474.56*(1+fringe_rate))],
+            'Exercise physiologist A': [5474.56*(1+fringe_rate), 0.1 * 5474.56*(1+fringe_rate)],
             'Exercise physiologist B': [(6843.20*(1+fringe_rate)), 0.1 * 6843.20*(1+fringe_rate)],
             'Games and equipment': [2409.66, 0.1 * 2409.66],
             'Motivational tools': [304.38, 0.1 * 304.38],
@@ -97,7 +87,7 @@ class ModelInputs:
             'Nutrition visit / follow up': [(5619.38*(1+fringe_rate)), 0.1 * 5619.38*(1+fringe_rate)],
             'Behavioral visit / follow up': [(4361.40*(1+fringe_rate)), 0.1 * 4361.40*(1+fringe_rate)],
             'Dept clinical secretary': [(549.30*(1+fringe_rate)), 0.1 * 549.30*(1+fringe_rate)],
-            'Typing': [(1647.90*(1+fringe_rate)), 0.1 * 1647.90*(1+fringe_rate)],
+            # 'Typing': [(1647.90*(1+fringe_rate)), 0.1 * 1647.90*(1+fringe_rate)],
             'Lab technician': [(1416.60*(1+fringe_rate)), 0.1 * 1416.60*(1+fringe_rate)],
             'Medical consultation': [(12303.60*(1+fringe_rate)), 0.1 * 12303.60*(1+fringe_rate)],
             'Rent space, utilities': [3804.73, 0.1 * 3804.73],
