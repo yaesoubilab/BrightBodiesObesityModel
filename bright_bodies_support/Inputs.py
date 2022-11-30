@@ -1,7 +1,5 @@
 from enum import Enum
 
-import deampy.statistics as Stat
-
 
 class Interventions(Enum):
     """ Bright Bodies v. Clinical Care """
@@ -28,7 +26,7 @@ class ModelInputs:
         self.simInit = 0.00001  # (years) initialization period to create the cohort
         self.simDuration = 10   # (years) simulation duration
         self.popSize = 90     # population size of each cohort
-        self.nCohorts = 200      # number of cohorts
+        self.nCohorts = 16      # number of cohorts
 
         # to discount outcomes and calculate the current value of old costs
         self.currentYear = 2020
@@ -50,59 +48,65 @@ class ModelInputs:
         # dictionary of cost items for Bright Bodies
         # each element is a list of [mean, stDev]
         self.dictCostBB = {
-            'Exercise physiologist A': [5474.56*(1+fringe_rate), 0.1 * 5474.56*(1+fringe_rate)],
-            'Exercise physiologist B': [(6843.20*(1+fringe_rate)), 0.1 * 6843.20*(1+fringe_rate)],
-            'Games and equipment': [2409.66, 0.1 * 2409.66],
-            'Motivational tools': [304.38, 0.1 * 304.38],
-            'Printed material (Exercise Session)': [31.71, 0.1 * 31.71],
-            'Gym room and utilities': [10400, 0.1 * 10400],
-            'First aid kit': [190.24, 0.1 * 190.24],
-            'Registered dietitian A': [(1558.44*(1+fringe_rate)), 0.1 * 1558.44*(1+fringe_rate)],
-            'Registered dietitian B': [(4675.32*(1+fringe_rate)), 0.1 * 4675.32*(1+fringe_rate)],
-            'Social worker (Nutrition Session)': [(1259.96*(1+fringe_rate)), 0.1 * 1259.96*(1+fringe_rate)],
-            'Educational tools': [1712.13, 0.1 * 1712.13],
-            'Classroom and utilities (Nutrition Session)': [2600, 0.1 * 2600],
-            'Social worker (Parent Session)': [(1259.96*(1+fringe_rate)), 0.1 * 1259.96+(1259.96*fringe_rate)],
-            'Printed material (Parent Session)': [31.71, 0.1 * 31.71],
-            'Classroom and utilities (Parent Session)': [2600, 0.1 * 2600],
-            'Program coordinator (exercise physiologist)(admin)': [(6843.20*(1+fringe_rate)),
-                                                                   0.1 * 6843.20*(1+fringe_rate)],
-            'Program director (registered dietitian)(admin)': [(12467.52*(1+fringe_rate)),
-                                                               0.1 * 12467.52*(1+fringe_rate)],
-            'Dept clinical secretary': [(549.30*(1+fringe_rate)), 0.1 * 549.30*(1+fringe_rate)],
-            'Technician': [(1416.60*(1+fringe_rate)), 0.1 * 1416.60*(1+fringe_rate)],
-            'Body fat analyzer and scale': [887.77, 0.1 * 887.77],
-            'Stadiometer': [76.09, 0.1 * 76.09],
-            'Medical consultation': [(5331.56*(1+fringe_rate)), 0.1 * 5331.56*(1+fringe_rate)],
-            'Rent space, utilities': [3804.73, 0.1 * 3804.73],
-            'Cleaning service': [1122.39, 0.1 * 1122.39],
-            'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
+            'Exercise Physiologist A': [5595.00 * (1 + fringe_rate), 0.1 * 5595.00 * (1 + fringe_rate)],
+            'Exercise Physiologist B': [6993.75 * (1 + fringe_rate), 0.1 * 6993.75 * (1 + fringe_rate)],
+            'Games and Equipment:': [2521.25, 0.1 * 2521.25],
+            'Motivational Tools:': [318.47, 0.1 * 318.47],
+            'Printed Materials (Exercise Session)': [33.17, 0.1 * 33.17],
+            'Gym Room and Utilities': [10400.00, 0.1 * 10400.00],
+            'First Aid Kit': [199.05, 0.1 * 199.05],
+            'Registered Dietitian A': [1592.73 * (1 + fringe_rate), 0.1 * 1592.73 * (1 + fringe_rate)],
+            'Registered Dietitian B': [4778.18 * (1 + fringe_rate), 0.1 * 4778.18 * (1 + fringe_rate)],
+            'Social Worker (Nutrition Session)': [1287.68 * (1 + fringe_rate), 0.1 * 1287.68 * (1 + fringe_rate)],
+            'Educational Tools ': [1791.41, 0.1 * 1791.41],
+            'Classroom and Utilities (Nutrition Session)': [2600.00, 0.1 * 2600.00],
+            'Social Worker (Parent Session)': [1287.68 * (1 + fringe_rate), 0.1 * 1287.68 * (1 + fringe_rate)],
+            'Printed Materials (Parent Session)': [33.17, 0.1 * 33.17],
+            'Classroom and Utilities (Parent Session)': [2600.00, 0.1 * 2600.00],
+            'Program Coordinator (exercise physiologist)(admin)': [6993.75 * (1 + fringe_rate),
+                                                                   0.1 * 6993.75 * (1 + fringe_rate)],
+            'Program Director (registered dietitian)(admin)': [12741.81 * (1 + fringe_rate),
+                                                               0.1 * 12741.81 * (1 + fringe_rate)],
+            'Department Clinical Secretary': [561.38 * (1 + fringe_rate), 0.1 * 561.38 * (1 + fringe_rate)],
+            'Technician': [1447.77 * (1 + fringe_rate), 0.1 * 1447.77 * (1 + fringe_rate)],
+            'Equipment (Weight): ': [928.88, 0.1 * 928.88],
+            'Equipment (Height):': [79.62, 0.1 * 79.62],
+            'Medical Director': [5448.85 * (1 + fringe_rate), 0.1 * 5448.85 * (1 + fringe_rate)],
+            'Space:': [3980.91, 0.1 * 3980.91],
+            'Cleaning Service': [1174.37, 0.1 * 1174.37],
+            'Clinic Equipment and Supplies ': [3848.22, 0.1 * 3848.22]
         }
 
         # dictionary of cost items for the Control
         # each element is a list of [mean, stDev]
         self.dictCostControl = {
-            'Nurse visit / follow up': [(14517.90*(1+fringe_rate)), 0.1 * 14517.90*(1+fringe_rate)],
-            'Nutrition visit / follow up': [(5619.38*(1+fringe_rate)), 0.1 * 5619.38*(1+fringe_rate)],
-            'Behavioral visit / follow up': [(4361.40*(1+fringe_rate)), 0.1 * 4361.40*(1+fringe_rate)],
-            'Dept clinical secretary': [(549.30*(1+fringe_rate)), 0.1 * 549.30*(1+fringe_rate)],
-            # 'Typing': [(1647.90*(1+fringe_rate)), 0.1 * 1647.90*(1+fringe_rate)],
-            'Lab technician': [(1416.60*(1+fringe_rate)), 0.1 * 1416.60*(1+fringe_rate)],
-            'Medical consultation': [(12303.60*(1+fringe_rate)), 0.1 * 12303.60*(1+fringe_rate)],
-            'Rent space, utilities': [3804.73, 0.1 * 3804.73],
-            'Cleaning service': [1122.39, 0.1 * 1122.39],
-            'Clinic equipment and supplies': [3677.90, 0.1 * 3677.90]
+            'Nurse Practitioner': [14837.29 * (1 + fringe_rate), 0.1 * 14837.29 * (1 + fringe_rate)],
+            'Registered Dietitian': [5743.00 * (1 + fringe_rate), 0.1 * 5743.00 * (1 + fringe_rate)],
+            'Social Worker (Behavioral visit)': [4457.35 * (1 + fringe_rate), 0.1 * 4457.35 * (1 + fringe_rate)],
+            'Department Clinical Secretary': [2245.54 * (1 + fringe_rate), 0.1 * 2245.54 * (1 + fringe_rate)],
+            'Technician': [1447.77 * (1 + fringe_rate), 0.1 * 1447.77 * (1 + fringe_rate)],
+            'Medical Director': [12574.28 * (1 + fringe_rate), 0.1 * 12574.28 * (1 + fringe_rate)],
+            'Space:': [3980.91, 0.1 * 3980.91],
+            'Cleaning Service': [1174.37, 0.1 * 1174.37],
+            'Clinic Equipment and Supplies ': [3848.22, 0.1 * 3848.22]
         }
 
         # calculate the standard deviation of the estimated mean
-        # (note st_dev of the estimated mean = st_dev of observations / sqrt(n), which the standard error)
-        sd_dev_younger18_obese = Stat.get_sterr_from_half_length(confidence_interval=[30, 450], n=2812, alpha=0.05)
-        sd_dev_younger18_overweigth = Stat.get_sterr_from_half_length(confidence_interval=[30, 380], n=2832, alpha=0.05)
+        # sd_dev_younger18_obese = Stat.get_sterr_from_half_length(
+        #     confidence_interval=[30, 450], n=2812, alpha=0.05)
+        # sd_dev_younger18_overweigth = Stat.get_sterr_from_half_length(
+        #     confidence_interval=[30, 380], n=2832, alpha=0.05)
+        #
+        # self.dictHCExp = {
+        #     '<18 years, >95th %ile': [220, sd_dev_younger18_obese],
+        #     '<18 years, <95th %ile': [180, sd_dev_younger18_overweigth],
+        #     '>18 years': [197, 43]
+        # }
 
         self.dictHCExp = {
-            '<18 years, >95th %ile': [220, sd_dev_younger18_obese],
-            '<18 years, <95th %ile': [180, sd_dev_younger18_overweigth],
-            '>18 years': [197, 43]
+            '<18 years, >95th %ile': [133, 62],
+            '<18 years, <95th %ile': [180, 89],
+            '>18 years': [223, 44]
         }
 
         # to inflate cost estimates
@@ -135,7 +139,7 @@ class ModelInputs:
             [16, 1, 0.055305708]  # 16, female
         ]
 
-        # bmi cut offs
+        # bmi cutoffs
         # 85th bmi cutoffs
         self.bmi85thCutOffs = [
             # age, sex, bmi_cutoff

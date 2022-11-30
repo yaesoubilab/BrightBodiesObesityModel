@@ -1,7 +1,8 @@
+import deampy.plots.sample_paths as Path
+
 import bright_bodies_support.CEA as CEA
 import bright_bodies_support.Inputs as I
 import bright_bodies_support.Plots as P
-import deampy.plots.sample_paths as Path
 from bright_bodies_support.ParameterGenerator import ParamGenerator
 from yom import MultiCohortClasses as MultiCls
 
@@ -145,5 +146,5 @@ def compare(scenario):
 if __name__ == '__main__':
 
     compare(scenario=I.EffectMaintenance.DEPREC)
-    compare(scenario=I.EffectMaintenance.NONE)
-    compare(scenario=I.EffectMaintenance.FULL)
+    # compare(scenario=I.EffectMaintenance.NONE)
+    # compare(scenario=I.EffectMaintenance.FULL)
