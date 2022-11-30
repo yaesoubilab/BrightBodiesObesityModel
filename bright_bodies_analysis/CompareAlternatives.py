@@ -150,5 +150,5 @@ def compare(scenario, only_to_calibrate=False):
 if __name__ == '__main__':
 
     compare(scenario=I.EffectMaintenance.DEPREC)
-    # compare(scenario=I.EffectMaintenance.NONE)
-    # compare(scenario=I.EffectMaintenance.FULL)
+    compare(scenario=I.EffectMaintenance.NONE)
+    compare(scenario=I.EffectMaintenance.FULL)

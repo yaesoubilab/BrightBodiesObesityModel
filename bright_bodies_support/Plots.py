@@ -144,6 +144,11 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
         bmis_bb = sim_outcomes_BB.pathsOfCohortAveBMI[cohortID].get_values()
         diff_yearly_ave_bmis.append(numpy.array(bmis_cc) - numpy.array(bmis_bb))
 
+    model_mean = []
+    for t in range(len(diff_yearly_ave_bmis[0])):
+        data = [v[t] for v in diff_yearly_ave_bmis]
+        model_mean.append(numpy.average(data))
+
     # to produce figure
     # rct data: treatment effect at 6 mo, year 1, and 2
     bb_ys = [3.0, 3.7, 2.8]
@@ -155,6 +160,9 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
     # simulates trajectories
     for ys in diff_yearly_ave_bmis:
         ax.plot(range(len(ys)), ys, color=color_model, alpha=0.5, linewidth=0.75, label='Model', zorder=1)
+
+    ax.plot(range(len(model_mean)), model_mean, color='k',
+            alpha=1, linewidth=1.5, label='Model-Mean', zorder=1)
 
     # bright bodies data
     ax.scatter([.5, 1, 2], bb_ys, color=color_data, label='RCT', zorder=2)
@@ -170,7 +178,7 @@ def plot_bb_effect(sim_outcomes_BB, sim_outcomes_CC, maintenance_effect, color_m
     ax.set_ylabel('Reduction in BMI (kg/m'+r"$^2$"+')')
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
+    ax.legend(handles[::-1][:3], labels[::-1][:3], loc='upper right')
 
     output_figure(plt=f, filename="outputs/figs/bbEffect-{}.png".format(maintenance_effect.name), dpi=300)
     # plt.show()
