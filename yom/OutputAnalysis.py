@@ -78,3 +78,7 @@ def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pyramid_x_
           simulated_multi_cohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=1, deci=1))
     print('Average change in BMI at year 2 with respect to the baseline (and 95% uncertainty interval)',
           simulated_multi_cohort.multiSimOutputs.get_mean_interval_change_in_bmi(year=2, deci=1))
+
+
+
+

@@ -19,9 +19,10 @@ COLOR_DATA = 'purple'
 
 
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
-def compare(scenario):
+def compare(scenario, only_to_calibrate=False):
     """
     :param scenario: effect maintenance scenario
+    :param only_to_calibrate: set to True if the purpose is only to calibrate the model
     """
 
     # change the working directory to the root directory
@@ -71,6 +72,9 @@ def compare(scenario):
                      color_model=COLOR_MODEL,
                      color_data=COLOR_DATA,
                      figsize=(5.5, 5))
+
+    if only_to_calibrate:
+        return
 
     # fig 3
     Path.plot_sets_of_sample_paths(

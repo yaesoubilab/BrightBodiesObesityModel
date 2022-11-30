@@ -1,11 +1,12 @@
+import deampy.plots.sample_paths as Path
 import matplotlib.pyplot as plt
 import numpy
+from deampy.plots.plot_support import output_figure
 from matplotlib import collections as matcoll
+from scipy import stats
 
 import bright_bodies_support.CEA as CEA
 import bright_bodies_support.Inputs as I
-import deampy.plots.sample_paths as Path
-from deampy.plots.plot_support import output_figure
 
 # Yearly difference in BMI under control and bright bodies
 YEARLY_DIFF_BMI_CONTROL = [1.9, 0.0]
@@ -14,6 +15,18 @@ YEARLY_DIFF_BMI_CONTROL_UB = [.9, 1.0]
 YEARLY_DIFF_BMI_BB = [-1.8, 0.9]
 YEARLY_DIFF_BMI_BB_LB = [.6, .8]
 YEARLY_DIFF_BMI_BB_UB = [.7, .8]
+
+
+def print_k_test(data, mean, st_dev, message):
+
+    r = stats.kstest(data, stats.norm.cdf, args=(mean, st_dev))
+
+    print(message+': p-value {} \t means \t {} \t {} \t st_devs \t {} \t {}'.format(
+        round(r.pvalue, 3),
+        round(mean, 2),
+        round(numpy.average(data), 2),
+        round(st_dev, 2),
+        round(numpy.std(data), 2)))
 
 
 def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, color_data):
@@ -35,14 +48,33 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, 
         ys = YEARLY_DIFF_BMI_BB
         lbs = YEARLY_DIFF_BMI_BB_LB
         ubs = YEARLY_DIFF_BMI_BB_UB
+
         ax.set_title('Bright Bodies')
         ax.text(-0.05, 1.025, 'B)', transform=ax.transAxes, size=11, weight='bold')
+
+        # KS test for equivalency
+        hls = 0.5 * (numpy.array(YEARLY_DIFF_BMI_BB_UB) + numpy.array(YEARLY_DIFF_BMI_BB_LB))
+        st_dev = hls / 1.96
+        print_k_test(data=year_one_vs_zero, mean=ys[0], st_dev=st_dev[0],
+                     message='BB Y1 to Y0:')
+        print_k_test(data=year_two_vs_one, mean=ys[1], st_dev=st_dev[1],
+                     message='BB Y2 to Y1:')
+
     else:
         ys = YEARLY_DIFF_BMI_CONTROL
         lbs = YEARLY_DIFF_BMI_CONTROL_LB
         ubs = YEARLY_DIFF_BMI_CONTROL_UB
+
         ax.set_title('Clinical Control')
         ax.text(-0.05, 1.025, 'A)', transform=ax.transAxes, size=11, weight='bold')
+
+        # KS test for equivalency
+        hls = 0.5 * (numpy.array(YEARLY_DIFF_BMI_CONTROL_UB) + numpy.array(YEARLY_DIFF_BMI_CONTROL_LB))
+        st_dev = hls / 1.96
+        print_k_test(data=year_one_vs_zero, mean=ys[0], st_dev=st_dev[0],
+                     message='CC Y1 to Y0:')
+        print_k_test(data=year_two_vs_one, mean=ys[1], st_dev=st_dev[1],
+                     message='CC Y2 to Y1:')
 
     # adding simulation outcomes
     for this_y in year_one_vs_zero:
@@ -50,13 +82,18 @@ def add_yearly_change_in_bmi_to_ax(ax, sim_outcomes, intervention, color_model, 
     for this_y in year_two_vs_one:
         ax.scatter(2, this_y, color=color_model, marker='_', s=200, alpha=0.5, linewidth=0.5, zorder=1)
 
+    # adding mean from model
+    ax.scatter([1, 2],
+               [numpy.average(year_one_vs_zero), numpy.average(year_two_vs_one)],
+               marker='_', color='k', label='Model-Mean', s=200, zorder=2)
+
     # adding RCT data
     ax.scatter([1, 2], ys, color=color_data, label='RCT', zorder=2)
     # adding error bars
     ax.errorbar([1, 2], ys, yerr=(lbs, ubs), fmt='none', capsize=4, color=color_data, zorder=2)
 
     handles, labels = ax.get_legend_handles_labels()
-    ax.legend(handles[::-1][:2], labels[::-1][:2], loc='upper right')
+    ax.legend(handles[::-1][:3], labels[::-1][:3], loc='upper right', fontsize=8)
     #ax.legend(loc='upper right')
 
     ax.axhline(y=0, color='k', ls='--', linewidth=0.75)
