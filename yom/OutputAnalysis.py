@@ -23,7 +23,7 @@ def plot_ave_bmi_trajs(sim_outcomes_BB, sim_outcomes_CC):
     )
 
 
-def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pyramid_x_max=10):
+def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pop_size, pyramid_x_max=10):
 
     # sample paths for population size
     Path.plot_sample_paths(
@@ -65,12 +65,15 @@ def generate_simulation_outputs(simulated_multi_cohort, age_sex_dist, pyramid_x_
     print('Average BMI over the simulation period:',
           output.statEffect.get_formatted_mean_and_interval(interval_type='p', deci=2))
     print()
-    print('Total cohort cost:',
-          output.statCohortCost.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
-    print('Total cohort intervention cost:',
-          output.statCohortInterventionCost.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
-    print('Total cohort health care expenditure:',
-          output.statCohortHCExpenditure.get_formatted_mean_and_interval(interval_type='p', deci=1, form=','))
+    print('Cost per person:',
+          output.statCohortCost.get_formatted_mean_and_interval(
+              interval_type='p', deci=0, form=',', multiplier=1/pop_size))
+    print('Intervention cost per person:',
+          output.statCohortInterventionCost.get_formatted_mean_and_interval(
+              interval_type='p', deci=0, form=',', multiplier=1/pop_size))
+    print('Health care expenditure per person:',
+          output.statCohortHCExpenditure.get_formatted_mean_and_interval(
+              interval_type='p', deci=0, form=',', multiplier=1/pop_size))
 
     # average chance in BMI with respect to the baseline (time 0)
     print()

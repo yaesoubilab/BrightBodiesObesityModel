@@ -6,7 +6,7 @@ import yom.OutputAnalysis as yomS
 from bright_bodies_support.ParameterGenerator import ParamGenerator
 
 # SIMULATE ONE INTERVENTION UNDER A GIVEN SCENARIO OF EFFECT MAINTENANCE
-INTERVENTION = I.Interventions.BRIGHT_BODIES
+INTERVENTION = I.Interventions.CONTROL
 EFFECT_MAINTENANCE = I.EffectMaintenance.DEPREC
 
 # this line is needed to avoid errors that occur on Windows computers when running the model in parallel
@@ -33,5 +33,6 @@ if __name__ == '__main__':
     # produce simulation outputs
     yomS.generate_simulation_outputs(simulated_multi_cohort=multiCohort,
                                      age_sex_dist=inputs.ageSexDist,
-                                     pyramid_x_max=10)
+                                     pyramid_x_max=10,
+                                     pop_size=inputs.popSize)
 
